@@ -1,6 +1,6 @@
 data_loading: on
 munging: on
-logging: off
+logging: on
 load_libraries: on
 libraries: MASS,MCMCpack,exact2x2,abind
 as_factors: on
