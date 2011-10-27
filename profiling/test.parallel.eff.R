@@ -4,7 +4,7 @@ r<-30
 q<-10
 nmc<-2
 run.in.linux <-FALSE
-
+verbose=TRUE
 nonpar.time <- system.time(
 gaussian_simulation_jofc_tradeoff(
     p, r, q, c.val,
