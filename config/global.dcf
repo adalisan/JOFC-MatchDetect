@@ -2,6 +2,6 @@ data_loading: on
 munging: on
 logging: on
 load_libraries: on
-libraries: MASS,MCMCpack,exact2x2,abind
+libraries: MASS,MCMCpack,exact2x2,abind,log4r
 as_factors: on
 data_tables: off
