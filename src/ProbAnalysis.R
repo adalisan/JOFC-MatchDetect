@@ -113,6 +113,15 @@ avg.Comm.alt<-c()
 
 estim.wstar<-c()
 
+means.0<-c()
+vars.0<-c()
+skews.0<-c()
+kurts.0 <- c()
+
+means.A<-c()
+vars.A<-c()
+skews.A<-c()
+kurts.A <- c()
 
 
 if (gauss.sim)
@@ -704,6 +713,17 @@ oos.dist.agg.A <- c()
 	oos.diss.0.par.log.n.agg<- c(oos.diss.0.par.log.n.agg,oos.diss.0.par.log.n)
 	oos.diss.A.par.log.n.agg<-c(oos.diss.A.par.log.n.agg,oos.diss.A.par.log.n)
 	
+
+	means.0<- mean(oos.diss.0)
+	vars.0 <- vars(oos.diss.0)
+	skews.0 <- skewness(oos.diss.0)
+	kurts.0 <- kurtosis(oos.diss.0)
+
+	means.A<- mean(oos.diss.A)
+	vars.A <- vars(oos.diss.A)
+	skews.A <- skewness(oos.diss.A)
+	kurts.A <- kurtosis(oos.diss.A)
+
 	
 	
 	}
