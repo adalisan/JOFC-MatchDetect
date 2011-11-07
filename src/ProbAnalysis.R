@@ -4,22 +4,11 @@
 ###############################################################################
 
 
-source("./src/simulation_math_util_fn.R")
-source("./src/gaussian_simulation_sim_fn.R")
-source("./src/dirichlet_simulation_fn.R")
-source("./src/oosMDS.R")
-source("./src/smacofM.R")
-source("./src/oosIM.R")
-source("./src/simulateTestPlot.R")
 
 
 
-results.dir <- "./results/"
-require(MASS)
-require(MCMCpack)
-require(exact2x2)
-require(mclust)
-require(VGAM)
+results.dir <- "graphs"
+
 
 
 
@@ -52,24 +41,6 @@ if (par.compute){
 		registerDoSMP(workers)
 	}
 }
-
-
-color.file<- read.csv("Cat_12.csv",header=FALSE,skip=2,as.is=TRUE)
-tmp.col<-dim(color.file)[2]
-rgb.vals<-as.matrix(color.file[,(tmp.col-2):tmp.col])
-colors.vec.alt<- apply(rgb.vals,1,function(x) (rgb(x[1],x[2],x[3],255,maxColorValue=255)))
-colors.vec <- c("red","green","aquamarine","purple",colors.vec.alt[1],
-		"darkblue",colors.vec.alt[7],"salmon","rosybrown","magenta","orange",
-		"darkorange4")
-colors.vec<-colors.vec.alt
-colors.vec[3]<-"gold4"
-colors.vec[2]<-"darkblue"
-colors.vec[4]<-"darkorange4"
-colors.vec[9]<-"red"
-colors.vec.len<-length(colors.vec)
-colors.vec[colors.vec.len+1]<-"cornflowerblue"
-colors.vec[colors.vec.len+2]<-"azure3"
-colors.vec.len<-length(colors.vec)
 
 
 
@@ -212,23 +183,23 @@ proc.dilation=FALSE #when investigating convergence of JOFC to PoM, should Procr
 old.gauss.model.param <- FALSE
 detach(params)
 
-param.index.count<-6
+param.index.count<-8
 params.list <- rep(list(params),param.index.count)
-
-params.list[[1]]$p <- 3
-params.list[[2]]$p <- 5
-params.list[[3]]$p <- 10
-params.list[[4]]$p <- 15
-params.list[[5]]$p <- 19
+p.vals<-rep(c(3,19),4)
+for (i in (1:length(p.vals))){
+params.list[[i]]$p <- p.vals[i]
 #params.list[[6]]$p <- 25
-vary.param<-"p"
 
-#params.list[[1]]$r <- 1.5
-#params.list[[2]]$r <- 3
-#params.list[[3]]$r <- 10
-#params.list[[4]]$r <- 30
+}
+r.vals<-rep(c(1.5,3,10,30),2)
+for (i in (1:length(r.vals))){
+params.list[[i]]$r <- r.vals[i]
+#params.list[[6]]$p <- 25
+
+}
+
 #params.list[[5]]$r <- 100
-
+vary.param<-"r"
 #params.list[[1]]$q <- 22
 
 
@@ -244,7 +215,7 @@ vary.param<-"p"
 	Y.sep.dist.par.agg<- c()
 	
 #laplace(llocation = "identity", lscale = "loge", elocation = list(),
-#		escale = list(), ilocation = NULL, iscale = NULL,
+#		es<cale = list(), ilocation = NULL, iscale = NULL,
 #		imethod = 1, zero = 2)
 #fit = vglm(y ~ 1, laplace, lddat, trace = TRUE, crit = "l")
 	
@@ -714,15 +685,15 @@ oos.dist.agg.A <- c()
 	oos.diss.A.par.log.n.agg<-c(oos.diss.A.par.log.n.agg,oos.diss.A.par.log.n)
 	
 
-	means.0<- mean(oos.diss.0)
-	vars.0 <- vars(oos.diss.0)
-	skews.0 <- skewness(oos.diss.0)
-	kurts.0 <- kurtosis(oos.diss.0)
+	means.0<- c(means.0,mean(oos.diss.0))
+	vars.0 <- c(vars.0,var(oos.diss.0))
+	skews.0 <- c(skews.0,skewness(oos.diss.0))
+	kurts.0 <- c(kurts.0,kurtosis(oos.diss.0))
 
-	means.A<- mean(oos.diss.A)
-	vars.A <- vars(oos.diss.A)
-	skews.A <- skewness(oos.diss.A)
-	kurts.A <- kurtosis(oos.diss.A)
+	means.A<- c(means.A,mean(oos.diss.A))
+	vars.A <- c(vars.A,var(oos.diss.A))
+	skews.A <- c(skews.A,skewness(oos.diss.A))
+	kurts.A <- c(kurts.A,kurtosis(oos.diss.A))
 
 	
 	
