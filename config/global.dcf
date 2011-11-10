@@ -2,7 +2,7 @@ data_loading: on
 munging: on
 logging: on
 load_libraries: on
-libraries: MASS,MCMCpack,exact2x2,abind,log4r,mclust,VGAM,moment
+libraries: MASS,MCMCpack,exact2x2,abind,log4r,mclust,VGAM,moments
 as_factors: on
 data_tables: off
 run_sims_in_parallel: on
