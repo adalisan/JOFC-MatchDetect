@@ -9,34 +9,29 @@
 #setwd("./DataFusion_Priebe/")
 
 
-#source("./src/GaussianSimFidCommTradeoffMain.R")
-source("./src/simulation_math_util_fn.R")
-source("./src/gaussian_simulation_sim_fn.R")
-source("./src/dirichlet_simulation_fn.R")
-source("./src/oosMDS.R")
-source("./src/smacofM.R")
-source("./src/oosIM.R")
-source("./src/simulateTestPlot.R")
 
-results.dir <- "./results/"
-require(MASS)
-require(MCMCpack)
-require(exact2x2)
 
-par.compute <- TRUE
-run.in.linux<- FALSE
+
+results.dir <- "./graphs/"
+
+
+par.compute <- FALSE
+run.in.linux<- (.Platform$OS.type=="unix")
 compare.pom.cca<-TRUE
 #c.vals<-c(0.01)
-c.vals<-c(0.01)
+c.vals<-c(0.01,0)
 
-verbose<-FALSE
+verbose<-TRUE
 oos <-TRUE
+
 
 gauss.sim <-T
 dirichlet.sim <- F
 run.mcnemars.test <- F
 cca.reg <- F
 power.comparison.test<- F
+add.plot.title<- F
+
 if (par.compute){
 	if( run.in.linux) {
 		require(doMC)
@@ -58,15 +53,15 @@ if (par.compute){
 
 #n.vals <-c(50,100,150,200,300,500)
 #
-n.vals<-c(150)
+n.vals<-c(100)
 nmc <-  100
-s<- 150
+s<- 100
 
 profile.mode <- FALSE
 debug.mode<- FALSE
 
 if(debug.mode){
-	n.vals<-c(150)
+	n.vals<-c(70)
 	nmc<-3
 	s<-10
 }
@@ -108,10 +103,10 @@ params<-list(
 		grassmannian.dist = F,
 		use.Euc.points.x = F,
 		use.Euc.points.y = F,
-		p = 7,
+		p = 3,
 		r = 10,
 		
-		q =12,
+		q = 15,
 		
 		d=2,
 		n=n.vals[1],
@@ -144,14 +139,15 @@ params<-list(
 		verbose=verbose,
 		c.val=0,
 		#w.vals = c(0.001,0.1,0.5,0.8,0.85,0.9,0.925,0.95,0.99,0.999),
-		w.vals = c(0.5,0.8,0.85,0.9,0.925,0.95,0.99,0.999),
+		#w.vals = c(0.5,0.8,0.85,0.9,0.925,0.95,0.99,0.999),
+    w.vals= c(0.5,0.999),
 		wt.equalize=FALSE,
 		rival.w = 0.999,
 		power.comparison.test = F
 )
 
 
-Rprof(filename = "Rprof.out", append = FALSE, interval = 0.02,
+if (profile.mode) Rprof(filename = "Rprof.out", append = FALSE, interval = 0.02,
        memory.profiling=FALSE)
 
 for (n.v in n.vals){
@@ -195,7 +191,7 @@ for (c.val in c.vals) {
 	
 	
 	methods.vec<-c("jofc","pom","cca")
-	color.file<- read.csv("Cat_12.csv",header=FALSE,skip=2,as.is=TRUE)
+	color.file<- read.csv("./data/Cat_12.csv",header=FALSE,skip=2,as.is=TRUE,sep=";")
 	tmp.col<-dim(color.file)[2]
 	rgb.vals<-as.matrix(color.file[,(tmp.col-2):tmp.col])
 	colors.vec.alt<- apply(rgb.vals,1,function(x) (rgb(x[1],x[2],x[3],255,maxColorValue=255)))
@@ -218,10 +214,10 @@ for (c.val in c.vals) {
 	params$n <- n.v
 	if (gauss.sim){
 		
-		params$p <- 7
+		params$p <- 3
 		params$r <- 10
 		
-		params$q <- 12
+		params$q <- 15
 		params$oos <- TRUE
 		
 		params$d<-2
