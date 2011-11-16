@@ -26,7 +26,7 @@ oos <-TRUE
 
 
 gauss.sim <-T
-dirichlet.sim <- F
+dirichlet.sim <- T
 run.mcnemars.test <- F
 cca.reg <- F
 power.comparison.test<- F
@@ -53,12 +53,12 @@ if (par.compute){
 
 #n.vals <-c(50,100,150,200,300,500)
 #
-n.vals<-c(100)
+n.vals<-c(150)
 nmc <-  100
-s<- 100
+s<- 150
 
 profile.mode <- FALSE
-debug.mode<- FALSE
+debug.mode<- TRUE
 
 if(debug.mode){
 	n.vals<-c(70)
@@ -334,8 +334,7 @@ for (c.val in c.vals) {
 			print(i)
 			w.val.i <- plot.w.vals[i] 
 			lty.i <- 1+((i-1)%%10)
-			if (w.val.i==0.925) {line.width<-3
-				}	else {line.width<-1.5}
+			line.width<-1.5
 			lty.i.vec <- c(lty.i.vec,lty.i)
 			lwd.i.vec <- c(lwd.i.vec,line.width)
 			par(lty=lty.i)
@@ -412,8 +411,7 @@ for (c.val in c.vals) {
 			print(i)
 			w.val.i <- plot.w.vals[i] 
 			lty.i <- 1+((i-1)%%10)
-			if (w.val.i==0.925) {line.width<-3
-				}	else {line.width<-1.5}
+		line.width<-1.5
 			lty.i.vec <- c(lty.i.vec,lty.i)
 			lwd.i.vec <- c(lwd.i.vec,line.width)
 			par(lty=lty.i)
@@ -495,6 +493,37 @@ for (c.val in c.vals) {
 		
 		sim.res.d<-simulate.generate.test.model.plot("Dirichlet",params,par.compute)
 		print("Dirichlet Setting Simulation Ended")
+    
+      
+							Fid1<-sim.res.d$FidComm.Terms$F1
+							Fid2<-sim.res.d$FidComm.Terms$F2
+							Comm<-sim.res.d$FidComm.Terms$C
+							
+							Fid1.List <- c(Fid1.List,list(Fid1))
+							Fid2.List <-c(Fid2.List,list(Fid2))
+							Comm.List <-c(Comm.List,list(Comm))
+							
+							avgFid1.n<-colMeans(Fid1)
+							avgFid2.n<-colMeans(Fid2)
+							avgComm.n<-colMeans(Comm)
+							
+							avg.Fid1.alt<-rbind(avg.Fid1.alt,avgFid1.n)
+							avg.Fid2.alt<-rbind(avg.Fid2.alt,avgFid2.n)
+							avg.Comm.alt<-rbind(avg.Comm.alt,avgComm.n)
+							
+							FC.ratio.n<-colMeans(sim.res.d$FC.ratios$f.c)
+							wtFC.ratio.n<-colMeans(sim.res.d$FC.ratios$wtf.c)
+							
+							
+							#avg.FCRatios.List<-rbind(FCRatios.List,FC.ratio.n)
+							#avg.wtFCRatios.List<-rbind(wtFCRatios.List,wtFC.ratio.n)
+						estim.wstar<-c(estim.wstar,sim.res.d$wstar)	
+							
+	
+    
+    
+    
+    
 		save.image(paste(results.dir,"Dirichlet","c",params$c.val,"-n",params$n,Sys.Date(),".RData",collapse=""))
 		
 		
@@ -542,7 +571,7 @@ for (c.val in c.vals) {
 		plot.w.vals<-params$w.vals[1:w.val.len]
 		
 		#w.val.indices<-c(1:4,7,9,10)
-		w.val.indices<-c(1,7,9,10)
+		  w.val.indices<- 1:w.val.len
 		plot.w.vals <- plot.w.vals[w.val.indices]
 		num.w.vals.plotted <- length(plot.w.vals)
 		
@@ -550,8 +579,8 @@ for (c.val in c.vals) {
 			print(i)
 			w.val.i <- plot.w.vals[i] 
 			lty.i <- 1+((i-1)%%10)
-			if (w.val.i==0.925) {line.width<-3
-				}	else {line.width<-1.5}
+		
+			line.width<-1.5
 			lty.i.vec <- c(lty.i.vec,lty.i)
 			lwd.i.vec <- c(lwd.i.vec,line.width)
 			par(lty=lty.i)
@@ -619,7 +648,7 @@ for (c.val in c.vals) {
 		w.val.len<- length(params$w.vals)
 		plot.w.vals<-params$w.vals[1:w.val.len]
 		
-		w.val.indices<-c(1:4,7,9,10)
+		w.val.indices<- 1:w.val.len
 		plot.w.vals <- plot.w.vals[w.val.indices]
 		num.w.vals.plotted <- length(plot.w.vals)
 		
@@ -627,8 +656,8 @@ for (c.val in c.vals) {
 			print(i)
 			w.val.i <- plot.w.vals[i] 
 			lty.i <- 1+((i-1)%%10)
-			if (w.val.i==0.925) {line.width<-3
-				}	else {line.width<-1.5}
+		
+				line.width<-1.5
 			lty.i.vec <- c(lty.i.vec,lty.i)
 			lwd.i.vec <- c(lwd.i.vec,line.width)
 			par(lty=lty.i)
