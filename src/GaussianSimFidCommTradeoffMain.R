@@ -51,14 +51,14 @@ if (par.compute){
 
 
 
-#n.vals <-c(50,100,150,200,300,500)
+n.vals <-c(50,100,150,200,300,500)
 #
-n.vals<-c(150)
-nmc <-  100
+#n.vals<-c(150)
+nmc <-  150
 s<- 150
 
 profile.mode <- FALSE
-debug.mode<- TRUE
+debug.mode<- FALSE
 
 if(debug.mode){
 	n.vals<-c(70)
