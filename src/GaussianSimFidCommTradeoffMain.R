@@ -230,7 +230,7 @@ for (c.val in c.vals) {
 				deparse(params.text.3) ,"\n")
 		params$plot.title <- plot.title.G
 		#parameter logging start
-		sink(paste(results.dir,model.letter,"c",params$c.val,"params.txt"))
+		sink(paste(results.dir,model.letter,"c",params$c.val,"params",Sys.Date(),".txt"))
 		print(plot.title.G)
 		print(params)
 		sink()
@@ -483,7 +483,8 @@ for (c.val in c.vals) {
 		
 		params$plot.title <-plot.title.D
 		#parameter logging start
-		sink(paste(results.dir,model.letter,"c",params$c.val,"params.txt"))
+    sink(paste(results.dir,model.letter,"c",params$c.val,"params",Sys.Date(),".txt"))
+		
 		print(plot.title.D)
 		print(params)
 		sink()
