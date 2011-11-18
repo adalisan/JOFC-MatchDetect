@@ -185,7 +185,7 @@ detach(params)
 
 param.index.count<-8
 params.list <- rep(list(params),param.index.count)
-p.vals<-rep(c(3,19),4)
+p.vals<-rep(c(5,19),each=4)
 for (i in (1:length(p.vals))){
 params.list[[i]]$p <- p.vals[i]
 #params.list[[6]]$p <- 25
@@ -239,12 +239,6 @@ vary.param<-"r"
 
 
 
-
-
-
-
-
-
 #param.index<-1
 for (param.index in 1:param.index.count){
 
@@ -268,19 +262,19 @@ oos.dist.agg.A <- c()
 	
 	windows()
 	hist(Ideal.Gamma.matched)
-	savePlot("Ideal.Gamma.matched.hist.pdf","pdf")
+	savePlot(file.path(results.dir,"Ideal.Gamma.matched.hist.pdf"),"pdf")
 	dev.off()
 	windows()
 	plot(density(Ideal.Gamma.matched))
-	savePlot("Ideal.Gamma.matched.dens.pdf","pdf")
+	savePlot(file.path(results.dir,"Ideal.Gamma.matched.dens.pdf"),"pdf")
 	dev.off()
 	windows()
 	hist(Ideal.Gamma.unmatched)
-	savePlot("Ideal.Gamma.unmatched.hist.pdf","pdf")
+	savePlot(file.path(results.dir,"Ideal.Gamma.unmatched.hist.pdf"),"pdf")
 	dev.off()
 	windows()
 	plot(density(Ideal.Gamma.unmatched))
-	savePlot("Ideal.Gamma.unmatched.dens.pdf","pdf")
+	savePlot(file.path(results.dir,"Ideal.Gamma.unmatched.dens.pdf"),"pdf")
 	dev.off()
 	windows()
 	
@@ -559,7 +553,6 @@ oos.dist.agg.A <- c()
 	
 	plot(density(as.vector(Y.comm.agg)))
 	
-	
 	Y.comm.dist.par<- fitdistr((Y.comm.agg+abs(min(Y.comm.agg))+0.01),"exponential")
 	print(Y.comm.dist.par)
 	Y.comm.dist.par.g<- fitdistr((Y.comm.agg+abs(min(Y.comm.agg))+0.01),"gamma")
@@ -570,6 +563,8 @@ oos.dist.agg.A <- c()
 	lines(x,dgamma(x,shape=Y.comm.dist.par.g$estimate["shape"],rate=Y.comm.dist.par.g$estimate["rate"]),col="red")
 	lines(x,dlnorm(x,meanlog=Y.comm.dist.par.log.n$estimate["meanlog"],sdlog=Y.comm.dist.par.log.n$estimate["sdlog"]),col="blue")
 	
+  savePlot(file.path(results.dir,"Y.comm.perturb.dist"),"pdf")
+  
 	
 	
 	
@@ -589,7 +584,8 @@ oos.dist.agg.A <- c()
 	#		escale = list(), ilocation = NULL, iscale = NULL,
 	#		imethod = 1, zero = 2)
 	#fit = vglm(y ~ 1, laplace, lddat, trace = TRUE, crit = "l")
-	
+	savePlot(file.path(results.dir,"Y.sep.perturb.dist"),"pdf")
+  
 
 
      windows()
@@ -602,7 +598,9 @@ oos.dist.agg.A <- c()
 	
 	lines(x,dlnorm(x,meanlog=r.comm.dist.par.log.n$estimate["meanlog"],
 					sdlog=r.comm.dist.par.log.n$estimate["sdlog"]),col="blue")
-	
+
+  savePlot(file.path(results.dir,"r.ratio.comm.perturb.dist"),"pdf")
+ 
 	
 	print(r.comm.dist.par)
 	print(r.comm.dist.par.log.n)
@@ -617,7 +615,8 @@ oos.dist.agg.A <- c()
 	r.sep.dist.par<- fitdistr(r.sep.agg,"normal")
 	lines(x,dnorm(x,mean=r.sep.dist.par$estimate["mean"],sd=r.sep.dist.par$estimate["sd"]),col="blue")
 	print(r.sep.dist.par)
-	
+	  savePlot(file.path(results.dir,"r.ratio.sep.perturb.dist"),"pdf")
+ 
 	
 	
 	plot(density(as.vector(oos.diss.0)))
@@ -630,7 +629,8 @@ oos.dist.agg.A <- c()
 	
 	lines(x,dlnorm(x,meanlog=oos.diss.0.par.log.n$estimate["meanlog"],
 					sdlog=oos.diss.0.par.log.n$estimate["sdlog"]),col="blue")
-	
+	  savePlot(file.path(results.dir,"oos.perturb.for.nulldist"),"pdf")
+ 
 	
 	
 	
@@ -649,6 +649,9 @@ oos.dist.agg.A <- c()
 	
 	lines(x,dlnorm(x,meanlog=oos.diss.A.par.log.n$estimate["meanlog"],
 					sdlog=oos.diss.A.par.log.n$estimate["sdlog"]),col="blue")
+
+  savePlot(file.path(results.dir,"oos.perturb.for.altdist"),"pdf")
+ 
 	windows()
 	em.result<-em("V",oos.diss.A,parameters=list(pro=c(0.9,0.1),mean=c(0,8),variance=list(modelName="V",d=1,G=2,sigmasq=c(3,3))))
 	oos.diss.A.dist.par<- em.result$parameters
