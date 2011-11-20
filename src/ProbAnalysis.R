@@ -144,7 +144,7 @@ params<-list(
 		c.val=0.1,
 		#w.vals = c(0.001,0.1,0.5,0.8,0.85,0.9,0.925,0.95,0.99,0.999),
 		#w.vals = c(0.5,0.8,0.85,0.9,0.925,0.95,0.99,0.999),
-		w.vals = c(0.5),
+		w.vals = c(0.5,0.75,0.95,0.999),
 		wt.equalize=FALSE,
 		rival.w = 0.999,
 		power.comparison.test = F
@@ -699,7 +699,6 @@ oos.dist.agg.A <- c()
 	kurts.A <- c(kurts.A,kurtosis(oos.diss.A))
 
 	
-	
 	}
 #	title(plot.title)
 	
@@ -709,3 +708,12 @@ oos.dist.agg.A <- c()
 #	save.image(paste("params",vary.param,param.index,".RData",sep="",collapse=""))
 #}
 
+  plot(means.0)
+	plot(vars.0)
+	plot(skews.0)
+	plot(kurts.0)
+
+  plot(means.A)
+  plot(vars.A)
+	plot(skews.A)
+	plot(kurts.A)
