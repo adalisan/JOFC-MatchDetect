@@ -94,6 +94,11 @@ vars.A<-c()
 skews.A<-c()
 kurts.A <- c()
 
+means.0.agg<-c()
+means.0.agg<-c()
+means.A.agg<-c()
+vars.A.agg<-c()
+
 
 if (gauss.sim)
 	sim.res.g<-list()
@@ -282,8 +287,8 @@ oos.dist.agg.A <- c()
 	
 	Pert.Gamma.matched   <- Pert.log.normal+Ideal.Gamma.matched
 	Pert.Gamma.unmatched <-   Pert.log.normal+Ideal.Gamma.matched
-	oos.diss.0 <-c()
-	oos.diss.A <-c()
+	oos.diss.0 <-array(0,dims(w.max.index,nmc))
+	oos.diss.A <-array(0,dims(w.max.index,nmc))
 	detach(params)
 	
 	
@@ -493,16 +498,15 @@ oos.dist.agg.A <- c()
 #if (profile.mode)				Rprof(NULL)
 						embedded.dist.A<- (Y.At[1]-Y.At[2])^2	
 						
-						oos.dist.agg.0 <-c(oos.dist.agg.0, embedded.dist.0)
-						oos.dist.agg.A <-c(oos.dist.agg.A, embedded.dist.A)
+						oos.dist.agg.0[l,mc] <- embedded.dist.0
+						oos.dist.agg.A[l,mc] <- embedded.dist.A
 					}
-					list(p1=Pert.mat.mc,p2=as.matrix(D.whole),p3=oos.dist.agg.0,p4=oos.dist.agg.A)
+					list(p1=Pert.mat.mc,p2=as.matrix(D.whole))
 				}	
 		)
 		Pert.mat[,,mc]<-results[[1]]
 		D.nmc   [,,mc]<-results[[2]]
-		oos.diss.0<-c(oos.diss.0,results[[3]])
-		oos.diss.A<-c(oos.diss.A,results[[4]])
+	
 		
 	} 
 	
