@@ -5,6 +5,7 @@ require(optmatch)
 source("./lib/simulation_math_util_fn.R")
 source("./lib/smacofM.R")
 source("./lib/oosIM.R")
+source("./lib/diffusion_distance.R")
 source("./lib/graph_embedding_fn.R")
 
 cep=TRUE
@@ -12,9 +13,7 @@ verbose= FALSE
 
 n = 20
 m = 15 # the first m pairs are known matches ; the last n-m pairs are to-be-matched
-Ln=LETTERS[1:n]
-colvec=c(rep(1,m),rep(2,(n-m)),rep(3,m),rep(4,(n-m)))
-d<-4
+
 npert = 11
 nmc = 100
 pert=(0:10)/10
@@ -33,8 +32,8 @@ if (debug.mode){
 	n.np<- 5
 	m<- 5
 }
-d<-4
-
+d.dim<-4
+T.diff<-100
 
 
 # these three lines are not used, really ...
@@ -60,7 +59,16 @@ for(imc in 1:nmc)
 		in.sample.ind<-rep(TRUE,2*n)
 		in.sample.ind[oos.sampling]<-FALSE
 		in.sample.ind[n+oos.sampling]<-FALSE
-		J = jofc(G,Gp,in.sample.ind,d.dim=4) 
+    
+    
+    J =jofc.diffusion.dist(G,Gp,
+  	in.sample.ind,
+		d.dim=d.dim,
+		graph.is.directed=FALSE,	
+		wt.matrix.1=NULL,
+		wt.matrix.2=NULL,
+		sep.graphs=TRUE)
+		
 		M = solveMarriage(J)
 		nc.jofc[ipert,imc] = present(M)         # returns the number correct in the marriage?
 		if (cep){
