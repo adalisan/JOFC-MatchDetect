@@ -19,8 +19,10 @@ load("./data/celegansGraph.Rd")
 cep=FALSE
 verbose= FALSE
 
-Ac<-(Ac+t(Ac))/2
-Ag<-(Ag+t(Ag))/2
+Ac<-Ac*upper.tri(Ac)
+Ag<-Ag*upper.tri(Ag)
+Ac<-(Ac+t(Ac))
+Ag<-(Ag+t(Ag))
 diag(Ac)<-0
 diag(Ag)<-0
 Ac.w<- Ac
@@ -33,10 +35,10 @@ Ag<- ifelse(Ag>0,1,0)
 n = nrow(Ag)
 m = n-10 # the first m pairs are known matches ; the last n-m pairs are to-be-matched
 
-T.diff<-100
+T.diff<-5
 d<-4
 npert = 11
-nmc = 100
+nmc = 200
 pert=(0:10)/10
 nc.jofc = matrix(0,npert,nmc)
 nc.cmds = matrix(0,npert,nmc)
@@ -65,7 +67,7 @@ G.comb<-omnibusM(G,G,diag(n))
 Graph.M <- graph.adjacency(G.comb,weighted= NULL ,mode="undirected")
 D.M<-shortest.paths(Graph.M)
 
-seed<-123
+seed<-12344439
 for(imc in 1:nmc)
 {
 	oos.sampling<-sample.int(n,size=n-m,replace=FALSE)
@@ -75,11 +77,10 @@ for(imc in 1:nmc)
 	
 	
 	
-		J = jofc(Ac.w,Ag.w,in.sample.ind,d.dim=8,
+		J = jofc(Ac.w,Ag.w,in.sample.ind,d.dim=6,
 				wt.matrix.1=Ac.w,wt.matrix.2=Ag.w,
 				use.weighted.graph=TRUE,
-				sep.graphs=TRUE,
-				use.diff.distance=TRUE) 
+				sep.graphs=FALSE) 
 		M = solveMarriage(J)
 		nc.worms.jofc[imc] = present(M)         # returns the number correct in the marriage?
 		
