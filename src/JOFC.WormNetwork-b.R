@@ -86,10 +86,8 @@ workers <- startWorkers(4) # My computer has 2 cores
 registerDoSMP(workers)
  times <- 4	# times to run the loop
  
-# comparing the running time for each loop
-system.time(x <- foreach(j=1:times ) %dopar% run.jofc.replicate.batch(j,5))
-system.time(for(j in 1:times ) run.jofc.replicate.batch(j,5))  #  4.82 seconds
- 
+
+run.results<-foreach(run.mc=1:times) %dopar% run.jofc.replicate.batch(run.mc,25)
 # stop workers
 stopWorkers(workers)
 
