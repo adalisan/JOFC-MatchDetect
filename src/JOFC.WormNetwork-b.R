@@ -35,14 +35,12 @@ Ag<- ifelse(Ag>0,1,0)
 n = nrow(Ag)
 m = n-10 # the first m pairs are known matches ; the last n-m pairs are to-be-matched
 
-T.diff<-5
+T.diff<-2
 d<-4
 npert = 11
 nmc = 100
 pert=(0:10)/10
-nc.jofc = matrix(0,npert,nmc)
-nc.cmds = matrix(0,npert,nmc)
-matched.cost<-0.01
+
 nc.worms.jofc<-rep(0,nmc)
 w.vals<-0.8
 
@@ -50,17 +48,21 @@ matched.cost<-0.01 #If matched.cost is equal to 1, consider an unweighted graph,
 #If matched.cost is  between 0 and 1, the graph is weighted with edges between matched vertices with weights equal to matched.cost. Edges between 
 # vertices of the same condition have either weight 1 or 2 according to whether they're connected according to given adjacency matrix or not.
 debug.mode<-FALSE
-if (debug.mode){
-	n.v<-100
-	n.np<- 5
-	m<- 5
-}
-d<-4
+
+d.dim<-10
 
 
 
 
-run.jofc.replicate.batch <- function(i, mc.rep.per.batch){
+run.jofc.replicate.batch <- function(i, mc.rep.per.batch,method="jofc"){
+
+require(igraph)
+require(optmatch)
+source("./lib/simulation_math_util_fn.R")
+source("./lib/smacofM.R")
+source("./lib/oosIM.R")
+source("./lib/graph_embedding_fn.R")
+source("./lib/diffusion_distance.R")
       num.matches<-rep(0,mc.rep.per.batch)
 
       for ( j in 1:mc.rep.per.batch) {
@@ -69,12 +71,25 @@ run.jofc.replicate.batch <- function(i, mc.rep.per.batch){
 	in.sample.ind[oos.sampling]<-FALSE
 	in.sample.ind[n+oos.sampling]<-FALSE
 	
+	   if (method=="jofc"){
 	
-	
-		J = jofc(Ac,Ag,in.sample.ind,d.dim=10,
+		J = jofc(Ac,Ag,in.sample.ind,d.dim=d.dim,
 				wt.matrix.1=NULL,wt.matrix.2=NULL,
 				use.weighted.graph=TRUE,
 				sep.graphs=TRUE) 
+            } else if (method=="jofc.wt"){
+	
+		J = jofc(Ac.w,Ag,in.sample.ind,d.dim=d.dim,
+				wt.matrix.1=Ac.w,wt.matrix.2=Ag.w,
+				use.weighted.graph=TRUE,
+				sep.graphs=TRUE) 
+            } else if (method=="jofc.diff.dist"){
+		J = jofc.diffusion.dist(Ac.w,Ag.w,in.sample.ind,d.dim=d.dim,
+				wt.matrix.1=Ac.w,wt.matrix.2=Ag.w,
+				sep.graphs=TRUE) 
+
+		}
+
 		M = solveMarriage(J)
 		num.matches[j] = present(M)  
        }
@@ -82,12 +97,12 @@ run.jofc.replicate.batch <- function(i, mc.rep.per.batch){
 }
 
 require(doSMP)
-workers <- startWorkers(4) # My computer has 2 cores
+workers <- startWorkers(8) 
 registerDoSMP(workers)
  times <- 4	# times to run the loop
- 
+run.per.batch <-12 
 
-run.results<-foreach(run.mc=1:times) %dopar% run.jofc.replicate.batch(run.mc,25)
+run.results<-foreach(run.mc=1:(nmc/run.per.batch),.combine=c) %dopar% run.jofc.replicate.batch(run.mc,run.per.batch,method="jofc.diff.dist")
 # stop workers
 stopWorkers(workers)
 
