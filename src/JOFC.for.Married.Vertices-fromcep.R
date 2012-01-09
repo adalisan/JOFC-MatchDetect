@@ -178,15 +178,15 @@ dev.off()
 
 
 
-d.dim.vec<-c(4,6,10)
+d.dim.vec<-c(4,6,10,13)
 
-nc.jofc.diff.d    = array(0,dim=c(npert,nmc,length(d.dim.vec)))
-nc.jofc.weighted.d = array(0,dim=c(npert,nmc,length(d.dim.vec)))
+nc.jofc.diff.d       = array(0,dim=c(npert,nmc,length(d.dim.vec)))
+nc.jofc.weighted.d   = array(0,dim=c(npert,nmc,length(d.dim.vec)))
 nc.jofc.unweighted.d = array(0,dim=c(npert,nmc,length(d.dim.vec)))
 
 
 
-nc.cmds.d = array(0,dim=c(npert,nmc,length(d.dim.vec)))
+nc.cmds.d           = array(0,dim=c(npert,nmc,length(d.dim.vec)))
 
 # these three lines are not used, really ...
 # they just set up a dummy D.M which is the correct object for input to fullmatch".
@@ -211,7 +211,7 @@ for(imc in 1:nmc)
 		Graph.2<-graph.adjacency(Gp)
 		D.1<-shortest.paths(Graph.1)
 		D.2<-shortest.paths(Graph.2)
-		oos.sampling<-sample.int(n,size=n-m,replace=FALSE)
+		oos.sampling<-sample(1:n,size=n-m,replace=FALSE)
 		in.sample.ind<-rep(TRUE,2*n)
 		in.sample.ind[oos.sampling]<-FALSE
 		in.sample.ind[n+oos.sampling]<-FALSE
@@ -272,7 +272,7 @@ for(imc in 1:nmc)
 			
       
       if (oos){
-         if (imc==1) print(in.sample.ind)
+         if (ipert==1) print(in.sample.ind)
        myD.M.in<- myD.M[in.sample.ind,in.sample.ind]
     		ccc = cmdscale(myD.M.in,k=d.dim,eig=T)
  			#plot(ccc$eig)
@@ -281,7 +281,7 @@ for(imc in 1:nmc)
        Y.emb<-oosMDS(myD.M,X=ccc$points, w=ifelse(in.sample.ind,1,0),init="gower")
        
 # 			
- 			 U = as.matrix(dist(Y.emb[,c(2,3)]))
+ 			 U = as.matrix(dist(Y.emb))
       } else {
       
       
@@ -290,7 +290,7 @@ for(imc in 1:nmc)
 			#pairs(ccc$points , col=colvec,pch=c(Ln,Ln))
 			#plot(ccc$points[,c(2,3)] , col=colvec,pch=c(Ln,Ln))
 			
-			U = as.matrix(dist(ccc$points[ c((m+1):(n),(n+m+1):(n+n)) ,c(2,3)]))
+			U = as.matrix(dist(ccc$points[ c((m+1):(n),(n+m+1):(n+n)) ,]))
 		  }
 			M = fullmatch(U[1:(n-m),(n-m+1):(2*(n-m))])
 			nc.cmds.d[ipert,imc,d.i] = present(M)         # returns the number correct in the marriage?
@@ -327,6 +327,31 @@ abline(h=1/(n-m),lty=2) ### chance?  apparently not!?
 abline(v=1/2,lty=2) ### chance?  gotta be!?
 dev.off()
 
+
+pdf("plot3.pdf")
+colors.vec<-c( "red","blue","orange")
+plot(pert,apply(nc.jofc.diff.d[,,1],1,mean)/(n-m),
+     xlab="perturbation parameter",ylab="Fraction of  correct matches",ylim=c(0,1),col=colors.vec[1],type="l")
+for (d.i in 2:length(d.dim.vec)){
+lines(pert,apply(nc.jofc.diff.d[,,d.i],1,mean)/(n-m),xlab="perturbation parameter",
+      ylab="Fraction of  correct matches",ylim=c(0,1),col=colors.vec[d.i])
+}
+for (d.i in 1:length(d.dim.vec)){
+lines(pert,apply(nc.cmds.d[,,d.i],1,mean)/(n-m),xlab="perturbation parameter",
+       ylab="Fraction of  correct matches",ylim=c(0,1),lty=2,col=colors.vec[d.i])
+}
+for (d.i in 1:length(d.dim.vec)){
+lines(pert,apply(nc.jofc.weighted.d[,,d.i],1,mean)/(n-m), lty=4,lwd=2,
+      xlab="perturbation parameter",ylab="Fraction of  correct matches",ylim=c(0,1),col=colors.vec[d.i])
+}
+
+legend.txt<- c("diff dist","CMDS","weighted.graph")
+legend.txt <- c(legend.txt,d.dim.vec)
+legend(x="topright",legend=legend.txt, col =c(rep(1,3),colors.vec),lty=c(1:3,rep(1,3)))
+title("marriage o jofc")
+abline(h=1/(n-m),lty=2) ### chance?  apparently not!?
+abline(v=1/2,lty=2) ### chance?  gotta be!?
+dev.off()
 
 
 
