@@ -81,7 +81,7 @@ for(imc in 1:nmc)
 				wt.matrix.1=Ac.w,wt.matrix.2=Ag.w,
 				use.weighted.graph=TRUE,
 				sep.graphs=FALSE) 
-		M = solveMarriage(J)
+		M = solveMarriage(J[[1]])
 		nc.worms.jofc[imc] = present(M)         # returns the number correct in the marriage?
 		
 }

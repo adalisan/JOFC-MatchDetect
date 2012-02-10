@@ -9,6 +9,8 @@ source("./lib/oosMDS.R")
 source("./lib/diffusion_distance.R")
 source("./lib/graph_embedding_fn.R")
 
+
+
 cep=TRUE
 verbose= FALSE
 oos=TRUE
@@ -16,12 +18,11 @@ oos.cep = TRUE
 
 a.cep <-20
 
-
 n = 20
 m = 15 # the first m pairs are known matches ; the last n-m pairs are to-be-matched
 
 npert = 11
-nmc = 100
+nmc = 20
 pert=(0:10)/10
 nc.jofc.diff = matrix(0,npert,nmc)
 nc.jofc.weighted = matrix(0,npert,nmc)
@@ -44,8 +45,10 @@ matched.cost<-0.01 #If matched.cost is equal to 1, consider an unweighted graph,
 
 d.dim<-4
 T.diff<-1
+c.imp<- 20
 
 dims.for.dist<-2:d.dim
+
 # these three lines are not used, really ...
 # they just set up a dummy D.M which is the correct object for input to fullmatch".
 # i'm just using Sancar's object ... i don't really understand it!
@@ -55,6 +58,7 @@ Graph.M <- graph.adjacency(G.comb,weighted= NULL ,mode="undirected")
 D.M<-shortest.paths(Graph.M)
 
 seed<-123
+set.seed(seed)
 for(imc in 1:nmc)
 {
 	G<-ER(n,0.5)
@@ -172,11 +176,11 @@ pdf("plot1.pdf")
 colors.vec<-c( "red","blue","orange","green")
 colors.vec<-colors.vec[1:4]
 plot(pert,apply(nc.jofc.diff,1,mean)/(n-m),xlab="perturbation parameter",ylab="Fraction of  correct matches",ylim=c(0,1),col=colors.vec[1])
-points(pert,apply(nc.cmds,1,mean)/(n-m),xlab="perturbation parameter",ylab="Fraction of  correct matches",ylim=c(0,1),pch=2,col=colors.vec[2])
+lines(pert,apply(nc.cmds,1,mean)/(n-m),xlab="perturbation parameter",ylab="Fraction of  correct matches",ylim=c(0,1),pch=2,col=colors.vec[2])
 
-points(pert,apply(nc.jofc.weighted,1,mean)/(n-m),xlab="perturbation parameter",ylab="Fraction of  correct matches",ylim=c(0,1),pch=3,col=colors.vec[3])
+lines(pert,apply(nc.jofc.weighted,1,mean)/(n-m),xlab="perturbation parameter",ylab="Fraction of  correct matches",ylim=c(0,1),pch=3,col=colors.vec[3])
 
-points(pert,apply(nc.jofc.unweighted,1,mean)/(n-m),xlab="perturbation parameter",ylab="Fraction of  correct matches",ylim=c(0,1),pch=4,col=colors.vec[4])
+lines(pert,apply(nc.jofc.unweighted,1,mean)/(n-m),xlab="perturbation parameter",ylab="Fraction of  correct matches",ylim=c(0,1),pch=4,col=colors.vec[4])
 
 legend.txt<- c("diff dist","CMDS","weighted.graph","unweighted.graph")
 legend(x="topright",legend=legend.txt, col =colors.vec,pch=1:4)
@@ -367,7 +371,7 @@ for (d.i in 1:length(d.dim.vec)){
 			xlab="perturbation parameter",ylab="Fraction of  correct matches",ylim=c(0,1),col=colors.vec[d.i])
 }
 
-legend.txt<- c("diff dist","CMDS","weighted.graph")
+legend.txt <- c("diff dist","CMDS","weighted.graph")
 legend.txt <- c(legend.txt,d.dim.vec)
 legend(x="topright",legend=legend.txt, col =c(rep(1,3),colors.vec),
 		lty=c(c(1,2,4),rep(1,length(d.dim.vec))))

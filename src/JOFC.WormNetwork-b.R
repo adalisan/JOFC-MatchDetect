@@ -73,24 +73,24 @@ source("./lib/diffusion_distance.R")
 	
 	   if (method=="jofc"){
 	
-		J = jofc(Ac,Ag,in.sample.ind,d.dim=d.dim,
+		J = jofc(Ac,Ag,in.sample.ind,d.dim=d.dim,w.vals.vec=w.vals,
 				wt.matrix.1=NULL,wt.matrix.2=NULL,
 				use.weighted.graph=TRUE,
 				sep.graphs=TRUE) 
             } else if (method=="jofc.wt"){
 	
-		J = jofc(Ac.w,Ag,in.sample.ind,d.dim=d.dim,
+		J = jofc(Ac.w,Ag,in.sample.ind,d.dim=d.dim,w.vals.vec=w.vals,
 				wt.matrix.1=Ac.w,wt.matrix.2=Ag.w,
 				use.weighted.graph=TRUE,
 				sep.graphs=TRUE) 
             } else if (method=="jofc.diff.dist"){
-		J = jofc.diffusion.dist(Ac.w,Ag.w,in.sample.ind,d.dim=d.dim,
+		J = jofc.diffusion.dist(Ac.w,Ag.w,in.sample.ind,d.dim=d.dim,,w.vals.vec=w.vals,
 				wt.matrix.1=Ac.w,wt.matrix.2=Ag.w,
 				sep.graphs=TRUE) 
 
 		}
 
-		M = solveMarriage(J)
+		M = solveMarriage(J[[1]])
 		num.matches[j] = present(M)  
        }
       return (num.matches)
@@ -102,7 +102,7 @@ registerDoSMP(workers)
  times <- 4	# times to run the loop
 run.per.batch <-12 
 
-run.results<-foreach(run.mc=1:(nmc/run.per.batch),.combine=c) %dopar% run.jofc.replicate.batch(run.mc,run.per.batch,method="jofc.diff.dist")
+run.results<-foreach(run.mc=1:(nmc/run.per.batch),.combine=c) %dopar% run.jofc.replicate.batch(run.mc,run.per.batch,method="jofc")
 # stop workers
 stopWorkers(workers)
 

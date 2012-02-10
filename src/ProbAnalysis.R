@@ -243,7 +243,8 @@ vary.param<-"r"
 
 
 
-
+oos.diss.all.params.0 <-array(0,dims=c(param.index.count,w.max.index,nmc))
+oos.diss.all.params.A <-array(0,dims=c(param.index.count,w.max.index,nmc))
 #param.index<-1
 for (param.index in 1:param.index.count){
 
@@ -509,7 +510,9 @@ oos.dist.agg.A <- c()
 	
 		
 	} 
-	
+	oos.diss.all.params.0 <-
+  oos.diss.all.params.A <-
+   
 	comm.terms <- cbind ((1:n)+n,1:n)
 	comm.terms <- rbind(comm.terms,cbind ((1:n),(1:n)+n))
 	sep.terms <- cbind ((1:n)+n,1:n)
@@ -523,8 +526,7 @@ oos.dist.agg.A <- c()
 	Y.sep.agg<-c()
 	r.sep.agg<-c()
 	
-	
-	#sink()
+	#sink()w.max.index
 	for (mc in 1:nmc){
 		Pert.mat.mc<-Pert.mat[,,mc]
 		D.mc<-D.nmc[,,mc]
@@ -548,6 +550,8 @@ oos.dist.agg.A <- c()
 		r.comm.agg <- c(r.comm.agg, as.vector(r.comm))
 		Y.sep.agg  <- c(Y.sep.agg,Y.sep)
 		r.sep.agg  <- c(r.sep.agg,r.sep)
+
+
 	}
 	
 	
@@ -701,7 +705,10 @@ oos.dist.agg.A <- c()
 	vars.A <- c(vars.A,var(oos.diss.A))
 	skews.A <- c(skews.A,skewness(oos.diss.A))
 	kurts.A <- c(kurts.A,kurtosis(oos.diss.A))
+  
 
+    oos.dist.agg.0[param.index,,] <- oos.diss.0
+    oos.dist.agg.A[param.index,,] <-oos.diss.A
 	
 	}
 #	title(plot.title)
