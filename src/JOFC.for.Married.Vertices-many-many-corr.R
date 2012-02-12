@@ -20,7 +20,7 @@ a.cep <-20
 n.1 = 40
 n.2 = 20
 n<- n.2
-m = 5 # the first m pairs are known matches ; the last n-m pairs are to-be-matched
+m = 5 # number of test nodes in the second graph that  are to-be-matched
 
 npert = 11
 nmc = 100
@@ -161,9 +161,7 @@ for(imc in 1:nmc)
 		nc.jofc.unweighted.r[ipert,imc] = mean(match.perf.eval$R)
 		nc.jofc.unweighted.f[ipert,imc] =mean(match.perf.eval$F)
 		
-		
-		
-		
+				
 		
 	}
 }
@@ -174,17 +172,17 @@ for(imc in 1:nmc)
 pdf("plot1.pdf")
 colors.vec<-c( "red","blue","orange","green")
 colors.vec<-colors.vec[1:4]
-plot(pert,apply(nc.jofc.diff.f,1,mean),xlab="perturbation parameter",ylab="Fraction of  correct matches",ylim=c(0,1),col=colors.vec[1])
-#points(pert,apply(nc.cmds,1,mean)/(n-m),xlab="perturbation parameter",ylab="Fraction of  correct matches",ylim=c(0,1),pch=2,col=colors.vec[2])
+plot(pert,apply(nc.jofc.diff.f,1,mean),xlab="perturbation parameter",ylab="Average F-measure",ylim=c(0,1),col=colors.vec[1])
+#points(pert,apply(nc.cmds,1,mean)/(n-m),xlab="perturbation parameter",ylab="Average F-measure",ylim=c(0,1),pch=2,col=colors.vec[2])
 
-points(pert,apply(nc.jofc.weighted.f,1,mean),xlab="perturbation parameter",ylab="Fraction of  correct matches",ylim=c(0,1),pch=3,col=colors.vec[3])
+points(pert,apply(nc.jofc.weighted.f,1,mean),xlab="perturbation parameter",ylab="Average F-measure",ylim=c(0,1),pch=3,col=colors.vec[3])
 
-points(pert,apply(nc.jofc.unweighted.f,1,mean),xlab="perturbation parameter",ylab="Fraction of  correct matches",ylim=c(0,1),pch=4,col=colors.vec[4])
+points(pert,apply(nc.jofc.unweighted.f,1,mean),xlab="perturbation parameter",ylab="Average F-measure",ylim=c(0,1),pch=4,col=colors.vec[4])
 
 legend.txt<- c("diff dist","weighted.graph","unweighted.graph")
 legend(x="topright",legend=legend.txt, col =colors.vec,pch=1:4)
-title("marriage o jofc")
-abline(h=1/(n-m),lty=2) ### chance?  apparently not!?
+title("1-to-k matching o jofc")
+abline(h=1/(m),lty=2) ### chance?  apparently not!?
 abline(v=1/2,lty=2) ### chance?  gotta be!?
 dev.off()
 
@@ -193,20 +191,28 @@ dev.off()
 pdf("plot2.pdf")
 colors.vec<-c( "red","blue","orange","green")
 colors.vec<-colors.vec[1:4]
-plot(pert,apply(nc.jofc.diff.p,1,mean),xlab="perturbation parameter",ylab="Fraction of  correct matches",ylim=c(0,1),col=colors.vec[1],type="l")
-#points(pert,apply(nc.cmds,1,mean)/(n-m),xlab="perturbation parameter",ylab="Fraction of  correct matches",ylim=c(0,1),pch=2,col=colors.vec[2])
+plot(pert,apply(nc.jofc.diff.p,1,mean),xlab="perturbation parameter",
+		ylab="Average precision/recall",ylim=c(0,1),col=colors.vec[1],type="l")
+#points(pert,apply(nc.cmds,1,mean)/(n-m),xlab="perturbation parameter",
+#     ylab="Average precision/recall",ylim=c(0,1),pch=2,col=colors.vec[2])
 
 
-lines(pert,apply(nc.jofc.weighted.p,1,mean),xlab="perturbation parameter",ylab="Fraction of  correct matches",ylim=c(0,1),col=colors.vec[3])
+lines(pert,apply(nc.jofc.weighted.p,1,mean),xlab="perturbation parameter",
+		ylab="Average precision/recall",ylim=c(0,1),col=colors.vec[3])
 
-lines(pert,apply(nc.jofc.unweighted.p,1,mean),xlab="perturbation parameter",ylab="Fraction of  correct matches",ylim=c(0,1),col=colors.vec[4])
+lines(pert,apply(nc.jofc.unweighted.p,1,mean),xlab="perturbation parameter",
+		ylab="Average precision/recall",ylim=c(0,1),col=colors.vec[4])
 
-lines(pert,apply(nc.jofc.diff.r,1,mean),xlab="perturbation parameter",ylab="Fraction of  correct matches",ylim=c(0,1),lty=2,col=colors.vec[1])
+
+lines(pert,apply(nc.jofc.diff.r,1,mean),xlab="perturbation parameter",
+		ylab="Average precision/recall",ylim=c(0,1),lty=2,col=colors.vec[1])
 
 
-lines(pert,apply(nc.jofc.weighted.r,1,mean),xlab="perturbation parameter",ylab="Fraction of  correct matches",ylim=c(0,1),lty=2,col=colors.vec[3])
+lines(pert,apply(nc.jofc.weighted.r,1,mean),xlab="perturbation parameter",
+		ylab="Average precision/recall",ylim=c(0,1),lty=2,col=colors.vec[3])
 
-lines(pert,apply(nc.jofc.unweighted.r,1,mean),xlab="perturbation parameter",ylab="Fraction of  correct matches",ylim=c(0,1),lty=2,col=colors.vec[4])
+lines(pert,apply(nc.jofc.unweighted.r,1,mean),xlab="perturbation parameter",
+		ylab="Average precision/recall",ylim=c(0,1),lty=2,col=colors.vec[4])
 
 
 legend.txt<- c("diff dist","weighted.graph","unweighted.graph")

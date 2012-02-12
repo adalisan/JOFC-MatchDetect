@@ -34,9 +34,9 @@ normalize.rows<-function(X){
 	return(X)
 }
 displace<-diag(simplex.dim)*3*t/4
-coord.matrix <-matrix(rep(psuedo.counts,simplex.dim),simplex.dim,simplex.dim)+displace
+coord.matrix.init<-matrix(rep(psuedo.counts,simplex.dim),simplex.dim,simplex.dim)+displace
 
-coord.matrix<- normalize.rows(coord.matrix)
+coord.matrix.init<- normalize.rows(coord.matrix.init)
 
 #print(coord.matrix)
 
@@ -57,7 +57,7 @@ agg.test.stats.alt.JOFC <- NULL
 
 nonid.Proc<-0
 id.Proc <-TRUE
-
+n.per.dim<-20
 Bary.to.Euc <- matrix(
 		c(1,1,1,
 				-1,-1,1,
@@ -73,12 +73,17 @@ windows()
 discarded.dims.vec.1<-rep(0,nmc)
 
 discarded.dims.vec.2<-rep(0,nmc)
+coord.matrix<- coord.matrix.init
+for (i in 2:n.per.dim)
+	coord.matrix<-rbind(coord.matrix,coord.matrix.init)
+
+
 init.proj.plot<-dev.cur()
 windows()
 second.proj.plot<-dev.cur()
 for (mc in 1:nmc){
 	
-	dirich.data<- matched_rdirichlet(n=simplex.dim, p=simplex.dim-1, r=r, q=3, c=0, alpha=coord.matrix)
+	dirich.data<- matched_rdirichlet(n=simplex.dim*n.per.dim, p=simplex.dim-1, r=r, q=3, c=0, alpha=coord.matrix)
 	X1<- dirich.data$X1
 	X2<- dirich.data$X2
 	dev.set(init.proj.plot)
@@ -171,7 +176,7 @@ for (mc in 1:nmc){
 # i-th point in first condition(X) vs all other points in second condition(Y)
 	dev.set(second.proj.plot)	
 	
-	for (i in 1:simplex.dim){
+	for (i in 1:(simplex.dim*n.per.dim)){
 		
 		train.data.X <- X1t.cent[-i,]
 		train.data.Y <- X2t.cent[-i,]
@@ -257,7 +262,7 @@ for (mc in 1:nmc){
 	if (run.jofc.analysis){
 		
 		#for (i in 1:simplex.dim){
-	i<-1
+	        i<-1
 			train.coord.matrix <-coord.matrix[-i,]
 			X1.X2<-sapply(seq_len(train.reps),function(j){
 						train.dirich.data<- matched_rdirichlet(n=(simplex.dim-1), p=simplex.dim-1,
