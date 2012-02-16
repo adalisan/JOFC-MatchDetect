@@ -4,7 +4,7 @@ results.dir <- "./graphs/"
 
 
 run.for.Sweave <-TRUE
-par.compute <- FALSE
+par.compute <- TRUE
 run.in.linux<- (.Platform$OS.type=="unix")
 compare.pom.cca<-TRUE
 #c.vals<-c(0.01)
@@ -23,9 +23,9 @@ add.plot.title<- F
 
 
 
-n.vals <-c(50,100,150,200,300,500)
+#n.vals <-c(50,100,150,200,300,500)
 #
-#n.vals<-c(150)
+n.vals<-c(150)
 nmc <-  150
 s<- 150
 
