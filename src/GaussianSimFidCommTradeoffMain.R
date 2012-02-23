@@ -16,6 +16,9 @@ source("./src/runningParams.R")
 
 print(debug.mode)
 if (par.compute){
+  if (par.compute.sf){
+    
+  } else{
 	if( run.in.linux) {
 		require(doMC)
 		require(foreach)
@@ -28,6 +31,7 @@ if (par.compute){
 		workers<-startWorkers(4,FORCE=TRUE)
 		registerDoSMP(workers)
 	}
+  }
 }
 
 
@@ -307,9 +311,12 @@ for (c.val in c.vals) {
 				col=colors.vec,lty=lty.i.vec,lwd=lwd.i.vec)
 			
 				fname<- paste(c(results.dir,"MVN","-FC-Tradeoff-",ifelse(oos,"OOS","noOOS"),"c",params$c.val,"-n",params$n),sep="",collapse="")
-									if(!run.in.linux&(!run.for.Sweave))  savePlot(paste(fname,".pdf",sep="",collapse=""),type="pdf")
-							if(!run.in.linux&(!run.for.Sweave))  savePlot(filename=paste(fname,".ps",sep="",collapse=""),type="ps")
-							if(!run.in.linux&(!run.for.Sweave)) savePlot(filename=paste(fname,".png",sep="",collapse=""),type="png")
+							windows()
+              if(!run.in.linux&(!run.for.Sweave))  savePlot(paste(fname,".pdf",sep="",collapse=""),type="pdf")
+							windows()
+              if(!run.in.linux&(!run.for.Sweave))  savePlot(filename=paste(fname,".ps",sep="",collapse=""),type="ps")
+		          windows()					
+    if(!run.in.linux&(!run.for.Sweave)) savePlot(filename=paste(fname,".png",sep="",collapse=""),type="png")
 		
 		# Zoomed in plot of ROC curves
 		lty.i.vec<-c()
@@ -371,9 +378,12 @@ for (c.val in c.vals) {
 		
 		
 				fname<- paste(c(results.dir,"MVN","-FC-Tradeoff-",ifelse(oos,"OOS","noOOS"),"c",params$c.val,"-n",params$n,"-zoomed"),sep="",collapse="")
-							if(!run.in.linux&(!run.for.Sweave)) savePlot(paste(fname,".pdf",sep="",collapse=""),type="pdf")
-							if(!run.in.linux&(!run.for.Sweave))  savePlot(filename=paste(fname,".ps",sep="",collapse=""),type="ps")
-							if(!run.in.linux&(!run.for.Sweave)) savePlot(filename=paste(fname,".png",sep="",collapse=""),type="png")
+		windows()		
+    if(!run.in.linux&(!run.for.Sweave)) savePlot(paste(fname,".pdf",sep="",collapse=""),type="pdf")
+		windows()
+    if(!run.in.linux&(!run.for.Sweave))  savePlot(filename=paste(fname,".ps",sep="",collapse=""),type="ps")
+		windows()
+    if(!run.in.linux&(!run.for.Sweave)) savePlot(filename=paste(fname,".png",sep="",collapse=""),type="png")
 		
 	}
 	
@@ -384,7 +394,7 @@ for (c.val in c.vals) {
 	
 	if (dirichlet.sim){
 		params$p<-8
-		params$r<-150
+		params$r<-80
 		
 		params$q<-22
 		params$oos <- TRUE
@@ -411,6 +421,7 @@ for (c.val in c.vals) {
 		print("Dirichlet Setting Simulation Starting")
 		
 		sim.res.d<-simulate.generate.test.model.plot("Dirichlet",params,par.compute)
+    run.time<-Sys.time()-begin.time
 		print("Dirichlet Setting Simulation Ended")
     
       
@@ -553,9 +564,13 @@ for (c.val in c.vals) {
 		#Write plot to file
 		
 			fname<- paste(c(results.dir,"Dirichlet","-FC-Tradeoff-",ifelse(oos,"OOS","noOOS"),"c",params$c.val,"-n",params$n),sep="",collapse="")
-								if(!run.in.linux&(!run.for.Sweave))  savePlot(paste(fname,".pdf",sep="",collapse=""),type="pdf")
-							if(!run.in.linux&(!run.for.Sweave))  savePlot(filename=paste(fname,".ps",sep="",collapse=""),type="ps")
-							if(!run.in.linux&(!run.for.Sweave)) savePlot(filename=paste(fname,".png",sep="",collapse=""),type="png")
+			
+    windows()
+    if(!run.in.linux&(!run.for.Sweave))  savePlot(paste(fname,".pdf",sep="",collapse=""),type="pdf")
+		windows()
+    if(!run.in.linux&(!run.for.Sweave))  savePlot(filename=paste(fname,".ps",sep="",collapse=""),type="ps")
+		windows()
+    if(!run.in.linux&(!run.for.Sweave)) savePlot(filename=paste(fname,".png",sep="",collapse=""),type="png")
 		
 		
 		
@@ -621,9 +636,12 @@ for (c.val in c.vals) {
 				col=colors.vec,lty=lty.i.vec,lwd=lwd.i.vec)
 		
 				fname<- paste(c(results.dir,"Dirichlet","-FC-Tradeoff-",ifelse(oos,"OOS","noOOS"),"c",params$c.val,"-n",params$n,"-zoomed"),sep="",collapse="")
-									if(!run.in.linux&(!run.for.Sweave))  savePlot(paste(fname,".pdf",sep="",collapse=""),type="pdf")
-							if(!run.in.linux&(!run.for.Sweave))  savePlot(filename=paste(fname,".ps",sep="",collapse=""),type="ps")
-							if(!run.in.linux&(!run.for.Sweave)) savePlot(filename=paste(fname,".png",sep="",collapse=""),type="png")
+				windows()
+    if(!run.in.linux&(!run.for.Sweave))  savePlot(paste(fname,".pdf",sep="",collapse=""),type="pdf")
+		windows()
+    if(!run.in.linux&(!run.for.Sweave))  savePlot(filename=paste(fname,".ps",sep="",collapse=""),type="ps")
+		windows()
+    if(!run.in.linux&(!run.for.Sweave)) savePlot(filename=paste(fname,".png",sep="",collapse=""),type="png")
 		
 	
 		par(lty=1)

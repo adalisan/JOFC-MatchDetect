@@ -1,10 +1,9 @@
 
 results.dir <- "./graphs/"
 
-
-
-run.for.Sweave <-TRUE
+run.for.Sweave <-FALSE
 par.compute <- TRUE
+par.compute.sf <- TRUE
 run.in.linux<- (.Platform$OS.type=="unix")
 compare.pom.cca<-TRUE
 #c.vals<-c(0.01)
@@ -30,7 +29,7 @@ nmc <-  150
 s<- 150
 
 profile.mode <- FALSE
-debug.mode<- FALSE
+debug.mode<- TRUE
 
 if(debug.mode){
   n.vals<-c(70)
