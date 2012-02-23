@@ -68,45 +68,6 @@ if(debug.mode){
 
 
 
-Fid1.List<-list()
-Fid2.List<-list()
-Comm.List<-list()
-
-avg.FCratios.List<-c()
-avg.wtFCratios.List<-c()
-FCratios.List<-list()
-wtFCratios.List<-list()
-avg.Fid1<-c()
-avg.Fid2<-c()
-avg.Comm<-c()
-
-avg.Fid1.alt<-c()
-avg.Fid2.alt<-c()
-avg.Comm.alt<-c()
-
-estim.wstar<-c()
-
-means.0<-c()
-vars.0<-c()
-skews.0<-c()
-kurts.0 <- c()
-
-means.A<-c()
-vars.A<-c()
-skews.A<-c()
-kurts.A <- c()
-
-means.0.agg<-c()
-means.0.agg<-c()
-means.A.agg<-c()
-vars.A.agg<-c()
-
-
-if (gauss.sim)
-	sim.res.g<-list()
-if (dirichlet.sim)
-	sim.res.d<-list()
-
 params<-list(
 		nmc=nmc,
 		coincid.vec.dotpr.thres =0.9,
@@ -163,9 +124,6 @@ size <- seq(0, 1, 0.01)
 len <- length(size)
 
 
-T0.agg<-array(0,dim=c(nmc,w.max.index,params$s))
-TA.agg<-array(0,dim=c(nmc,w.max.index,params$s))
-
 
 model="gaussian"
 
@@ -198,22 +156,69 @@ params.list[[i]]$p <- p.vals[i]
 #params.list[[6]]$p <- 25
 
 }
-r.vals<-rep(c(1.5,10,30,100),5)
+q.vals<-rep(c(5,10,30,40),5)
 for (i in (1:length(r.vals))){
-params.list[[i]]$r <- r.vals[i]
+params.list[[i]]$q <- q.vals[i]
 params.list[[i]]$p <- p.vals[i]
 }
 
 #params.list[[5]]$r <- 100
-vary.param<-"r"
+vary.param<-"q"
 #params.list[[1]]$q <- 22
 
 }
 
 
 
+compute.stats.for.params<-function(params.list,vary.param){
+
+  
+T0.agg<-array(0,dim=c(nmc,w.max.index,params.list[[1]]$s))
+TA.agg<-array(0,dim=c(nmc,w.max.index,params.list[[1]]$s))
+
+  
+  Fid1.List<-list()
+Fid2.List<-list()
+Comm.List<-list()
+
+avg.FCratios.List<-c()
+avg.wtFCratios.List<-c()
+FCratios.List<-list()
+wtFCratios.List<-list()
+avg.Fid1<-c()
+avg.Fid2<-c()
+avg.Comm<-c()
+
+avg.Fid1.alt<-c()
+avg.Fid2.alt<-c()
+avg.Comm.alt<-c()
+
+estim.wstar<-c()
+
+means.0<-c()
+vars.0<-c()
+skews.0<-c()
+kurts.0 <- c()
+
+means.A<-c()
+vars.A<-c()
+skews.A<-c()
+kurts.A <- c()
+
+means.0.agg<-c()
+means.0.agg<-c()
+means.A.agg<-c()
+vars.A.agg<-c()
 
 
+if (gauss.sim)
+  sim.res.g<-list()
+if (dirichlet.sim)
+	sim.res.d<-list()
+
+  
+  
+  
 	Y.comm.dist.par.agg<- c()
 	
 	Y.comm.dist.par.g.agg<-c()
@@ -514,12 +519,12 @@ for (param.index in 1:param.index.count){
 		)
     oos.dist.agg.0[,mc]<-results$oos.0
     oos.dist.agg.A[,mc]<-results$oos.A
-
-	
-		
 	} 
 
   oos.diss.all.params.0[param.index,,] <-oos.dist.agg.0
   oos.diss.all.params.A[param.index,,] <-oos.dist.agg.A
 	
 	}
+
+  return(stats.0=oos.diss.all.params.0,stats.A=oos.diss.all.params.A)
+}
