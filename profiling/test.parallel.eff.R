@@ -42,7 +42,7 @@ if (par.compute){
 	}
 	else {require(doSMP)	
 		require(foreach)
-		setMKLthreads(1)
+		#setMKLthreads(1)
 		workers<-startWorkers(4,FORCE=TRUE)
 		registerDoSMP(workers)
 	}

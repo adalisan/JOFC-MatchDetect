@@ -688,5 +688,5 @@ sink()
 warnings()
 
 #Rprof(NULL)
-if ((!run.in.linux) & par.compute) 
+if ((!run.in.linux) & par.compute & (!par.compute.sf)) 
 	stopWorkers(workers)

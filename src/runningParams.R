@@ -86,7 +86,8 @@ params<-list(
     #w.vals= c(0.5,0.999),
 		wt.equalize=FALSE,
 		rival.w = 0.999,
-		power.comparison.test = F
+		power.comparison.test = F,
+		hardest.alt=TRUE
 )
 
 
