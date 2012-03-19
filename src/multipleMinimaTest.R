@@ -8,37 +8,38 @@ meshgrid <- function(a,b) {
 
 n<-7
 X<-matrix(0,n,2)
-X[,1]<-c(0,1,1,0,0,0,0.5)
-X[,2]<-c(0,0,1,1,0,0,0.5)
-X[5,]<-c(1.01,1)
-X[6,]<-c(0.01,1)
-
-in.sample.ind<-c(1:4,7)
+X[,1]<-c(0,1,1,0,0,0,0.5)#1.01)
+X[,2]<-c(0,0,1,1,0,0,0.5)#,0)
+X[5,]<-c(1,0)
+X[6,]<-c(0,1)
+#X[8,]<-c(0,1.0)
+in.sample.ind<-c(1:4,7)#,8)
 d.X<- dist(X)
 
 
-w<-0.5
+w <- 0.1
 W <- matrix(1-w,n,n)
-W[5,3] <- W[3,5]<- w
+W[5,2] <- W[2,5]<- w
 W[6,4] <- W[4,6]<- w
+W[5,7] <- W[7,5]<- 1-w
 diag(W)<-0
 
 W.oos <- W
 W.oos[in.sample.ind, in.sample.ind]<-0	
 
 
-i <- 3
-j <- 6
+i <- 4
+j <- 5
 
 ind <- (n*(i-1) - i*(i-1)/2 + j-i)
 
-#d.X[ind]<-d.X[ind]-0.9
+d.X[ind]<-d.X[ind]-1.4
 
-i<-5
+i<-2
 j<-6
 ind<-(n*(i-1) - i*(i-1)/2 + j-i)
 
-#d.X[ind]<- d.X[ind]+2
+d.X[ind]<- d.X[ind]-1.4
 #X[5,]<-c(0,1)
 
 
@@ -46,18 +47,24 @@ i<-5
 j<-7
 ind<-(n*(i-1) - i*(i-1)/2 + j-i)
 
-#d.X[ind]<- d.X[ind]+0.9
+#d.X[ind]<- d.X[ind]+0.707
+
+i<-5
+j<-8
+ind<-(n*(i-1) - i*(i-1)/2 + j-i)
+
+#d.X[ind]<- d.X[ind]-1.4
 
 print(d.X)
 
 init.config<-X
 
-in.sample.Bool<-(1:7 %in% in.sample.ind)
+in.sample.Bool<-(1:n %in% in.sample.ind)
 X.embed.1.in <- smacofM(as.matrix(d.X)[in.sample.ind,in.sample.ind],
                     ndim    = 2,
                     W       = W[in.sample.ind,in.sample.ind],
                     init    = init.config[in.sample.Bool,]		,
-                    verbose = TRUE,
+                    verbose = FALSE,
                     itmax   = 1000,
                     eps     = 1e-6)
 			
@@ -65,7 +72,7 @@ X.embed.1.oos <- oosIM(D=as.matrix(d.X),
 				X=X.embed.1.in,
 				init= init.config[!in.sample.Bool,],
 				W=W.oos,
-					verbose = TRUE,
+					verbose = FALSE,
 					itmax   = 1000,
 					eps     = 1e-6,
 					bwOos = TRUE,
@@ -73,14 +80,16 @@ X.embed.1.oos <- oosIM(D=as.matrix(d.X),
 			
 row.names(X.embed.1.oos)<-NULL
 row.names(X.embed.1.in)<-NULL
-X.embed.1.norm <- rbind(X.embed.1.in[1:4,] ,X.embed.1.oos,X.embed.1.in[5,]) 
+X.embed.1.norm <- rbind(X.embed.1.in[1:4,] ,X.embed.1.oos,X.embed.1.in[5:(n-2),]) 
+print("Init config ")
 print(X.embed.1.norm)
-
-
-close.to.init.1<-c(0.95,1)
-close.to.init.2<-c(0.07,1)
-far.to.init.1<-c(0.07,1)
-far.to.init.2<-c(0.95,1)
+  stress <- sum(as.dist(W)*((dist(X.embed.1.norm)-d.X)^2))
+print("Init config  stress")
+print(stress)
+close.to.init.1<-c(1.5,1)
+close.to.init.2<-c(1.5,1)
+far.to.init.1<-c(1.5,1)
+far.to.init.2<-c(1.5,1)
 min.stress.1<-100
 min.stress.2<-100
 grid.seq.x<-seq(-0.5,1.5,0.1)
@@ -110,7 +119,7 @@ for (j in 1:length(grid.seq.y)){
 		#j.y<-mesh.grid.coords$y[i,j] 
 
 		init.config[5,]<-c(i.x,j.y)
-		init.config[6,]<-c(1-i.x,j.y)
+		init.config[6,]<-c(1-i.x,1-j.y)
 		
 		X.embed.2.in<-smacofM(as.matrix(d.X)[in.sample.ind, in.sample.ind],
 				ndim    = 2,
@@ -124,7 +133,7 @@ for (j in 1:length(grid.seq.y)){
 				X = X.embed.2.in,
 				init = init.config[!in.sample.Bool,],
 				
-				verbose =  (i<=(length(grid.seq.x)/2)),
+				verbose =  FALSE,#(i<=(length(grid.seq.x)/2)),
 				itmax   = 1000,
 				eps     = 1e-6,
 				W = W.oos,
@@ -134,27 +143,27 @@ for (j in 1:length(grid.seq.y)){
 		row.names(X.embed.2.oos)<-NULL
 		row.names(X.embed.2.in)<-NULL
 
-		X.embed.2.norm<- rbind(X.embed.2.in[1:4,] ,X.embed.2.oos,X.embed.2.in[5,])		
+		X.embed.2.norm<- rbind(X.embed.2.in[1:4,] ,X.embed.2.oos,X.embed.2.in[5:(n-2),])		
 		
 		final.coords.x.5[i,j]<-X.embed.2.norm[5,1]
 		final.coords.y.5[i,j]<-X.embed.2.norm[5,2]
 		final.coords.x.6[i,j]<-X.embed.2.norm[6,1]
 		final.coords.y.6[i,j]<-X.embed.2.norm[6,2]
-		print("X.embed.2.norm")
+		#print("X.embed.2.norm")
 		#print(X.embed.2.norm)
 		stress <- sum(as.dist(W)*((dist(X.embed.2.norm)-d.X)^2))
 		stress.unif.wt <- sum(((dist(X.embed.2.norm)-d.X)^2))
 		stress.unif.abs <- sum(abs(dist(X.embed.2.norm)-d.X))
-		print(stress)
-		print(stress.unif.wt)
-		print(stress.unif.abs)		
-		if ((sum(X.embed.2.norm[5,]>0.5)==2)){ 
+		#print(stress)
+	#	print(stress.unif.wt)
+	#	print(stress.unif.abs)		
+		if (sum((X.embed.2.norm[6,2]>0.5))==1){ 
 			#& (sum(X.embed.2.norm[6,]<0.3)==1))
 			
 
 			grid.resp[i,j]<-1
-			print("First Test Point")
-			print(X.embed.2.norm[5,])
+		#	print("First Test Point")
+		#	print(X.embed.2.norm[5,])
 			if (stress < min.stress.1) {
 				min.stress.1<-stress
 				print("Min stress found(real min)")
@@ -209,12 +218,13 @@ print("Min stress found(second min)")
 
 print(min.stress.2)
 
+if(!is.vector(close.to.init.1)){
 windows()
 
 par(pch=1)
 plot(x=close.to.init.1[,1],y=close.to.init.1[,2],col="red",
-			xlim=c(min(grid.seq.x),max(grid.seq.x))
-			,ylim=c(min(grid.seq.y),max(grid.seq.y)))
+			xlim=c(min(close.to.init.1[,1],close.to.init.2[,1]),max(close.to.init.1[,1],close.to.init.2[,1]))
+			,ylim=c(min(close.to.init.1[,2],close.to.init.2[,2]),max(close.to.init.1[,2],close.to.init.2[,2])))
 
 par(pch=3)
 points(x=close.to.init.2[,1],y=close.to.init.2[,2],col="blue")
@@ -234,13 +244,15 @@ select.y<-1:length(grid.seq.y)
 #	length=0.1)
 
 
-arrows(x0 = mesh.grid.coords$x[t(grid.resp==1)],
-	 y0 = mesh.grid.coords$y[t(grid.resp==1)],
-	 x1 =  final.coords.x[grid.resp==1] ,
-       y1 =  final.coords.y[grid.resp==1] ,
-	length=0.1)
+#arrows(x0 = mesh.grid.coords$x[t(grid.resp==1)],
+#	 y0 = mesh.grid.coords$y[t(grid.resp==1)],
+#	 x1 =  final.coords.x[grid.resp==1] ,
+#       y1 =  final.coords.y[grid.resp==1] ,
+#	length=0.1)
 
+}
 
+if(!is.vector(far.to.init.1)){
 windows()
 
 par(pch=1)
@@ -251,14 +263,12 @@ par(pch=3)
 points(x=far.to.init.2[,1],y=far.to.init.2[,2],col="blue")
 title("Final config  Far to true points")
 
-arrows(x0 = mesh.grid.coords$x[t(grid.resp==0)],
-	 y0 = mesh.grid.coords$y[t(grid.resp==0)],
-	 x1 =  final.coords.x[grid.resp==0] ,
-       y1 =  final.coords.y[grid.resp==0] ,
-	length=0.1)
-
-windows()
-
+#arrows(x0 = mesh.grid.coords$x[t(grid.resp==0)],
+#	 y0 = mesh.grid.coords$y[t(grid.resp==0)],
+#	 x1 =  final.coords.x.6[grid.resp==0] ,
+#       y1 =  final.coords.y.6[grid.resp==0] ,
+#	length=0.1)
+}
 
 plot3d(x.coords, y.coords,
 
