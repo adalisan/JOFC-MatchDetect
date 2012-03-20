@@ -393,8 +393,8 @@ for (c.val in c.vals) {
 	run.time <-0
 	
 	if (dirichlet.sim){
-		params$p<-8
-		params$r<-80
+		params$p<-5
+		params$r<-20
 		
 		params$q<-22
 		params$oos <- TRUE

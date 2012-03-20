@@ -17,7 +17,7 @@ in.sample.ind<-c(1:4,7)#,8)
 d.X<- dist(X)
 
 
-w <- 0.1
+w <- 0.99
 W <- matrix(1-w,n,n)
 W[5,2] <- W[2,5]<- w
 W[6,4] <- W[4,6]<- w
@@ -26,6 +26,9 @@ diag(W)<-0
 
 W.oos <- W
 W.oos[in.sample.ind, in.sample.ind]<-0	
+
+new.index.order<- c(in.sample.ind,c(5,6))
+W.oos<-W.oos[new.index.order,new.index.order]
 
 
 i <- 4
