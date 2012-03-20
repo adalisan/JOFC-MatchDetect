@@ -346,7 +346,7 @@ run.one.repl.with.params<-function(mc.counter,params){
 							bwOos    = FALSE)
 					
 					
-					embedded.dist.0<- (Y.0t[1]-Y.0t[2])^2
+					embedded.dist.0<- sum((Y.0t[1,]-Y.0t[2,])^2)
 					if (verbose) print("JOFC alternative omnibus OOS embedding \n")
 					Y.At<-oosIM(D=omnibus.oos.D.A,
 							X=X,
@@ -358,7 +358,7 @@ run.one.repl.with.params<-function(mc.counter,params){
 							isWithin = oos.obs.flag,
 							bwOos    = FALSE)
 #if (profile.mode)				Rprof(NULL)
-					embedded.dist.A<- (Y.At[1]-Y.At[2])^2	
+					embedded.dist.A<- sum((Y.At[1,]-Y.At[2,])^2)	
 					
 					oos.diss.mc.0[l]<- embedded.dist.0
 					oos.diss.mc.A[l]<- embedded.dist.A

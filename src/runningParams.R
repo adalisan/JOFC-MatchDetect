@@ -29,7 +29,7 @@ nmc <-  150
 s<- 150
 
 profile.mode <- FALSE
-debug.mode<- TRUE
+debug.mode<- FALSE
 
 if(debug.mode){
   n.vals<-c(70)

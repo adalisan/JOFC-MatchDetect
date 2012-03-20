@@ -139,8 +139,10 @@ Baltimore, MD 21218-2682}
 \abstract{For matched data from disparate sources (objects observed under different conditions), optimality of information fusion must be defined with respect to the inference task at hand. Defining the task as matched/unmatched hypothesis testing for dissimilarity observations, the forthcoming Manifold Matching paper by Priebe et al.~\cite{JOFC} presents an embedding method based on joint optimization of fidelity (preservation of within-condition dissimilarities between observations of an object) and commensurability (preservation of between-condition dissimilarities between observations) . We investigate the tradeoff between fidelity and commensurability by varying weights in weighted embedding of an omnibus dissimilarity matrix. Optimal (defined with respect to the power of the test) weights for the optimization correspond to an optimal compromise between fidelity and commensurability. The two extremes of this tradeoff are commensurability optimization prioritized over fidelity optimization and vice versa. Results indicate optimal weights are different than equal weights for commensurability and fidelity and our weighted embedding scheme provides significant improvements in test power.
 }
 
-\SweaveOpts{echo=FALSE,results=hide,debug=TRUE}
-<<>>=
+\SweaveOpts{echo=FALSE,results=hide,debug=TRUE,prefix.string=FidCommPaper}
+#file.path("doc","FidCommPaper")
+
+<<Init>>=
 	rm(list=ls())
 	library(ProjectTemplate)
 	load.project()
@@ -637,11 +639,67 @@ First, note that  $\beta(w)$ is continuous with respect to $w$ and locally conve
 Note that it is possible to have multiple local minima in the embedding step(see example in$\ref{}$) and have $w$ control which is the global minimum among the configurations of $\hat{X}_{.}$. 
 Global Minimum Configuration determined by $w$ .
 
-Consider four in-sample points in $\mathbb{R}$ with locations $X_1=(0,0)$,$X_2=(1,0)$,$X_3=(1,1)$ and $X_4=(1,0)$ and two out-of-sample  points with coordinates $X_5=(0.95,1)$ and $X_6=(0.07,1)$. Suppose $X_5$ and $X_3$ are matched. Denote the Euclidean distance matrix by $D$. Suppose, due to noise, or due to dissimilarities not being Euclidean distances, our dissimilarity matrix is $D'=D-0.92$. Based on the initial configuration, the  embedding coordinates of $\hat{X}_5$ might be closer to $X_4$ compared to $X_3$. This is due to a local minimum in the configuration space, because while $\hat{X}_5$ starts from the initial configuration, it might have to cross paths with the embedding of  ${X}_4$ with which it has a "large`` dissimilarity.  Based on value of $w$, it might be easier to get out of this local minimum. In fact, depending on w can this  local minimum can be a global minimum. The following plot shows what minimum $\hat{X}_5$ ends up in, depending on $w$ value.   
+Consider five in-sample points in $\mathbb{R}$ with locations $X_1=(0,0)$,$X_2=(1,0)$,$X_3=(1,1)$
+ and $X_4=(1,0)$, $X_5=(.5,.5)$ and two out-of-sample  points with coordinates $X_6=(1,0)$ and $X_7=(0,1)$.
+  Suppose $X_6$ is matched with $X_2$ and $X_7$ is matched with $X_4$. 
+  Denote the Euclidean distance matrix by $D$. 
+  Suppose, due to noise, or due to dissimilarities not being Euclidean distances, 
+  our dissimilarity matrix is $D'_{ij}=\begin{cases}
+  D_ij-1.4 & \textrm{if  $i==4 & j==6$ or $i==6 & j==4$ or $i==2 & j==7$  or $i==7 & j==2$}  \\
+  D_ij  & \textrm{ otherwise}\\
+  \end{cases}$. Quantitatively, the three points $X_1$, $X_7$ and $X_3$ form a barrier which to cross for the oos points to reach their matched counterparts.
+   
+   Based on the initial configuration, the  embedding coordinates of $\hat{X}_6$ might be closer
+    to $X_4$ compared to $X_2$. This is due to a local minimum in the configuration space, 
+    because while $\hat{X}_6$ starts from the initial configuration at the start of optimization, 
+    it might have to cross paths with the embedding of  ${X}_1,{X}_3,{X}_7$ with which it has a  nonzero dissimilarity.  
+    Based on value of $w$, it might be easier to get out of this local minimum. 
+    In fact, depending on w can this  local minimum can be a global minimum. 
+    That is, the configuration where $X_6$ stays on the side of $X_4$ instead of $X_2$ might have a lower stress than the configuration where $X_6$ is near $X_2$. 
+    The following plots shows the local minimum $\hat{X}_6$ ends up in, depending on initial configuration. 
+    Depending on $w$ value, one of these minima has a lower weighted stress than the other.   
 
-Other than such carefully constructed examples, we expect the configuration that is a minimum to be unique.  
+<<multMin,  echo=FALSE,fig=FALSE,results=hide,cache=TRUE >>=
+source("./src/multipleMinimaTest.R")
+@
+\begin{figure}
+\includegraphics[scale=0.35]{true-min-w-0_1.pdf}
+\includegraphics[scale=0.35]{other-min-w-0_1.pdf}
+\caption{Final configurations for for different $w=0.1$ }
+\label{fig:Finalconfig-MultMin-w-0_1}
+\end{figure}
+
+
+
+
+\begin{figure}
+\includegraphics[scale=0.35]{true-min-w-0_5.pdf}
+\includegraphics[scale=0.35]{other-min-w-0_5.pdf}
+\caption{Final configurations for for different $w=0.5$ }
+\label{fig:Finalconfig-MultMin-w-0_5}
+\end{figure}
+
+
+
+\begin{figure}
+\includegraphics[scale=0.35]{true-min-w-0_99.pdf}
+\includegraphics[scale=0.35]{other-min-w-0_99.pdf}
+\caption{Final configurations for for different $w=0.99$ }
+\label{fig:Finalconfig-MultMin-w-0_99}
+\end{figure}
+
+
+
+
+
+Other than such carefully constructed examples, we expect $w$ to have no effect on the ordering of the local minima according to their stress values.
+Therefore,  the argmin among these local minima is independent of $w$. The minimum configuration is then a continuous function of $w$. 
+By the continuity of the distance function with respect to configurations, the test statistic is continuous with respect to $w$. One can conclude $\beta(w) $ is a continuous function of $w$. 
+%It is possible this is not the global minimum in $\mathbb{R}^d$  
+ 
  Another avenue for investigation is  how $w^{*}$ depends on the parameters of the distributions of $\mathbf{F}_m$ and  $\mathbf{F}_u$ . 
- For example consider the signal and noise dimensions $p$ and $q$ respectively.
+ Let us first investigate the effect of parameters on the empirical distribution of the test statistic, under null and alternative.
+ For our Multivariate Normal and Dirichlet models, consider the signal and noise dimensions $p$ and $q$ respectively.
   An increase in $p$ leads to the inflation of the test statistic under alternative
   \ref{fig-stats-p}.
 
@@ -665,17 +723,22 @@ par(lwd=2)
   fix.i <-1
 
    par(lty=1)
-  plot(density(oos.diss.all.params.0[1,fix.i,],bw=0.25), col= colors.vec[1],
-		  lty=1,type='l',ylim=c(0,0.2))
-  for (j in 2:4){
-    lines(density(oos.diss.all.params.0[j,fix.i,],bw=0.25), col= colors.vec[j])
+   first.est<- density(oos.diss.all.params.0[1,fix.i,])
+  plot(first.est, col= colors.vec[1],
+		  lty=1,type='l',ylim=c(0,0.2),main="")
+  for (j in 2:5){
+    lines(density(oos.diss.all.params.0[1+(j-1)*4,fix.i,],bw=first.est$bw), col= colors.vec[j])
   }
 
   par(lty=3)
-  lines(density(oos.diss.all.params.A[1,fix.i,],bw=0.25), col= colors.vec[1],lty=3,ylim=c(0,0.2))
-  for (j in 2:4){
-    lines(density(oos.diss.all.params.A[j,fix.i,],bw=0.25), col= colors.vec[j])
+  first.est.a<-density(oos.diss.all.params.A[1,fix.i,])
+  lines(first.est.a, col= colors.vec[1],lty=3,ylim=c(0,0.2))
+  for (j in 2:5){
+    lines(density(oos.diss.all.params.A[1+(j-1)*4,fix.i,],bw=first.est.a$bw), col= colors.vec[j])
   }
+  legend.txt<- p.vals[1+(0:4)*5]
+  title("Null and alternative test statistics for different p values ")
+  legend("bottomright",legend=legend.txt,col=colors.vec[1:5],lty=rep(1,5))
 @
 
 
@@ -685,40 +748,102 @@ par(lwd=2)
 
 
 
-Consider increase in $r$, this will cause the test statistic under null to be stochastically smaller,
+Consider  an increase in $r$, this will cause the test statistic under null to be stochastically smaller,
  leading to a smaller critical value. So , a increase in priority of fidelity,
   which corresponds to smaller $w$ might lead to the increase in the test statistic under alternative, and therefore an increase in power.\ref{fig-stats-r}  
- Consider increase in $r$, this will cause the test statistic under null to be stochastically smaller,
-  leading to a smaller critical value. So , a increase in fidelity, which corresponds to smaller $w$ might lead to the increase in the test statistic under alternative, 
-  and therefore an increase in power.  
- Consider increase in $r$, this will cause the test statistic under null to be stochastically smaller,
-  leading to a smaller critical value. So , a increase in fidelity, which corresponds to smaller $w$ might lead to the increase in the test statistic under alternative, 
-  and therefore an increase in power.  
+
 
 
 <<fig-stats-r, echo=FALSE,fig=TRUE, results=hide, cache=FALSE >>=
 	
 par(lty=1)
-	plot(density(oos.diss.all.params.0[1,fix.i,],bw=0.25), col= colors.vec[1],
-		  lty=1,type='l', ylim=c(0,0.4))
+first.est<- density(oos.diss.all.params.0[1,fix.i,])
+	plot(first.est, col= colors.vec[1],
+		  lty=1,type='l', ylim=c(0,0.4),main="")
  	for (j in 2:4){
-		lines(density(oos.diss.all.params.0[1+(j-1)*5,fix.i,],bw=0.25), col= colors.vec[j])
+		lines(density(oos.diss.all.params.0[j,fix.i,],bw=first.est$bw), col= colors.vec[j])
   	}
 	
 	par(lty=3)
-	lines(density(oos.diss.all.params.A[1,fix.i,],bw=0.25), col= colors.vec[1])
+	first.est.a<-density(oos.diss.all.params.A[1,fix.i,])
+	lines(first.est.a, col= colors.vec[1])
 	for (j in 2:4){
-		lines(density(oos.diss.all.params.A[1+(j-1)*5,fix.i,],bw=0.25), col= colors.vec[j])
+		lines(density(oos.diss.all.params.A[j,fix.i,],bw=first.est.a$bw), col= colors.vec[j])
   	}
+	title("Null and alternative test statistics for different r values ")
+	legend.txt<- r.vals[1:4]
+	legend("bottomright",legend=legend.txt,col=colors.vec[1:4],lty=rep(1,4))
 @
 
+Consider increases in $c$, which will increase the dissimilarity  both between matched and between unmatched vectors. 
+
+
+<<stats-c-sim, echo=FALSE,fig=FALSE,results=hide,cache=TRUE >>=
+source("./src/Null.Alt.Stat.for.JOFC.R")
+
+debug.mode<-FALSE
+if(debug.mode){
+	n.vals<-c(50)
+	nmc<-3
+	s<-1
+}
+
+
+params$w.vals<-c(0.75)	
+p.vals<-rep(5,5)
+r.vals<-rep(50,5)
+q.vals<-rep(5,5)
+c.vals<- c(0,0.01,0.1,0.2,0.5)
+vary.param<-"c"
+
+param.index.count<-length(c.vals)
+params.list <- rep(list(params),param.index.count)
+
+
+
+for (i in (1:length(c.vals))){
+	params.list[[i]]$r <- r.vals[i]
+	params.list[[i]]$p <- p.vals[i]
+	params.list[[i]]$q <- q.vals[i]
+	params.list[[i]]$c <- c.vals[i]
+}
+
+debug.mode <- FALSE
+oos.stats.c<-compute.stats.for.params(params.list,"c")
+oos.diss.all.params.c.0 <- oos.stats.c$stats.0
+oos.diss.all.params.c.A <- oos.stats.c$stats.A
+sfStop()
+@
+
+<<fig-stats-c, echo=FALSE,fig=TRUE,results=hide,cache=FALSE >>=
+
+fix.i<-1
+first.est<- density(oos.diss.all.params.c.0[1,fix.i,])
+	par(lty=1)
+  plot(first.est, col= colors.vec[1],
+		  lty=1,type='l',ylim=c(0,0.4),main="")
+ for (j in 2:length(c.vals)) {
+  lines(density(oos.diss.all.params.c.0[j,fix.i,],bw=first.est$bw), col= colors.vec[j])
+	}
+   par(lty=3)
+   first.est.a<-density(oos.diss.all.params.c.A[1,fix.i,])
+  lines(first.est.a, col= colors.vec[1])
+  for (j in 2:length(c.vals)) {
+  lines(density(oos.diss.all.params.c.A[j,fix.i,],bw=first.est.a$bw), col= colors.vec[j])
+  }
+  
+  
+  title("Null and alternative test statistics for different c values ")
+  legend.txt<- c.vals
+  legend("bottomright",legend=legend.txt,col=colors.vec[1:5],lty=rep(1,5))
+@
 
 
 
 
 Consider increases in $q$,  the test statistic under both null and alternative is inflated\ref{fig-stats-q}. 
 
-<<stats-q-sim, echo=FALSE,fig=TRUE,results=verbatim,cache=TRUE >>=
+<<stats-q-sim, echo=FALSE,fig=FALSE,results=hide,cache=TRUE >>=
 source("./src/Null.Alt.Stat.for.JOFC.R")
 
 debug.mode<-FALSE
@@ -749,24 +874,30 @@ debug.mode <- FALSE
 oos.stats.q<-compute.stats.for.params(params.list,"q")
 oos.diss.all.params.q.0 <- oos.stats.q$stats.0
 oos.diss.all.params.q.A <- oos.stats.q$stats.A
-
+sfStop()
 @
 
 <<fig-stats-q, echo=FALSE,fig=TRUE,results=hide,cache=FALSE >>=
 
 fix.i<-1
-
+first.est<- density(oos.diss.all.params.q.0[1,fix.i,])
 	par(lty=1)
-  plot(density(oos.diss.all.params.q.0[1,fix.i,],bw=0.25), col= colors.vec[1],
-		  lty=1,type='l',ylim=c(0,0.4))
+  plot(first.est, col= colors.vec[1],
+		  lty=1,type='l',ylim=c(0,0.4),main="")
  for (j in 2:length(q.vals)) {
-  lines(density(oos.diss.all.params.q.0[j,fix.i,],bw=0.25), col= colors.vec[j])
+  lines(density(oos.diss.all.params.q.0[j,fix.i,],bw=first.est$bw), col= colors.vec[j])
 	}
    par(lty=3)
-  lines(density(oos.diss.all.params.q.A[1,fix.i,],bw=0.25), col= colors.vec[1])
+   first.est.a<-density(oos.diss.all.params.q.A[1,fix.i,])
+  lines(first.est.a, col= colors.vec[1])
   for (j in 2:length(q.vals)) {
-  lines(density(oos.diss.all.params.q.A[j,fix.i,],bw=0.25), col= colors.vec[j])
+  lines(density(oos.diss.all.params.q.A[j,fix.i,],bw=first.est.a$bw), col= colors.vec[j])
   }
+  
+  
+  title("Null and alternative test statistics for different q values ")
+  legend.txt<- q.vals
+  legend("bottomright",legend=legend.txt,col=colors.vec[1:4],lty=rep(1,4))
 @
  If commensurability can be preserved in the face of the increase in $q$, the power of the test may be preserved. However a very large increase in $w$ is not guarenteed to increase the preservation of commensurability, since the extra dimensions are noise, trying to   make the differences between coordinates  small in those dimensions will not  help in power, in fact may be disruptive since,
   more fidelity may be lost in the effort to bring the pair of points together.
@@ -828,123 +959,59 @@ run.for.Sweave<-TRUE
 # Override parameters for simulation here
 
 @
-<<fig=FALSE,echo=FALSE,results=verbatim,cache=TRUE,prefix.string="JOFCpaper">>=
-print(debug.mode)
-@
 
-<<sim-two-cond,fig=FALSE,echo=FALSE,results=hide,cache=TRUE,prefix.string="JOFCpaper">>=
+
+<<sim-two-cond,fig=FALSE,echo=FALSE,results=verbatim,cache=TRUE,prefix.string="JOFCpaper">>=
 debug.mode<- FALSE
 source("./src/GaussianSimFidCommTradeoffMain.R")
-
+sfStop()
 @
 
 
 \begin{figure}
-\includegraphics[scale=0.35]{MVN-FC-Tradeoff-OOSc0-01.pdf}
+\includegraphics[scale=0.35]{MVN-FC-Tradeoff-OOSc0-01-n150.pdf}
 \caption{Power ($\beta$) vs Type I error ($\alpha$) plot for different $w$ values for the Gaussian setting (noisy case)}
 \label{fig:MVN-c001-power-alpha}
 \end{figure}
 
-
+\begin{figure}
+\includegraphics[scale=0.35]{MVN-FC-Tradeoff-OOSc0-n150.pdf}
+\caption{Power ($\beta$) vs Type I error ($\alpha$) plot for different $w$ values for the Gaussian setting (noiseless case)}
+\label{fig:MVN-c0-power-alpha}
+\end{figure}
 
 \begin{figure}
 \includegraphics[scale=0.95]{OOS-MVN-power-w-c0-01.pdf}
-\caption{Power ($\beta$) vs Type I error ($\alpha$) plot for different $w$ values for the Gaussian setting (noisy case)}
+\caption{Power ($\beta$) vs $w$ plot for different Type I error ($\alpha$) values for the Gaussian setting (noisy case)}
 \label{fig:MVN-c001-power-w}
 \end{figure}
 
 
 \begin{figure}
-\includegraphics[scale=0.35]{Dirichlet-FC-Tradeoff-OOSc0.pdf}
-\caption{Power ($\beta$) vs Type I error ($\alpha$) plot for different $w$ values for the Gaussian setting (noisy case)}
-\caption{$\beta$ vs $\alpha$ plot for different $w$ values for the Dirichlet setting (noiseless case)}
+\includegraphics[scale=0.35]{Dirichlet-FC-Tradeoff-OOSc0-01-n150.pdf}
+\caption{Power ($\beta$) vs Type I error ($\alpha$) plot for different $w$ values for the Dirichlet setting (noisy case)}
 \label{fig:Dir-c001-power-alpha}
 \end{figure}
 
 \begin{figure}
-\includegraphics[scale=0.35]{Dirichlet-FC-Tradeoff-OOSc0-01.pdf}
-\caption{$\beta$ vs $\alpha$ plot for different $w$ values for the Dirichlet setting (noisy case)}
-\label{fig:Dir-c001-ROC}
+\includegraphics[scale=0.35]{Dirichlet-FC-Tradeoff-OOSc0-n150.pdf}
+\caption{Power ($\beta$) vs Type I error ($\alpha$) plot for different $w$ values for the Dirichlet setting (noiseless case)}
+\label{fig:Dir-c0-power-alpha}
+\end{figure}
+
+\begin{figure}
+\includegraphics[scale=0.95]{OOSDirichlet-power-w-c0-01.pdf}
+\caption{Power ($\beta$) vs $w$ plot for different Type I error ($\alpha$) values for the Gaussian setting (noisy case)}
+\label{fig:MVN-c001-power-w}
 \end{figure}
 
 Setting p and q to 5 and 10, respectively, for $n=150$ and $m=150$, the average of the power values for $nmc=150$ Monte Carlo replicates are computed at  different $\alpha$s and are plotted in Figure \ref{fig:MVN-c001-ROC} against $\alpha$ for the Gaussian setting.  Qualititatively similar plots for the Dirichlet setting  exist.  The plot in Figure \ref{fig:MVN-c001-ROC} shows that for different values of  $w$, we have varying power curves, and some $w$ values outperform others in terms of power. In Figure \ref{fig:MVN-c001-beta-w},  $\beta(w)$ is plotted against $w$ for fixed values of $\alpha$. It is  interesting that the optimal value of $w$ seems to be in the range of $(0.85,1)$ for all settings, which suggests commensurability might be more critical for our hypothesis testing task. 
 
-The same pair of plots are included for various values of parameters $p$,$q$ ,$r$ and $c$.
-
-
-\section{The general case of more than two conditions}
-
-
-As it was mentioned, all of the approaches are generalizable to $K>2$ conditions, though some ambiguities need to be resolved. For example,  the alternative hypothesis could be  defined as the event that at least one of the K new dissimilarities are unmatched ($ H_{A1}: \exists i, j , 1\leq i < j \leq K :\bm{y}_{i} \nsim \bm{y}_{j} $ ) or it could be defined as the case that absolutely none of the K dissimilarities are matched   ($H_{A2}: \forall i, j , 1\leq i < j \leq K :\bm{y}_{i} \nsim \bm{y}_{j}$ )  . and the sample from the alternative must be generated accordingly during Monte Carlo simulation. In the first case, an appropriate test statistic is then the maximum of the pairwise distances between embeddings of each test K-tuple.
-
-For PoM, one can use Procrustes analysis  generalized to more than two configurations.
-
-For CCA, there are multiple generalizations available as the correlation between more than two configurations can be defined in multiple ways \cite{generalCCA}. Let $X_1,\ldots,X_k$ be random vectors. Consider the selection of the first set of directions to be selected for CCA and the correlation matrix of   $X_1,\ldots, X_k$, $\Phi_1$.   The following two criteria  are proposed in \cite{generalCCA}.
-\begin{itemize}
-\item MAXVAR. Maximize the largest eigenvalue of $\Phi_1$ : $\lambda^{(1)}_1$ 
-\item  MINVAR. Minimize  the smallest eigenvalue of $\Phi_1$ : $\lambda^{(m)}_1$ 
-\end{itemize}
-For $H_{A1}$ MINVAR might be a good choice, since the exploitation task is to find evidence against the null and as favorable to the alternative as possible. MINVAR should be small whenever there exists \emph{at least} one unmatched measurement so under the alternative hypothesis. MAXVAR, in this case, wouldn't be necessarily small under alternative with respect to null.  MINVAR statistic should be stochastically smaller compared to null distribution. For $H_{A2}$ MAXVAR is appropriate, since under the alternative hypothesis, MAXVAR should be very small compared to under the null hypothesis. 
-
-<<sim-Kcond-pre,fig=FALSE,echo=FALSE,results=verbatim,cache=FALSE,prefix.string="JOFCpaper">>=
-#rm(list=ls())
-
-#setwd(file.path("./../DataFusion_Kconditions/"))
-#library(ProjectTemplate)
-#load.project()
-# TODO: Add comment
-# TODO: Classical MDS version of wMDS
-# TODO: Read parameters from txt file
-# TODO: Create Rnw file
-# Author: Sancar
-###############################################################################
-#setwd(paste(Sys.getenv("R_HOME") ,"./../projects/",prefix.string=collapse=""))
-
-
-
-source("./src/runningParams.R")
-run.for.Sweave<-TRUE
-#debug.mode<- FALSE
-
-
-#
-# Override parameters for simulation here
-
-@
-
-
-<<sim-Kcond,fig=FALSE,echo=FALSE,results=hide,cache=TRUE,prefix.string="JOFCpaper">>=
-#debug.mode<- FALSE
-K<-3
-#sink("./logs/debug.trymsg.txt")
-source("./src/GaussianSimFidCommTradeoffMain_Kcond.R")
-#sink()
-@
+%The same pair of plots are included for various values of parameters $p$,$q$ ,$r$ and $c$.
 
 
 
 
-\begin{figure}
-\includegraphics[scale=0.95]{OOS-MVN-power-w-c0-01_Kcond.pdf}
-\caption{Power ($\beta$) vs Type I error ($\alpha$) plot for different $w$ values for the Gaussian setting (noisy case)}
-\label{fig:MVN-c001-ROC}
-\end{figure}
-
-
-
-
-
-\section{Experiments on Wiki Data}
-A collection of articles are collected from the English Wikipedia, consisting of the directed 2-neighborhood of the document "Algebraic Geometry"
-   This  collection of 1382 articles and the correspondence of each article in French 
-Wikipedia forms our real-life dataset. The dissimilarity between articles in same language is computed by the Lin  Pantel discounted mutual information \cite{} and cosine dissimilarity k(xik; xjk) = 1  (xik xjk)=(kxikk2kxjkk2).  
-For hypothesis testing,   randomly held out four documents - one matched pair and one unmatched pair
- -  are used to compute empirical type I error $\alpha$ and estimate of power based on the critical value computed from the distribution of the test statistic for the remaining 1380 matched pairs. 
-The test statistic is computed using one of the three approached mentioned  $cca$, $p\circ m$, and $jofc$ . The two sets of held-out matched pairs are used as y1 and y2, via out-of-sample
-embedding, to estimate the null distribution of the test statistic T = d(ye1; ye2). This allows
-us to estimate critical values for any specified Type I error level. Then the two sets of heldout unmatched pairs are used as y1 and y2, via out-of-sample embedding, to estimate power.
-Target dimensionality d is determined by the Zhu and Ghodsi automatic dimensionality selection
-method [26], resulting in d = 6 for this data set.
 
 
 
@@ -1013,6 +1080,194 @@ $e_{01}$:Correctly Classified by C1, \newline Misclassified by C2 & $e_{11}$:Cor
 For the noisy version of the Gaussian setting at allowable type I error 0.05 for the two tests, when comparing  the null hypothesis that  $H_{0}: \beta_{\alpha}({\hat{w}^*})=\beta_{\alpha}({w=0.5})$ against the alternative $H_{A}=\beta_{\alpha}({\hat{w}^*})>\beta_{\alpha}({w=0.5})$, we find $p<1.09E-24$ which indicates the power using estimate of optimal $w^*$ is significantly greater than the power when using $w=0.5$. 
 %In fact
 % the distribution of p-values from McNemar's tests is skewed and  we reject $\beta_{0.5}>=\beta_{w^*} $ for  55\%  of the %Monte Carlo replicates.
+
+
+
+
+
+Setting p and q to 5 and 10, respectively, for $n=150$ and $m=150$, the average of the power values for $nmc=150$ Monte Carlo replicates are computed at  different $\alpha$s and are plotted in Figure \ref{fig:MVN-c001-ROC} against $\alpha$ for the Gaussian setting.  Qualititatively similar plots for the Dirichlet setting  exist.  The plot in Figure \ref{fig:MVN-c001-ROC} shows that for different values of  $w$, we have varying power curves, and some $w$ values outperform others in terms of power. In Figure \ref{fig:MVN-c001-beta-w},  $\beta(w)$ is plotted against $w$ for fixed values of $\alpha$. It is  interesting that the optimal value of $w$ seems to be in the range of $(0.85,1)$ for all settings, which suggests commensurability might be more critical for our hypothesis testing task. 
+
+The same pair of plots are included for various values of parameters $p$,$q$ ,$r$ and $c$.
+
+
+\section{The general case of more than two conditions}
+
+
+As it was mentioned, all of the approaches are generalizable to $K>2$ conditions, though some ambiguities need to be resolved. For example,  the alternative hypothesis could be  defined as the event that at least one of the K new dissimilarities are unmatched ($ H_{A1}: \exists i, j , 1\leq i < j \leq K :\bm{y}_{i} \nsim \bm{y}_{j} $ ) or it could be defined as the case that absolutely none of the K dissimilarities are matched   ($H_{A2}: \forall i, j , 1\leq i < j \leq K :\bm{y}_{i} \nsim \bm{y}_{j}$ )  . and the sample from the alternative must be generated accordingly during Monte Carlo simulation. In the first case, an appropriate test statistic is then the maximum of the pairwise distances between embeddings of each test K-tuple.
+
+For PoM, one can use Procrustes analysis  generalized to more than two configurations. Generalized Procrustes Analysis \cite{} is a well established method for finding a collection of linear transformations that minimizes the mismatch between the transformed configurations and a "mean`` shape computed from these configurations. 
+
+For CCA, there are multiple generalizations available as the correlation between more than two configurations can be defined in multiple ways \cite{generalCCA}. Let $X_1,\ldots,X_k$ be random vectors. Consider the selection of the first set of directions to be selected for CCA and the correlation matrix of   $X_1,\ldots, X_k$, $\Phi_1$.   The following two criteria  are proposed in \cite{generalCCA}.
+\begin{itemize}
+\item MAXVAR. Maximize the largest eigenvalue of $\Phi_1$ : $\lambda^{(1)}_1$ 
+\item  MINVAR. Minimize  the smallest eigenvalue of $\Phi_1$ : $\lambda^{(m)}_1$ 
+\end{itemize}
+For $H_{A1}$ MINVAR might be a good choice, since the exploitation task is to find evidence against the null and as favorable to the alternative as possible. MINVAR should be small whenever there exists \emph{at least} one unmatched measurement so under the alternative hypothesis. MAXVAR, in this case, wouldn't be necessarily small under alternative with respect to null.  MINVAR statistic should be stochastically smaller compared to null distribution. For $H_{A2}$ MAXVAR is appropriate, since under the alternative hypothesis, MAXVAR should be very small compared to under the null hypothesis. 
+
+\begin{figure}
+\includegraphics[scale=0.95]{OOS-MVN-power-w-c0-01_Kcond.pdf}
+\caption{Power ($\beta$) vs Type I error ($\alpha$) plot for different $w$ values for the Gaussian setting (noisy case)}
+\label{fig:MVN-c001-ROC}
+\end{figure}
+
+
+\section{The general case of more than two conditions}
+
+
+As it was mentioned, all of the approaches are generalizable to $K>2$ conditions, though some ambiguities need to be resolved. For example,  the alternative hypothesis could be  defined as the event that at least one of the K new dissimilarities are unmatched ($ H_{A1}: \exists i, j , 1\leq i < j \leq K :\bm{y}_{i} \nsim \bm{y}_{j} $ ) or it could be defined as the case that absolutely none of the K dissimilarities are matched   ($H_{A2}: \forall i, j , 1\leq i < j \leq K :\bm{y}_{i} \nsim \bm{y}_{j}$ )  . and the sample from the alternative must be generated accordingly during Monte Carlo simulation. In the first case, an appropriate test statistic is then the maximum of the pairwise distances between embeddings of each test K-tuple.
+
+For PoM, one can use Procrustes analysis  generalized to more than two configurations. For the development of Generalized Procrustes Analysis, see \cite{generalPCA} 
+
+For CCA, there are multiple generalizations available as the correlation between more than two configurations can be defined in multiple ways \cite{generalCCA}. Let $X_1,\ldots,X_k$ be random vectors. Consider the selection of the first set of directions to be selected for CCA and the correlation matrix of   $X_1,\ldots, X_k$, $\Phi_1$.   The following two criteria  are proposed in \cite{generalCCA}.
+\begin{itemize}
+\item MAXVAR. Maximize the largest eigenvalue of $\Phi_1$ : $\lambda^{(1)}_1$ 
+\item  MINVAR. Minimize  the smallest eigenvalue of $\Phi_1$ : $\lambda^{(m)}_1$ 
+\end{itemize}
+For $H_{A1}$ MINVAR might be a good choice, since the exploitation task is to find evidence against the null and as favorable to the alternative as possible. MINVAR should be small whenever there exists \emph{at least} one unmatched measurement so under the alternative hypothesis. MAXVAR, in this case, wouldn't be necessarily small under alternative with respect to null.  MINVAR statistic should be stochastically smaller compared to null distribution. For $H_{A2}$ MAXVAR is appropriate, since under the alternative hypothesis, MAXVAR should be very small compared to under the null hypothesis. It is quite possible the other generalizations are appropriate for our task 
+
+<<sim-Kcond-pre,fig=FALSE,echo=FALSE,results=verbatim,cache=FALSE,prefix.string="JOFCpaper">>=
+#rm(list=ls())
+
+#setwd(file.path("./../DataFusion_Kconditions/"))
+#library(ProjectTemplate)
+#load.project()
+# TODO: Add comment
+# TODO: Classical MDS version of wMDS
+# TODO: Read parameters from txt file
+# TODO: Create Rnw file
+# Author: Sancar
+###############################################################################
+#setwd(paste(Sys.getenv("R_HOME") ,"./../projects/",prefix.string=collapse=""))
+
+
+
+source("./src/runningParams.R")
+run.for.Sweave<-TRUE
+#debug.mode<- FALSE
+
+
+#
+# Override parameters for simulation here
+
+@
+
+
+<<sim-Kcond,fig=FALSE,echo=FALSE,results=hide,cache=TRUE,prefix.string="JOFCpaper">>=
+#debug.mode<- FALSE
+K<-3
+#sink("./logs/debug.trymsg.txt")
+source("./src/GaussianSimFidCommTradeoffMain_Kcond.R")
+#sink()
+sfStop()
+@
+
+
+
+
+\begin{figure}
+\includegraphics[scale=0.95]{OOS-MVN-power-w-c0-01_Kcond.pdf}
+\caption{Power ($\beta$) vs Type I error ($\alpha$) plot for different $w$ values for the Gaussian setting (noisy case)}
+\label{fig:MVN-c001-ROC}
+\end{figure}
+
+\section{Experiments on Wiki Data}
+A collection of articles are collected from the English Wikipedia, consisting of the
+ directed 2-neighborhood of the document "Algebraic Geometry". 
+   This  collection of 1382 articles and the correspondence of each article in French 
+Wikipedia is the real-life dataset. These documents are processed, and dissimilarities between documents  in same language are computed by the Lin  Pantel discounted mutual information \cite{LinPantel}
+ and cosine dissimilarity $k(x_{ik}; x_{jk}) = 1  (x_{ik} x_{jk})=(k(x_{ik})k2kx_{jk}k2)$. It is possible to utilize both textual content of the documents and the hyperlink graph structure.
+We will only consider dissimilarities based on the textual content in this example.   
+For hypothesis testing,   randomly held out four documents - one matched pair and one unmatched pair
+ -  are used to compute empirical type I error $\alpha$ and estimate of power based on the critical value computed
+  from the distribution of the test statistic for the remaining 1380 matched pairs. 
+The test statistic is computed using one of the three approached mentioned  $cca$, $p\circ m$, and $jofc$ . 
+The two sets of held-out matched pairs are embedded as $\tilde{y}_1$ and $\tilde{y}_2$, via out-of-sample
+embedding, to estimate the null distribution of the test statistic $T = d(\tilde{y}_1; \tilde{y}_2)$. This allows
+us to estimate critical values for any specified Type I error level. 
+Then the two sets of heldout unmatched pairs are embedded as $\tilde{y'}_1$ and $\tilde{y'}_2$, via out-of-sample embedding. 
+$T' = d(\tilde{y'}_1; \tilde{y'}_2)$ will give us an empirical distribution of the test statistic  under the alternative hypothesis. 
+And the distribution under null hypothesis and under alternative hypothesis can be used to estimate power.
+Target dimensionality d is determined by the Zhu and Ghodsi automatic dimensionality selection
+method \cite{ZhuGhodsi}, resulting in d = 6 for this data set.
+
+\section{Model Selection}
+For the simulations presented up to now, the embedding dimension was set to 2. This was a convenient choice which allowed us to investigate various aspects of JOFC and competing approaches.
+However we require a more precise selection of this parameter, since it plays such a big role in performance in general learning settings. Specifically, we want to consider the effect of this parameter on Fidelity and Commensurability.
+First consider the distribution of the test statistic for different values of the embedding dimension.
+
+<<stats-d-sim, echo=FALSE,fig=FALSE,results=hide,cache=TRUE >>=
+source("./src/Null.Alt.Stat.for.JOFC.R")
+
+debug.mode<-FALSE
+if(debug.mode){
+	n.vals<-c(50)
+	nmc<-3
+	s<-1
+}
+
+
+params$w.vals<-c(0.75)	
+param.index.count<-4
+params.list <- rep(list(params),param.index.count)
+p.vals<-rep(5,4)
+r.vals<-rep(50,4)
+q.vals<-rep(5,4)
+d.vals<-c(2,4,8,10)
+
+vary.param<-"d"
+
+
+
+for (i in (1:length(q.vals))){
+	params.list[[i]]$r <- r.vals[i]
+	params.list[[i]]$p <- p.vals[i]
+	params.list[[i]]$q <- q.vals[i]
+	params.list[[i]]$d <- d.vals[i]
+	params.list[[i]]$c <- 0.01
+}
+
+debug.mode <- FALSE
+oos.stats.d<-compute.stats.for.params(params.list,"d")
+oos.diss.all.params.d.0 <- oos.stats.d$stats.0
+oos.diss.all.params.d.A <- oos.stats.d$stats.A
+sfStop()
+@
+
+<<fig-stats-d, echo=FALSE,fig=TRUE,results=hide,cache=FALSE >>=
+
+fix.i<-1
+first.est<- density(oos.diss.all.params.d.0[1,fix.i,])
+	par(lty=1)
+  plot(first.est, col= colors.vec[1],
+		  lty=1,type='l',ylim=c(0,0.4),main="")
+ for (j in 2:length(q.vals)) {
+  lines(density(oos.diss.all.params.d.0[j,fix.i,],bw=first.est$bw), col= colors.vec[j])
+	}
+   par(lty=3)
+   first.est.a<-density(oos.diss.all.params.d.A[1,fix.i,])
+  lines(first.est.a, col= colors.vec[1])
+  for (j in 2:length(q.vals)) {
+  lines(density(oos.diss.all.params.d.A[j,fix.i,],bw=first.est.a$bw), col= colors.vec[j])
+  }
+  
+  
+  title("Null and alternative test statistics for different d values ")
+  legend.txt<- d.vals
+  legend("bottomright",legend=legend.txt,col=colors.vec[1:4],lty=rep(1,4))
+@
+
+
+\section{Experiments on Graph Data}
+
+We wish to apply our approach to  the vertex matching problem in multiple graphs. We are again in a semi-supervised setting, where matchings between some vertices in different graphs are known  and wish to infer the correspondences between the remaining collection of vertices in the graphs.
+\begin{comment}
+a formal description of the problem with notation
+\end{comment} 
+One useful property of dissimilarity representation is that the structure of data is irrelevant once an appropriate dissimilarity function  for the data is available. There are many distances that can be defined between vertices in graphs. We assume that an appropriate distance measure is available to us.
+
+
+
+
 
 
 \section{Conclusion}

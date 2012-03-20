@@ -18,17 +18,7 @@ d.X<- dist(X)
 
 
 w <- 0.99
-W <- matrix(1-w,n,n)
-W[5,2] <- W[2,5]<- w
-W[6,4] <- W[4,6]<- w
-W[5,7] <- W[7,5]<- 1-w
-diag(W)<-0
 
-W.oos <- W
-W.oos[in.sample.ind, in.sample.ind]<-0	
-
-new.index.order<- c(in.sample.ind,c(5,6))
-W.oos<-W.oos[new.index.order,new.index.order]
 
 
 i <- 4
@@ -61,6 +51,29 @@ ind<-(n*(i-1) - i*(i-1)/2 + j-i)
 print(d.X)
 
 init.config<-X
+w.vals<-c(0.1,0.45,0.5,0.55,0.99)
+
+min.config.stress.1.w<- rep(0, length(w.vals))
+min.config.stress.2.w<- rep(0, length(w.vals))
+
+for (w.i in 1:length(w.vals)){
+w <- w.vals[w.i]
+
+
+
+W <- matrix(1-w,n,n)
+W[5,2] <- W[2,5]<- w
+W[6,4] <- W[4,6]<- w
+W[5,7] <- W[7,5]<- 1-w
+diag(W)<-0
+
+
+W.oos <- W
+W.oos[in.sample.ind, in.sample.ind]<-0	
+new.index.order<- c(in.sample.ind,c(5,6))
+W.oos<-W.oos[new.index.order,new.index.order]
+
+
 
 in.sample.Bool<-(1:n %in% in.sample.ind)
 X.embed.1.in <- smacofM(as.matrix(d.X)[in.sample.ind,in.sample.ind],
@@ -109,7 +122,8 @@ final.coords.x.5<-array(0,dim=c(length(grid.seq.x),length(grid.seq.y)))
 final.coords.y.5<-array(0,dim=c(length(grid.seq.x),length(grid.seq.y)))
 final.coords.x.6<-array(0,dim=c(length(grid.seq.x),length(grid.seq.y)))
 final.coords.y.6<-array(0,dim=c(length(grid.seq.x),length(grid.seq.y)))
-
+min.config.1<-matrix(0,n,2)
+min.config.2<-matrix(0,n,2)
 
 for (j in 1:length(grid.seq.y)){
 
@@ -171,6 +185,7 @@ for (j in 1:length(grid.seq.y)){
 				min.stress.1<-stress
 				print("Min stress found(real min)")
 				print(X.embed.2.norm)
+				min.config.1<-X.embed.2.norm
 				print(min.stress.1)
 
 			}
@@ -187,6 +202,7 @@ for (j in 1:length(grid.seq.y)){
 				print("Min stress found(second min)")
 				print(X.embed.2.norm)
 				print(min.stress.2)
+				min.config.2<-X.embed.2.norm
 			
 			}
 			far.to.init.1<-rbind(far.to.init.1,X.embed.2.norm[5,])
@@ -214,13 +230,18 @@ plot(x.coords, y.coords,
 #plot(unmatrix(mesh.grid.coords$x,byrow=FALSE),
 #     unmatrix(mesh.grid.coords$y,byrow=FALSE),
       col=ifelse(unmatrix(grid.resp,byrow=FALSE)==1,"red","black"))
+print("For w.value")
+print(w)
 print("Min stress found(real min)")
-
+print(min.config.1)
 print(min.stress.1)
 print("Min stress found(second min)")
-
+print(min.config.2)
 print(min.stress.2)
-
+min.config.stress.1.w<-min.stress.1
+min.config.stress.2.w<-min.stress.2
+		
+		
 if(!is.vector(close.to.init.1)){
 windows()
 
@@ -231,8 +252,10 @@ plot(x=close.to.init.1[,1],y=close.to.init.1[,2],col="red",
 
 par(pch=3)
 points(x=close.to.init.2[,1],y=close.to.init.2[,2],col="blue")
-title("Final config Close to true points")
+title(paste("Final config Close to true config- w=",w,collapse=TRUE))
+legend("bottomright",legend=c(expression("X_5"),expression("X_6")),col=c("red","blue"))
 
+savePlot(paste("true-min-w",w,".pdf",collapse=TRUE))
 
 #select.x<- sort( sample.int(length(grid.seq.x) , 10))
 select.x<-1:length(grid.seq.x) 
@@ -264,8 +287,10 @@ plot(x=far.to.init.1[,1],y=far.to.init.1[,2],col="red",
 			,ylim=c(min(grid.seq.y),max(grid.seq.y)))
 par(pch=3)
 points(x=far.to.init.2[,1],y=far.to.init.2[,2],col="blue")
-title("Final config  Far to true points")
+title(paste("Final config Far to true config- w=",w,collapse=TRUE))
+legend("bottomright",legend=c(expression("X_5"),expression("X_6")),col=c("red","blue"))
 
+savePlot(paste("other-min-w",w,".pdf",collapse=TRUE))
 #arrows(x0 = mesh.grid.coords$x[t(grid.resp==0)],
 #	 y0 = mesh.grid.coords$y[t(grid.resp==0)],
 #	 x1 =  final.coords.x.6[grid.resp==0] ,
@@ -279,7 +304,7 @@ plot3d(x.coords, y.coords,
 #plot3d(unmatrix(mesh.grid.coords$x,byrow=FALSE),
 #	 unmatrix(mesh.grid.coords$y,byrow=FALSE),
 		stress.at.loc)
-
+}
 
 
 
