@@ -20,13 +20,14 @@ cca.reg <- F
 power.comparison.test<- F
 add.plot.title<- F
 
-
+K<-3
 
 #n.vals <-c(50,100,150,200,300,500)
 #
 n.vals<-c(150)
 nmc <-  150
 s<- 150
+
 
 profile.mode <- FALSE
 debug.mode<- FALSE

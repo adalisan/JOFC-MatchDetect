@@ -689,6 +689,9 @@ source("./src/multipleMinimaTest.R")
 \end{figure}
 
 
+<<multMin-table,  echo=FALSE,fig=FALSE,results=tex >>=
+min.config.stress.w.table
+@
 
 
 

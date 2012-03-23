@@ -12,4 +12,6 @@
 	colors.vec.len<-length(colors.vec)
 	colors.vec[colors.vec.len+1]<-"cornflowerblue"
 	colors.vec[colors.vec.len+2]<-"azure3"
-	colors.vec.len<-length(colors.vec)
+	colors.vec.len <- length(colors.vec)
+
+	
