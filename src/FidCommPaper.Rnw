@@ -282,7 +282,7 @@ M=  \left[ \begin{array}{cc}
          \Delta_1 & L\\
         L^T  & \Delta_2 
      \end{array}  \right]     \label{omnibus} 
-\end{equation} where $L$ is a matrix of imputed entries. 
+\end{equation} where $L$ is a matrix of imputed entries. One way to impute $L$ is to set it to $\frac{\Delta_1+\Delta_2}{2}$. Another choice for imputation is introduced in \ref{sec:FidComm}: the diagonal of $L$ is set to 0, the rest of the entries are $NA$ and are ignored in the optimization of MDS criterion.  
 Using MDS to embed  this omnibus matrix into a  space  $\mathcal{X}$, we obtain $2n$ embedded observations $\{\tilde{y}_i^{(k)}; i=1,\ldots,n;k=1,2\}$ in a single space, with distances between the different observations consistent with the given dissimilarities. Now that the observations are commensurate, we can compute the test statistic \[
 \tau=d\left(\tilde{y}_i^{(1)},\tilde{y}_j^{(2)}\right)\label{teststat}
 \] for $i^{th}$ and $j^{th}$ observations under different conditions.  For ``large" values of $\tau$, we will reject the null hypothesis. We will refer to this approach as the Joint Optimization of Fidelity and Commensurability (JOFC) approach, for reasons that will be explained in Section \ref{sec:FidComm}. In this approach, the mappings   $\{ \rho_k,; k=1,\ldots,K\}$ in ~\ref{fig:fig1}  are not explicitly defined.
@@ -614,7 +614,6 @@ D\left(
 $\hat{X}_{2u}:\omega\rightarrow \mathbf{R}^{d'}$ are  measurable maps,  $\hat{X}_{1m}$ , $\hat{X}_{2m}$ , $\hat{X}_{1u}$, $\hat{X}_{2u}$ are random vectors. 
 Define $F_Y$ as the   cumulative distribution function of  $Y$ where $Y$ can be  any function of $\hat{X}_m$ or $\hat{X}_u$.
 
-\subsection{ A short detour : Discontinuity in configurations}
 
 
 
@@ -636,6 +635,8 @@ One of the important questions to be explored is   the uniqueness of  $w^*$.   T
 \begin{comment}
 First, note that  $\beta(w)$ is continuous with respect to $w$ and locally convex  with respect to embedding coordinates $\hat{X}_{.}$
 \end{comment}
+\subsubsection{ A short detour : Discontinuity in configurations}
+
 Note that it is possible to have multiple local minima in the embedding step(see example in$\ref{}$) and have $w$ control which is the global minimum among the configurations of $\hat{X}_{.}$. 
 Global Minimum Configuration determined by $w$ .
 
@@ -1096,37 +1097,31 @@ The same pair of plots are included for various values of parameters $p$,$q$ ,$r
 \section{The general case of more than two conditions}
 
 
-As it was mentioned, all of the approaches are generalizable to $K>2$ conditions, though some ambiguities need to be resolved. For example,  the alternative hypothesis could be  defined as the event that at least one of the K new dissimilarities are unmatched ($ H_{A1}: \exists i, j , 1\leq i < j \leq K :\bm{y}_{i} \nsim \bm{y}_{j} $ ) or it could be defined as the case that absolutely none of the K dissimilarities are matched   ($H_{A2}: \forall i, j , 1\leq i < j \leq K :\bm{y}_{i} \nsim \bm{y}_{j}$ )  . and the sample from the alternative must be generated accordingly during Monte Carlo simulation. In the first case, an appropriate test statistic is then the maximum of the pairwise distances between embeddings of each test K-tuple.
+As it was mentioned, all of the approaches are generalizable to $K>2$ conditions, though some ambiguities need to be resolved. For example,  the alternative hypothesis could be  defined as the event that at least one of the K new dissimilarities are unmatched ($ H_{A1}: \exists i, j , 1\leq i < j \leq K :\bm{y}_{i} \nsim \bm{y}_{j} $ ) or it could be defined as the case that absolutely none of the K dissimilarities are matched   ($H_{A2}: \forall i, j , 1\leq i < j \leq K :\bm{y}_{i} \nsim \bm{y}_{j}$ )  .
+% and the sample from the alternative must be generated accordingly during Monte Carlo simulation. In the first case, an appropriate test statistic is then the maximum of the pairwise %distances between embeddings of each test K-tuple.
 
 For PoM, one can use Procrustes analysis  generalized to more than two configurations. Generalized Procrustes Analysis \cite{} is a well established method for finding a collection of linear transformations that minimizes the mismatch between the transformed configurations and a "mean`` shape computed from these configurations. 
 
-For CCA, there are multiple generalizations available as the correlation between more than two configurations can be defined in multiple ways \cite{generalCCA}. Let $X_1,\ldots,X_k$ be random vectors. Consider the selection of the first set of directions to be selected for CCA and the correlation matrix of   $X_1,\ldots, X_k$, $\Phi_1$.   The following two criteria  are proposed in \cite{generalCCA}.
+For CCA, there are multiple generalizations available as the correlation between more than two configurations can be defined in multiple ways \cite{generalCCA}. Let $X_1,\ldots,X_K$ be random vectors. Consider the first set of canonical variates to be computed, $Z_1^{1},\ldots,Z_K^{1}$. Denote  the correlation matrix of  $Z_1^{1},\ldots,Z_K^{1}$ by $\Phi^{(1)}$.   The following three criteria  are proposed in \cite{generalCCA}.
 \begin{itemize}
-\item MAXVAR. Maximize the largest eigenvalue of $\Phi_1$ : $\lambda^{(1)}_1$ 
-\item  MINVAR. Minimize  the smallest eigenvalue of $\Phi_1$ : $\lambda^{(m)}_1$ 
+\item SUMCOR. Maximize the sum of the elements of $\Phi^{(1)}$ : $\mathbf{1'}\(Phi^{(1)})\mathbf{1'}$
+\item MAXVAR. Maximize the largest eigenvalue of $\Phi^{(1)}$ : $\lambda^{(1)}_1$ 
+\item  MINVAR. Minimize  the smallest eigenvalue of $\Phi^{(1)}$ : $\lambda^{(m)}_1$ 
 \end{itemize}
-For $H_{A1}$ MINVAR might be a good choice, since the exploitation task is to find evidence against the null and as favorable to the alternative as possible. MINVAR should be small whenever there exists \emph{at least} one unmatched measurement so under the alternative hypothesis. MAXVAR, in this case, wouldn't be necessarily small under alternative with respect to null.  MINVAR statistic should be stochastically smaller compared to null distribution. For $H_{A2}$ MAXVAR is appropriate, since under the alternative hypothesis, MAXVAR should be very small compared to under the null hypothesis. 
+One can think of all of these criteria as different norms on the correlation matrix.
+%For $H_{A1}$ MINVAR might be a good choice, since the exploitation task is to find evidence against the null and as favorable to the alternative as possible. 
+%MINVAR should be small whenever there exists \emph{at least} one unmatched measurement so under the alternative hypothesis. MAXVAR, in this case, wouldn't be necessarily small under alternative with respect to null.  MINVAR statistic should be stochastically smaller compared to null distribution. For $H_{A2}$ MAXVAR is appropriate, since under the alternative hypothesis, MAXVAR should be very small compared to under the null hypothesis. 
+%For $H_{A2}$ MAXVAR is appropriate, since under the alternative hypothesis, MAXVAR should be very small compared to under the null hypothesis. It is quite possible the other generalizations are appropriate for our task.
+An interesting question is whether any of these generalizations is more appropriate for $H_{A1}$ or $H_{A2}$.
 
-\begin{figure}
-\includegraphics[scale=0.95]{OOS-MVN-power-w-c0-01_Kcond.pdf}
-\caption{Power ($\beta$) vs Type I error ($\alpha$) plot for different $w$ values for the Gaussian setting (noisy case)}
-\label{fig:MVN-c001-ROC}
-\end{figure}
+A multivariate normal model with $K=3$ conditions were used to generate $K$-condition matched data. 
+The simulations in the previous section\ref{sec:Simulation Results} were repeated with this $K$-condition data. 
+The alternative was chosen as $ H_{A1}$ and SUMCOR was chosen for generalized CCA.
+ $q$-dimensional noise vectors of magnitude $c$ was added to the matched measurements. 
+ The ROC curves are shown in \ref{fig:MVN-c001-ROC-Kcond}.
 
 
-\section{The general case of more than two conditions}
-
-
-As it was mentioned, all of the approaches are generalizable to $K>2$ conditions, though some ambiguities need to be resolved. For example,  the alternative hypothesis could be  defined as the event that at least one of the K new dissimilarities are unmatched ($ H_{A1}: \exists i, j , 1\leq i < j \leq K :\bm{y}_{i} \nsim \bm{y}_{j} $ ) or it could be defined as the case that absolutely none of the K dissimilarities are matched   ($H_{A2}: \forall i, j , 1\leq i < j \leq K :\bm{y}_{i} \nsim \bm{y}_{j}$ )  . and the sample from the alternative must be generated accordingly during Monte Carlo simulation. In the first case, an appropriate test statistic is then the maximum of the pairwise distances between embeddings of each test K-tuple.
-
-For PoM, one can use Procrustes analysis  generalized to more than two configurations. For the development of Generalized Procrustes Analysis, see \cite{generalPCA} 
-
-For CCA, there are multiple generalizations available as the correlation between more than two configurations can be defined in multiple ways \cite{generalCCA}. Let $X_1,\ldots,X_k$ be random vectors. Consider the selection of the first set of directions to be selected for CCA and the correlation matrix of   $X_1,\ldots, X_k$, $\Phi_1$.   The following two criteria  are proposed in \cite{generalCCA}.
-\begin{itemize}
-\item MAXVAR. Maximize the largest eigenvalue of $\Phi_1$ : $\lambda^{(1)}_1$ 
-\item  MINVAR. Minimize  the smallest eigenvalue of $\Phi_1$ : $\lambda^{(m)}_1$ 
-\end{itemize}
-For $H_{A1}$ MINVAR might be a good choice, since the exploitation task is to find evidence against the null and as favorable to the alternative as possible. MINVAR should be small whenever there exists \emph{at least} one unmatched measurement so under the alternative hypothesis. MAXVAR, in this case, wouldn't be necessarily small under alternative with respect to null.  MINVAR statistic should be stochastically smaller compared to null distribution. For $H_{A2}$ MAXVAR is appropriate, since under the alternative hypothesis, MAXVAR should be very small compared to under the null hypothesis. It is quite possible the other generalizations are appropriate for our task 
+ 
 
 <<sim-Kcond-pre,fig=FALSE,echo=FALSE,results=verbatim,cache=FALSE,prefix.string="JOFCpaper">>=
 #rm(list=ls())
@@ -1170,14 +1165,14 @@ sfStop()
 \begin{figure}
 \includegraphics[scale=0.95]{OOS-MVN-power-w-c0-01_Kcond.pdf}
 \caption{Power ($\beta$) vs Type I error ($\alpha$) plot for different $w$ values for the Gaussian setting (noisy case)}
-\label{fig:MVN-c001-ROC}
+\label{fig:MVN-c001-ROC-Kcond}
 \end{figure}
 
 \section{Experiments on Wiki Data}
 A collection of articles are collected from the English Wikipedia, consisting of the
  directed 2-neighborhood of the document "Algebraic Geometry". 
    This  collection of 1382 articles and the correspondence of each article in French 
-Wikipedia is the real-life dataset. These documents are processed, and dissimilarities between documents  in same language are computed by the Lin  Pantel discounted mutual information \cite{LinPantel}
+Wikipedia is our real-life dataset. These documents are processed, and dissimilarities between documents  in the same language are computed by the Lin-Pantel discounted mutual information \cite{LinPantel}
  and cosine dissimilarity $k(x_{ik}; x_{jk}) = 1  (x_{ik} x_{jk})=(k(x_{ik})k2kx_{jk}k2)$. It is possible to utilize both textual content of the documents and the hyperlink graph structure.
 We will only consider dissimilarities based on the textual content in this example.   
 For hypothesis testing,   randomly held out four documents - one matched pair and one unmatched pair
@@ -1190,8 +1185,169 @@ us to estimate critical values for any specified Type I error level.
 Then the two sets of heldout unmatched pairs are embedded as $\tilde{y'}_1$ and $\tilde{y'}_2$, via out-of-sample embedding. 
 $T' = d(\tilde{y'}_1; \tilde{y'}_2)$ will give us an empirical distribution of the test statistic  under the alternative hypothesis. 
 And the distribution under null hypothesis and under alternative hypothesis can be used to estimate power.
-Target dimensionality d is determined by the Zhu and Ghodsi automatic dimensionality selection
+Target dimensionality d is determined by the Zhu and Ghodsi  automatic dimensionality selection
 method \cite{ZhuGhodsi}, resulting in d = 6 for this data set.
+
+
+<<wiki-2cond, echo=FALSE,fig=FALSE,results=hide,cache=TRUE >>=
+w.vals = c(0.5,0.8,0.9,0.925,0.95,0.99,0.999)
+w.val.len <- length(w.vals)
+nmc<-12
+size <- seq(0, 1, 0.01)
+oos.use.imputed<-FALSE
+level.mcnemar <- 0.02
+power.nmc <-array(0,dim=c(w.val.len,nmc,length(size)))
+test.samp.size <- 40
+m<- test.samp.size
+n<- N-(2*test.samp.size)
+
+Wchoice<-"avg"
+
+separability.entries.w<- FALSE
+wt.equalize<-FALSE
+assume.matched.for.oos<-TRUE
+oos.use.imputed<-FALSE
+oos <- TRUE
+verbose <-TRUE
+pre.scaling<-TRUE
+
+
+  #prescaling
+	if (pre.scaling) {
+		s <- lm(as.vector(TE) ~ as.vector(TF) + 0)$coefficients
+	} else {
+		s <- 1
+	}
+
+  TF<-TF*s
+
+
+for (mc in 1: nmc) {
+	
+	
+	left.out.samp<- sample(1:N,2*test.samp.size)
+	test.matched<- left.out.samp[1:test.samp.size] 
+	test.unmatched<- left.out.samp[test.samp.size+(1:test.samp.size)] 
+	test.matched   <- sort(test.matched)
+	test.unmatched <- sort(test.unmatched)
+
+	#sample.for.unmatched<- sample(1:n,test.samp.size)
+	orig.indices<-1:N
+	#sample.for.unmatched.orig.index<-orig.indices[-left.out.samp][sample.for.unmatched]
+	
+	T0 <- matrix(0,w.val.len,m)   #Test statistics for JOFC under null
+	TA <- matrix(0,w.val.len,m)    #Test statistics for JOFC under alternative
+	
+	D1<-TE[-left.out.samp,-left.out.samp]
+ 	D2<-TF[-left.out.samp,-left.out.samp]
+	train.test.0<-orig.indices[-left.out.samp]
+	train.test.0<-c(train.test.0,test.matched)
+	train.test.A<-orig.indices[-left.out.samp]
+	train.test.A<-c(train.test.A,test.unmatched)
+
+ 	D10A<- TE[train.test.0]
+	D20<-  TF[train.test.0]
+	
+	D2A<-  TF[train.test.A]
+	
+	D.oos.1      <- TE[test.matched,test.matched]
+	D.oos.2.null <- TF[test.matched,test.matched]
+	D.oos.2.alt  <- TF[test.unmatched,test.unmatched]
+
+			
+	L.in.oos.0 <- omnibusM.inoos(TE[-left.out.samp,][,test.matched],TF[-left.out.samp,][,test.matched],matrix(0,n,m))
+	L.in.oos.A <- omnibusM.inoos(TE[-left.out.samp,][,test.matched],TF[-left.out.samp,][,test.unmatched],matrix(0,n,m))
+					
+	ideal.omnibus.0 <- omnibusM(omnibusM (D1,D2,matrix(0,n,n)),omnibusM(D.oos.1,D.oos.2.null,matrix(0,m,m)),L.in.oos.0)
+	ideal.omnibus.A <- omnibusM(omnibusM (D1,D2,matrix(0,n,n)),omnibusM(D.oos.1,D.oos.2.alt,matrix(0,m,m)),L.in.oos.A)
+	
+	
+
+	d <- 55
+	c.val <- 0
+	
+	power.w.star<- 0
+				
+	
+	JOFC.results <- run.jofc(
+				   D1, D2, D10A,D20,D2A,
+					D.oos.1,
+					D.oos.2.null ,
+					D.oos.2.alt ,
+					
+					ideal.omnibus.0  ,
+					ideal.omnibus.A ,
+	
+				n,m,
+	
+				d,c.val,
+				model,oos,Wchoice,separability.entries.w,wt.equalize,assume.matched.for.oos,oos.use.imputed,
+				
+				w.vals,
+				TRUE) 
+  
+  
+			if (verbose) print("JOFC test statistic complete \n")
+	
+			T0 <- JOFC.results$T0 
+			TA <- JOFC.results$TA 
+			for (l in 1:w.val.len){
+	
+			  w.val.l <- w.vals[l]					
+			
+			  power.l <- get_power(T0[l,],TA[l,],size)
+			  power.nmc[l,mc,]<-power.l
+			  power.mcnemar.l <- get_power(T0[l,],TA[l,],level.mcnemar)
+			  if (power.mcnemar.l>power.w.star){
+				  rival.w <- w.vals[l]
+				  power.w.star <- power.mcnemar.l
+				  w.val.rival.idx <- l
+		    }
+	    }
+	
+	 }
+@
+
+<<wiki-2cond-plot, echo=FALSE,fig=TRUE,results=hide,cache=FALSE >>=
+
+
+colors.vec <- c("red","green","gold4","purple","aquamarine",
+		"darkblue","azure3","salmon","rosybrown","magenta","orange",
+		"darkorange4")
+
+
+colors.vec.len<-length(colors.vec)
+#	colors.vec[colors.vec.len+1]<-"cornflowerblue"
+#	colors.vec[colors.vec.len+2]<-"azure3"
+colors.vec.len<-length(colors.vec)
+par(lty=1)
+
+lty.i.vec<-c()
+for (i in 1:w.val.len){
+	lty.i <- 1+((i-1)%%10)
+	
+	lty.i.vec <- c(lty.i.vec,lty.i)
+	#par(lty=lty.i)
+	plot.ROC.with.CI(power.nmc[i,,],plot.title="",plot.col = colors.vec[i],
+			conf.int=FALSE,add=(i>1),ylim=1)
+	
+}
+
+
+legend.txt <- w.vals
+
+legend("bottomright",legend=legend.txt,
+		col=colors.vec,lty=1)
+
+
+
+@
+
+
+
+
+
+
 
 \section{Model Selection}
 For the simulations presented up to now, the embedding dimension was set to 2. This was a convenient choice which allowed us to investigate various aspects of JOFC and competing approaches.
@@ -1258,16 +1414,630 @@ first.est<- density(oos.diss.all.params.d.0[1,fix.i,])
   legend.txt<- d.vals
   legend("bottomright",legend=legend.txt,col=colors.vec[1:4],lty=rep(1,4))
 @
+The plot here shows the effect of $d$ on Fidelity and Commensurability errors.
 
+
+The following plot of ROC curves\cite{d-ROC} shows the effect of $d$ parameter on the performance of different methods. 
 
 \section{Experiments on Graph Data}
 
-We wish to apply our approach to  the vertex matching problem in multiple graphs. We are again in a semi-supervised setting, where matchings between some vertices in different graphs are known  and wish to infer the correspondences between the remaining collection of vertices in the graphs.
-\begin{comment}
-a formal description of the problem with notation
-\end{comment} 
-One useful property of dissimilarity representation is that the structure of data is irrelevant once an appropriate dissimilarity function  for the data is available. There are many distances that can be defined between vertices in graphs. We assume that an appropriate distance measure is available to us.
+We wish to apply our approach to  the vertex matching problem in multiple graphs.
+ We are again in a semi-supervised setting, where matchings between some vertices in different graphs are known 
+  and wish to infer the correspondences between the remaining collection of vertices in the graphs.
 
+Suppose $A,B \in \R^{(r+s)\times (r+s)}$ are adjacency matrices for graphs 
+ partitioned as ($r$ rows then $s$ rows, $r$ columns then $s$ columns)
+\[  A =\left [
+\begin{array}{cc} A_{11} & A_{12} \\ A_{21} & A_{22} \end{array} \right ]
+\ \ \ \ \ \ \ \ \ B =\left [
+\begin{array}{cc} B_{11} & B_{12} \\ B_{21} & B_{22} \end{array} \right ]
+\]
+To simplify  suppose that $A_{11}=B_{11}$ , ie the first $r$ vertices
+of $A$'s graph correspond respectively to the first $r$ vertices of $B$'s graph,
+and we wish to complete the isomorphism by determining the correspondences between the pairs of $s$ vertices. 
+That is, we seek a permutation matrix $P \in \{0,1\}^{s \times s}$ such that $A=(I_{r \times r}
+\oplus P)B(I_{r \times r} \oplus P)^T$, ie
+ \[
+ \left [
+\begin{array}{cc} A_{11} & A_{12} \\ A_{21} & A_{22} \end{array}
+\right ]
+\left [
+\begin{array}{cc} I_{r \times r} & 0_{r \times s} \\ 0_{s \times r} & P \end{array}
+\right ]
+=
+\left [
+\begin{array}{cc} I_{r \times r} & 0_{r \times s} \\ 0_{s \times r} & P \end{array}
+\right ]
+\left [
+\begin{array}{cc} B_{11} & B_{12} \\ B_{21} & B_{22} \end{array}
+\right ] .
+\]
+
+Using omnibus  embedding, it is possible to embed the vertices of two graphs in a commensurate space.
+Therefore, the JOFC approach can be used here for determining the pairwise distance between  the vertices of $A$ and $B$.
+The next step is to use the pairwise distances to find the optimal 1-1 matchings by the Hungarian algorithm \cite{Hung-algo}.
+ 
+One useful property of dissimilarity representation is that the structure of data is irrelevant once an appropriate dissimilarity function  for the data is available. 
+There are many distances that can be defined between vertices in graphs. We assume that an appropriate distance measure is available to us.
+In our experiments we will use three different dissimilarities:
+\begin{itemize}
+ \item the shortest path on the  unweighted graph whose adjacency matrix is available
+ \item the shortest path on a weighted version of the graph whose adjacency matrix is available
+ \item diffusion distance between vertices on the (unweighted?) graph.
+ \end{itemize}
+ Note that these dissimilarities can only be defined between vertices of the same graph. We impute the inter-condition dissimilarities as
+  as described before\label{omnibus}.
+ 
+  In the following simulation, $A$ is an Erdos-Renyi graph and the adjacency matrix of $B$ is a entry-wise bit-flipped version of the adjacency matrix of $A$.
+  The probability of flipping an entry of the adjacency matrix is the perturbation parameter which is the variable on the x-axis. 
+  The performance measure is the proportion of true measures.
+<<JOFC-on-ER-Graph, echo=FALSE,fig=FALSE,results=hide,cache=TRUE>>=
+cep=TRUE
+verbose= FALSE
+oos=TRUE
+oos.cep = TRUE
+
+a.cep <-20
+
+n = 20
+m = 15 # the first m pairs are known matches ; the last n-m pairs are to-be-matched
+
+npert = 11
+nmc = 20
+pert=(0:10)/10
+nc.jofc.diff = matrix(0,npert,nmc)
+nc.jofc.weighted = matrix(0,npert,nmc)
+nc.jofc.unweighted = matrix(0,npert,nmc)
+
+
+
+nc.cmds = matrix(0,npert,nmc)
+
+matched.cost<-0.01
+
+
+w.vals.vec <- c(0.5,0.7,0.9,0.95)
+
+w.max.index<-length(w.vals.vec)
+
+matched.cost<-0.01 #If matched.cost is equal to 1, consider an unweighted graph, with edges between matched vertices
+#If matched.cost is  between 0 and 1, the graph is weighted with edges between matched vertices with weights equal to matched.cost. Edges between 
+# vertices of the same condition have either weight 1 or 2 according to whether they're connected according to given adjacency matrix or not.
+
+d.dim<-4
+T.diff<-1
+c.imp<- 20
+
+dims.for.dist<-2:d.dim
+
+# these three lines are not used, really ...
+# they just set up a dummy D.M which is the correct object for input to fullmatch".
+# i'm just using Sancar's object ... i don't really understand it!
+G<-ER(n,0.5)
+G.comb<-omnibusM(G,G,diag(n))
+Graph.M <- graph.adjacency(G.comb,weighted= NULL ,mode="undirected")
+D.M<-shortest.paths(Graph.M)
+
+seed<-123
+set.seed(seed)
+for(imc in 1:nmc)
+{
+	G<-ER(n,0.5)
+	for(ipert in 1:npert)
+	{
+		Y.emb<-NULL
+		Gp<-bitflip(G ,pert[ipert],pert[ipert])
+		Graph.1<-graph.adjacency(G)
+		Graph.2<-graph.adjacency(Gp)
+		D.1<-shortest.paths(Graph.1)
+		D.2<-shortest.paths(Graph.2)
+		oos.sampling<-sample(1:n, size=(n-m), replace=FALSE)
+		in.sample.ind<-rep(TRUE,2*n)
+		in.sample.ind[oos.sampling]<-FALSE
+		in.sample.ind[n+oos.sampling]<-FALSE
+		#if (imc==1) print(in.sample.ind)
+		
+		J.1 =jofc.diffusion.dist(G,Gp,
+				in.sample.ind,
+				d.dim=d.dim,
+				w.vals.vec,
+				graph.is.directed=FALSE,
+				oos=oos,
+				wt.matrix.1=NULL,
+				wt.matrix.2=NULL,
+				sep.graphs=TRUE
+		)
+		
+		
+		M = solveMarriage(J.1[[1]])
+		nc.jofc.diff[ipert,imc] = present(M)         # returns the number correct in the marriage?
+		
+		
+		J.2 =jofc(G,Gp,
+				in.sample.ind,
+				d.dim=d.dim,
+				w.vals.vec,
+				graph.is.directed=FALSE,	
+				oos=oos,          
+				
+				wt.matrix.1=NULL,
+				wt.matrix.2=NULL,
+				sep.graphs=TRUE)
+		
+		M = solveMarriage(J.2[[1]])
+		nc.jofc.weighted[ipert,imc] = present(M)         # returns the number correct in the marriage?
+		
+		J.3 =jofc(G,Gp,
+				in.sample.ind,
+				d.dim=d.dim,
+				w.vals.vec,	
+				graph.is.directed=FALSE,
+				oos=oos,
+				use.weighted.graph=FALSE,
+				wt.matrix.1=NULL,
+				wt.matrix.2=NULL,
+				sep.graphs=TRUE)
+		
+		M = solveMarriage(J.3[[1]])
+		nc.jofc.unweighted[ipert,imc] = present(M)         # returns the number correct in the marriage?
+		
+		
+		
+		
+		
+		
+		myD.M = D.M
+		myD.M[1:n,1:n]=D.1
+		myD.M[(n+1):(2*n),(n+1):(2*n)]=D.2
+		myD.M[1:n,(n+1):(2*n)]=(D.1+D.2)/2
+		myD.M[(n+1):(2*n),1:n]=(D.1+D.2)/2
+		for(i in 1:n) for(j in (n+m+1):(2*n)) myD.M[i,j] = myD.M[j,i] = a.cep
+		for(i in (m+1):n) for(j in (n+1):(2*n)) myD.M[i,j] = myD.M[j,i] = a.cep
+		
+		
+		if (oos.cep){
+			oos.in.sample.vec<- c(1:m,(n+1):(n+m))
+			oos.in.sample.ind<- rep(FALSE,2*n)
+			oos.in.sample.ind[oos.in.sample.vec]<-TRUE
+			myD.M.in<- myD.M[oos.in.sample.ind, oos.in.sample.ind]
+			ccc = cmdscale(myD.M.in,k=d.dim,eig=T)
+			#plot(ccc$eig)
+			#pairs(ccc$points , col=colvec,pch=c(Ln,Ln))
+			#plot(ccc$points[,c(2,3)] , col=colvec,pch=c(Ln,Ln))
+			Y.emb<-oosMDS(myD.M,X=ccc$points, w=ifelse(oos.in.sample.ind,1,0),init="gower")			 			
+			U = as.matrix(dist(Y.emb[,dims.for.dist]))
+		} else {
+
+			ccc = cmdscale(myD.M,k=d.dim,eig=T)
+			#plot(ccc$eig)
+			#pairs(ccc$points , col=colvec,pch=c(Ln,Ln))
+			#plot(ccc$points[,c(2,3)] , col=colvec,pch=c(Ln,Ln))
+			
+			U = as.matrix(dist(ccc$points[ c((m+1):(n),(n+m+1):(n+n)) ,dims.for.dist]))
+		}
+		
+		
+		
+		
+		
+		
+		M = fullmatch(U[1:(n-m),(n-m+1):(2*(n-m))])
+		nc.cmds[ipert,imc] = present(M)         # returns the number correct in the marriage?
+		
+		
+		
+		
+	}
+}
+
+
+
+<<graph-plot-1, echo=FALSE,fig=TRUE,results=hide,cache=FALSE >>=
+### notice that the %correctmatches decreases as perturbation parameter increases! :-)
+
+
+colors.vec<-c( "red","blue","orange","green")
+colors.vec<-colors.vec[1:4]
+plot(pert,apply(nc.jofc.diff,1,mean)/(n-m),xlab="perturbation parameter",ylab="Fraction of  correct matches",ylim=c(0,1),col=colors.vec[1])
+lines(pert,apply(nc.cmds,1,mean)/(n-m),xlab="perturbation parameter",ylab="Fraction of  correct matches",ylim=c(0,1),pch=2,col=colors.vec[2])
+
+lines(pert,apply(nc.jofc.weighted,1,mean)/(n-m),xlab="perturbation parameter",ylab="Fraction of  correct matches",ylim=c(0,1),pch=3,col=colors.vec[3])
+
+lines(pert,apply(nc.jofc.unweighted,1,mean)/(n-m),xlab="perturbation parameter",ylab="Fraction of  correct matches",ylim=c(0,1),pch=4,col=colors.vec[4])
+
+legend.txt<- c("diff dist","CMDS","weighted.graph","unweighted.graph")
+legend(x="topright",legend=legend.txt, col =colors.vec,pch=1:4)
+title("marriage o jofc")
+abline(h=1/(n-m),lty=2) ### chance?  apparently not!?
+abline(v=1/2,lty=2) ### chance?  gotta be!?
+@
+
+
+<<JOFC-graph-sim-2, echo=FALSE,fig=FALSE,results=hide,cache=TRUE >>=
+
+d.dim.vec<-c(4,6,10)
+
+nc.jofc.diff.d       = array(0,dim=c(npert,nmc,length(d.dim.vec)))
+nc.jofc.weighted.d   = array(0,dim=c(npert,nmc,length(d.dim.vec)))
+nc.jofc.unweighted.d = array(0,dim=c(npert,nmc,length(d.dim.vec)))
+
+
+
+nc.cmds.d           = array(0,dim=c(npert,nmc,length(d.dim.vec)))
+
+# these three lines are not used, really ...
+# they just set up a dummy D.M which is the correct object for input to fullmatch".
+# i'm just using Sancar's object ... i don't really understand it!
+G<-ER(n,0.5)
+G.comb<-omnibusM(G,G,diag(n))
+Graph.M <- graph.adjacency(G.comb,weighted= NULL ,mode="undirected")
+D.M<-shortest.paths(Graph.M)
+
+seed<-123
+
+for (d.dim in d.dim.vec){
+	dims.for.dist<-2:d.dim
+	d.i<-which(d.dim.vec==d.dim)
+	for(imc in 1:nmc)
+	{
+		G<-ER(n,0.5)
+		for(ipert in 1:npert)
+		{
+			
+			Gp<-bitflip(G ,pert[ipert],pert[ipert])
+			Graph.1<-graph.adjacency(G)
+			Graph.2<-graph.adjacency(Gp)
+			D.1<-shortest.paths(Graph.1)
+			D.2<-shortest.paths(Graph.2)
+			oos.sampling<-sample(1:n,size=n-m,replace=FALSE)
+			in.sample.ind<-rep(TRUE,2*n)
+			in.sample.ind[oos.sampling]<-FALSE
+			in.sample.ind[n+oos.sampling]<-FALSE
+			
+			
+			J.1 =jofc.diffusion.dist(G,Gp,
+					in.sample.ind,
+					d.dim=d.dim,
+					w.vals.vec,
+					graph.is.directed=FALSE,
+					oos=oos,
+					wt.matrix.1=NULL,
+					wt.matrix.2=NULL,
+					sep.graphs=TRUE)
+			
+			M = solveMarriage(J.1[[1]])
+			nc.jofc.diff.d[ipert,imc,d.i] = present(M)         # returns the number correct in the marriage?
+			
+			
+			J.2 =jofc(G,Gp,
+					in.sample.ind,
+					
+					d.dim=d.dim,
+					w.vals.vec,
+					graph.is.directed=FALSE,
+					oos=oos,          
+					wt.matrix.1=NULL,
+					wt.matrix.2=NULL,
+					sep.graphs=TRUE)
+			
+			M = solveMarriage(J.2[[1]])
+			nc.jofc.weighted.d[ipert,imc,d.i] = present(M)         # returns the number correct in the marriage?
+			
+			J.3 =jofc(G,Gp,
+					in.sample.ind,
+					d.dim=d.dim,
+					w.vals.vec,
+					graph.is.directed=FALSE,
+					oos=oos,
+					use.weighted.graph=FALSE,
+					wt.matrix.1=NULL,
+					wt.matrix.2=NULL,
+					sep.graphs=TRUE)
+			
+			M = solveMarriage(J.3[[1]])
+			nc.jofc.unweighted.d[ipert,imc,d.i] = present(M)         # returns the number correct in the marriage?
+			
+			
+			
+			
+			
+			if (cep){
+				U<-matrix()
+				
+				myD.M = D.M # i use just the object D.M ... none of the original entries!
+				myD.M[1:n,1:n]=D.1
+				myD.M[(n+1):(2*n),(n+1):(2*n)]=D.2
+				myD.M[1:n,(n+1):(2*n)]=(D.1+D.2)/2
+				myD.M[(n+1):(2*n),1:n]=(D.1+D.2)/2
+				for(i in 1:n) for(j in (n+m+1):(2*n)) myD.M[i,j] = myD.M[j,i] = a.cep
+				for(i in (m+1):n) for(j in (n+1):(2*n)) myD.M[i,j] = myD.M[j,i] = a.cep
+				
+				
+				if (oos.cep){
+					
+					oos.in.sample.vec<- c(1:m,(n+1):(n+m))
+					oos.in.sample.ind<- rep(FALSE,2*n)
+					oos.in.sample.ind[oos.in.sample.vec]<-TRUE
+					myD.M.in<- myD.M[oos.in.sample.ind,oos.in.sample.ind]
+					
+					ccc = cmdscale(myD.M.in,k=d.dim,eig=T)
+					#plot(ccc$eig)
+					#pairs(ccc$points , col=colvec,pch=c(Ln,Ln))
+					#plot(ccc$points[,c(2,3)] , col=colvec,pch=c(Ln,Ln))
+					Y.emb<-oosMDS(myD.M,X=ccc$points, w=ifelse(oos.in.sample.ind,1,0),init="gower")					
+# 			
+					U = as.matrix(dist(Y.emb[,dims.for.dist]))
+				} else {
+					
+					
+					ccc = cmdscale(myD.M,k=d.dim,eig=T)
+					#plot(ccc$eig)
+					#pairs(ccc$points , col=colvec,pch=c(Ln,Ln))
+					#plot(ccc$points[,c(2,3)] , col=colvec,pch=c(Ln,Ln))
+					
+					U = as.matrix(dist(ccc$points[ c((m+1):(n),(n+m+1):(n+n)) ,dims.for.dist]))
+				}
+				M = fullmatch(U[1:(n-m),(n-m+1):(2*(n-m))])
+				nc.cmds.d[ipert,imc,d.i] = present(M)         # returns the number correct in the marriage?
+			}
+			
+						
+		}
+	}
+}
+@
+
+
+### notice that the %correctmatches decreases as perturbation parameter increases! :-)
+
+<<graph-plot-2, echo=FALSE,fig=TRUE,results=hide,cache=FALSE >>=
+
+colors.vec<-c( "red","blue","orange","green","purple")
+
+colors.vec<-colors.vec[1:length(d.dim.vec)]
+plot(pert,apply(nc.jofc.diff.d[,,1],1,mean)/(n-m),xlab="perturbation parameter",ylab="Fraction of  correct matches",ylim=c(0,1),col=colors.vec[1])
+for (d.i in 2:length(d.dim.vec)){
+	points(pert,apply(nc.jofc.diff.d[,,d.i],1,mean)/(n-m),xlab="perturbation parameter",ylab="Fraction of  correct matches",ylim=c(0,1),pch=1,col=colors.vec[d.i])
+}
+for (d.i in 1:length(d.dim.vec)){
+	points(pert,apply(nc.cmds.d[,,d.i],1,mean)/(n-m),xlab="perturbation parameter",ylab="Fraction of  correct matches",ylim=c(0,1),pch=2,col=colors.vec[d.i])
+}
+for (d.i in 1:length(d.dim.vec)){
+	points(pert,apply(nc.jofc.weighted.d[,,d.i],1,mean)/(n-m),xlab="perturbation parameter",ylab="Fraction of  correct matches",ylim=c(0,1),pch=3,col=colors.vec[d.i])
+}
+for (d.i in 1:length(d.dim.vec)){
+	points(pert,apply(nc.jofc.unweighted.d[,,d.i],1,mean)/(n-m),xlab="perturbation parameter",ylab="Fraction of  correct matches",ylim=c(0,1),pch=4,col=colors.vec[d.i])
+}
+legend.txt<- c("diff dist","CMDS","weighted.graph","unweighted.graph")
+legend.txt <- c(legend.txt,d.dim.vec)
+legend(x="topright",legend=legend.txt, 
+		col =c(rep(1,4),colors.vec),pch=c(1:4,rep(1,length(d.dim.vec))))
+title("marriage o jofc")
+abline(h=1/(n-m),lty=2) ### chance?  apparently not!?
+abline(v=1/2,lty=2) ### chance?  gotta be!?
+@
+
+
+<<graph-plot-3, echo=FALSE,fig=TRUE,results=hide,cache=FALSE >>=
+ccolors.vec<-c( "red","blue","orange","green","purple")
+
+colors.vec<-colors.vec[1:length(d.dim.vec)]
+plot(pert,apply(nc.jofc.diff.d[,,1],1,mean)/(n-m),
+		xlab="perturbation parameter",ylab="Fraction of  correct matches",ylim=c(0,1),col=colors.vec[1],type="l")
+for (d.i in 2:length(d.dim.vec)){
+	lines(pert,apply(nc.jofc.diff.d[,,d.i],1,mean)/(n-m),xlab="perturbation parameter",
+			ylab="Fraction of  correct matches",ylim=c(0,1),col=colors.vec[d.i])
+}
+for (d.i in 1:length(d.dim.vec)){
+	lines(pert,apply(nc.cmds.d[,,d.i],1,mean)/(n-m),xlab="perturbation parameter",
+			ylab="Fraction of  correct matches",ylim=c(0,1),lty=2,col=colors.vec[d.i])
+}
+for (d.i in 1:length(d.dim.vec)){
+	lines(pert,apply(nc.jofc.weighted.d[,,d.i],1,mean)/(n-m), lty=4,lwd=2,
+			xlab="perturbation parameter",ylab="Fraction of  correct matches",ylim=c(0,1),col=colors.vec[d.i])
+}
+
+legend.txt <- c("diff dist","CMDS","weighted.graph")
+legend.txt <- c(legend.txt,d.dim.vec)
+legend(x="topright",legend=legend.txt, col =c(rep(1,3),colors.vec),
+		lty=c(c(1,2,4),rep(1,length(d.dim.vec))))
+title("marriage o jofc")
+abline(h=1/(n-m),lty=2) ### chance?  apparently not!?
+abline(v=1/2,lty=2) ### chance?  gotta be!?
+@
+
+
+
+<<JOFC-graph-sim-3, echo=FALSE,fig=FALSE,results=hide,cache=TRUE >>=
+
+nc.jofc.diff.w       = array(0,dim=c(npert,nmc,length(w.vals.vec)))
+nc.jofc.weighted.w   = array(0,dim=c(npert,nmc,length(w.vals.vec)))
+nc.jofc.unweighted.w = array(0,dim=c(npert,nmc,length(w.vals.vec)))
+
+
+
+# these three lines are not used, really ...
+# they just set up a dummy D.M which is the correct object for input to fullmatch".
+# i'm just using Sancar's object ... i don't really understand it!
+G<-matrix(0,n,n)
+G.comb<-matrix(0,2*n,2*n)
+Graph.M <- graph.adjacency(G.comb,weighted= NULL ,mode="undirected")
+D.M<-shortest.paths(Graph.M)
+
+seed<-123
+
+for(imc in 1:nmc)
+{
+	G<-ER(n,0.5)
+	for(ipert in 1:npert)
+	{
+		
+		Gp<-bitflip(G ,pert[ipert],pert[ipert])
+		Graph.1<-graph.adjacency(G)
+		Graph.2<-graph.adjacency(Gp)
+		D.1<-shortest.paths(Graph.1)
+		D.2<-shortest.paths(Graph.2)
+		oos.sampling<-sample(1:n,size=n-m,replace=FALSE)
+		in.sample.ind<-rep(TRUE,2*n)
+		in.sample.ind[oos.sampling]<-FALSE
+		in.sample.ind[n+oos.sampling]<-FALSE
+		
+		
+		J.1 =jofc.diffusion.dist(G,Gp,
+				in.sample.ind,
+				d.dim=d.dim,
+				w.vals.vec,
+				graph.is.directed=FALSE,
+				oos=oos,
+				wt.matrix.1=NULL,
+				wt.matrix.2=NULL,
+				sep.graphs=TRUE)
+		for (w.i in 1:w.max.index){
+			M = solveMarriage(J.1[[w.i]])
+			nc.jofc.diff.w[ipert,imc,w.i] = present(M)         # returns the number correct in the marriage?
+		}
+		
+		J.2 =jofc(G,Gp,
+				in.sample.ind,
+				d.dim=d.dim,
+				w.vals.vec,
+				graph.is.directed=FALSE,
+				oos=oos,          
+				wt.matrix.1=NULL,
+				wt.matrix.2=NULL,
+				sep.graphs=TRUE)
+		for (w.i in 1:w.max.index){
+			M = solveMarriage(J.2[[w.i]])
+			nc.jofc.weighted.w[ipert,imc,w.i] = present(M)         # returns the number correct in the marriage?
+		}
+		J.3 =jofc(G,Gp,
+				in.sample.ind,
+				d.dim=d.dim,
+				w.vals.vec,
+				graph.is.directed=FALSE,
+				oos=oos,
+				use.weighted.graph=FALSE,
+				wt.matrix.1=NULL,
+				wt.matrix.2=NULL,
+				sep.graphs=TRUE)
+		for (w.i in 1:w.max.index){
+			M = solveMarriage(J.3[[w.i]])
+			nc.jofc.unweighted.w[ipert,imc,w.i] = present(M)         # returns the number correct in the marriage?
+		}
+		
+		
+		
+	}
+}
+@
+
+### notice that the %correctmatches decreases as perturbation parameter increases! :-)
+
+<<graph-plot-4, echo=FALSE,fig=TRUE,results=hide,cache=FALSE >>=
+
+colors.vec<-c( "red","blue","orange","black","purple")
+colors.vec<- colors.vec[1:w.max.index]
+plot(pert,apply(nc.jofc.diff.w[,,1],1,mean)/(n-m),xlab="perturbation parameter",
+		ylab="Fraction of  correct matches",ylim=c(0,1),col=colors.vec[1],type="l")
+for (w.i in 2:w.max.index){
+	lines(pert,apply(nc.jofc.diff.w[,,w.i],1,mean)/(n-m),
+			xlab="perturbation parameter",ylab="Fraction of  correct matches",
+			ylim=c(0,1),lty=1,col=colors.vec[w.i])
+}
+
+for (w.i in 1:w.max.index){
+	lines(pert,apply(nc.jofc.weighted.w[,,w.i],1,mean)/(n-m),
+			xlab="perturbation parameter",ylab="Fraction of  correct matches",
+			ylim=c(0,1),lty=3,col=colors.vec[w.i])
+}
+for (w.i in 1:w.max.index){
+	lines(pert,apply(nc.jofc.unweighted.w[,,w.i],1,mean)/(n-m),
+			xlab="perturbation parameter",ylab="Fraction of  correct matches",
+			ylim=c(0,1),lty=4,col=colors.vec[w.i])
+}
+legend.txt<- c("diff dist","weighted.graph","unweighted.graph")
+legend.txt <- c(legend.txt,w.vals.vec)
+legend(x="topright",legend=legend.txt, col =c(rep(1,3),colors.vec),
+		lty=c(c(1,3,4),rep(1,w.max.index)))
+title("marriage o jofc")
+abline(h=1/(n-m),lty=2) ### chance?  apparently not!?
+abline(v=1/2,lty=2) ### chance?  gotta be!?
+@
+
+
+<<JOFC-graph-sim-5, echo=FALSE,fig=FALSE,results=hide,cache=TRUE >>=
+
+T.diff.vec<- c(0.5,1,2,5,10)
+nc.jofc.diff.T       = array(0,dim=c(npert,nmc,length(d.dim.vec)))
+
+
+
+
+# these three lines are not used, really ...
+# they just set up a dummy D.M which is the correct object for input to fullmatch".
+# i'm just using Sancar's object ... i don't really understand it!
+G<-ER(n,0.5)
+G.comb<-omnibusM(G,G,diag(n))
+Graph.M <- graph.adjacency(G.comb,weighted= NULL ,mode="undirected")
+D.M<-shortest.paths(Graph.M)
+
+seed<-123
+
+for (T.i in 1:length(T.diff.vec)){
+	T.diff<-T.diff.vec[T.i]
+	for(imc in 1:nmc)
+	{
+		G<-ER(n,0.5)
+		for(ipert in 1:npert)
+		{
+			
+			Gp<-bitflip(G ,pert[ipert],pert[ipert])
+			Graph.1<-graph.adjacency(G)
+			Graph.2<-graph.adjacency(Gp)
+			D.1<-shortest.paths(Graph.1)
+			D.2<-shortest.paths(Graph.2)
+			oos.sampling<-sample(1:n,size=n-m,replace=FALSE)
+			in.sample.ind<-rep(TRUE,2*n)
+			in.sample.ind[oos.sampling]<-FALSE
+			in.sample.ind[n+oos.sampling]<-FALSE
+			
+			
+			J.1 =jofc.diffusion.dist(G,Gp,
+					in.sample.ind,
+					d.dim=d.dim,
+					w.vals.vec,
+					graph.is.directed=FALSE,
+					oos=oos,
+					wt.matrix.1=NULL,
+					wt.matrix.2=NULL,
+					sep.graphs=TRUE)
+			
+			M = solveMarriage(J.1[[1]])
+			nc.jofc.diff.T[ipert,imc,T.i] = present(M)         # returns the number correct in the marriage?							
+		}
+	}
+}
+
+### notice that the %correctmatches decreases as perturbation parameter increases! :-)
+
+<<graph-plot-5, echo=FALSE,fig=TRUE,results=hide,cache=FALSE >>=
+		
+
+colors.vec<-c( "red","blue","orange","green","purple")
+
+colors.vec<-colors.vec[1:length(T.diff.vec)]
+plot(pert,apply(nc.jofc.diff.T[,,1],1,mean)/(n-m),xlab="perturbation parameter",ylab="Fraction of  correct matches",ylim=c(0,1),col=colors.vec[1])
+for (d.i in 2:length(d.dim.vec)){
+	points(pert,apply(nc.jofc.diff.T[,,T.i],1,mean)/(n-m),xlab="perturbation parameter",ylab="Fraction of  correct matches",ylim=c(0,1),pch=1,col=colors.vec[T.i])
+}
+legend.txt <- c(T.diff.vec)
+legend(x="topright",legend=legend.txt, 
+		col =c(colors.vec),pch=rep(1,length(T.diff.vec)))
+title("marriage o jofc (different diffusion param T)")
+abline(h=1/(n-m),lty=2) ### chance?  apparently not!?
+abline(v=1/2,lty=2) ### chance?  gotta be!?
+
+@
 
 
 
