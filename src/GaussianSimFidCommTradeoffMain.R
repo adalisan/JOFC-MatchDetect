@@ -12,7 +12,7 @@
 
 
 
-source("./src/runningParams.R")
+if (!run.for.Sweave) source("./src/runningParams.R")
 
 print(debug.mode)
 if (par.compute){
@@ -72,6 +72,7 @@ if (dirichlet.sim)
 if (profile.mode) Rprof(filename = "Rprof.out", append = FALSE, interval = 0.02,
 			memory.profiling=FALSE)
 
+for (d.v in d.vals){
 for (n.v in n.vals){
 	
 	for (c.val in c.vals) {
@@ -134,6 +135,8 @@ for (n.v in n.vals){
 		params$c.val <- c.val
 		
 		params$n <- n.v
+		
+		params$d<-d.v
 		if (gauss.sim){
 			
 			params$p <- 3
@@ -142,7 +145,7 @@ for (n.v in n.vals){
 			params$q <- 15
 			params$oos <- TRUE
 			
-			params$d<-2
+			
 			
 			params.text.1 <- bquote(p==.(params$p) | r==.(params$r) |q==.(params$q) |c==.(params$c.val)|d==.(params$d))
 			params.text.3 <- bquote(n==.(params$n) |assume.matched.oos==.(params$assume.matched.for.oos) | nmc==.(params$nmc)| oos==.(params$oos) )

@@ -7,9 +7,9 @@
 
 
 
-
-
-#run.jofc <- function(D1, D2, D10A,D20,D2A,
+#
+#
+#run.jofc.graph <- function(D1, D2, D10A,D20,D2A,
 #					D.oos.1,
 #					D.oos.2.null ,
 #					D.oos.2.alt ,
@@ -50,7 +50,7 @@
 #		
 #		
 #		# Embed in-sample using different weight matrices (differentw values)
-#		X.embeds<-JOFC.Fid.Commens.Tradeoff(M,d,w.vals,separability.entries.w,init.conf=init.conf,wt.equalize=wt.equalize)
+#		X.embeds<-JOFC.Insample.Embed(M,d,w.vals,separability.entries.w,init.conf=init.conf,wt.equalize=wt.equalize)
 #		if (0) {
 #		Fid.Err.Term.1 <- X.embeds[[w.max.index+2]]
 #		Fid.Err.Term.2 <- X.embeds[[w.max.index+3]]
@@ -200,10 +200,11 @@
 #}
 
 
-
+model= "gaussian"
 w.vals = c(0.1,0.2,0.4,0.5,0.8,0.9,0.925,0.95,0.99,0.999)
 w.val.len <- length(w.vals)
 nmc<-12
+d<-6
 size <- seq(0, 1, 0.01)
 oos.use.imputed<-FALSE
 level.mcnemar <- 0.02
@@ -232,10 +233,10 @@ if (pre.scaling) {
 
 TF<-TF*s
 
-
-for (mc in 1: nmc) {
-	
-	
+run.wiki.JOFC.sim.mc.replicate <- function(m.i,N, test.samp.size, w.val.len, m, TE, TF,
+		n, model, oos, Wchoice, separability.entries.w, wt.equalize,
+		assume.matched.for.oos, oos.use.imputed, w.vals, size, verbose,  level.mcnemar) {
+	power.mc <-array(0,dim=c(w.val.len,length(size)))
 	left.out.samp<- sample(1:N,2*test.samp.size)
 	test.matched<- left.out.samp[1:test.samp.size] 
 	test.unmatched<- left.out.samp[test.samp.size+(1:test.samp.size)] 
@@ -273,12 +274,17 @@ for (mc in 1: nmc) {
 	ideal.omnibus.A <- omnibusM(omnibusM (D1,D2,matrix(0,n,n)),omnibusM(D.oos.1,D.oos.2.alt,matrix(0,m,m)),L.in.oos.A)
 	
 	
+	print(str(T0))
+	print(str(TA))
 	
-	d <- 55
-	c.val <- 0
+	print(str(D1))
+	print(str(D2))
+	print(str(D10A))
+	print(str(D20))
+	
 	
 	power.w.star<- 0
-	
+	print("starting JOFC embedding ")
 	
 	JOFC.results <- run.jofc(
 			D1, D2, D10A,D20,D2A,
@@ -291,11 +297,13 @@ for (mc in 1: nmc) {
 			
 			n,m,
 			
-			d,c.val,
-			model,oos,Wchoice,separability.entries.w,wt.equalize,assume.matched.for.oos,oos.use.imputed,
-			
+			d,
+			model,oos,Wchoice,separability.entries.w,wt.equalize,
+			assume.matched.for.oos,oos.use.imputed,
+			pom.config=NULL,
 			w.vals,
-			TRUE) 
+			size,
+			verbose=verbose) 
 	
 	
 	if (verbose) print("JOFC test statistic complete \n")
@@ -307,7 +315,7 @@ for (mc in 1: nmc) {
 		w.val.l <- w.vals[l]					
 		
 		power.l <- get_power(T0[l,],TA[l,],size)
-		power.nmc[l,mc,]<-power.l
+		power.mc[l,]<-power.l
 		power.mcnemar.l <- get_power(T0[l,],TA[l,],level.mcnemar)
 		if (power.mcnemar.l>power.w.star){
 			rival.w <- w.vals[l]
@@ -315,16 +323,31 @@ for (mc in 1: nmc) {
 			w.val.rival.idx <- l
 		}
 	}
-	
+	return(list(T0=T0,TA=TA,power.mc=power.mc))
 }
 
 
 
 
+	
+	sfInit( parallel=TRUE, cpus=4 )
 
 
-
-
+	
+	JOFC.wiki.res<-lapply(1:nmc, run.wiki.JOFC.sim.mc.replicate, N = N, test.samp.size = test.samp.size,
+					w.val.len = w.val.len, m = m, TE = TE, TF = TF, n = n,
+					model = "gaussian", oos = oos, Wchoice = Wchoice,
+					separability.entries.w = separability.entries.w, wt.equalize = wt.equalize,
+					assume.matched.for.oos = assume.matched.for.oos, oos.use.imputed = oos.use.imputed,
+					w.vals = w.vals, size = size, verbose = verbose,  level.mcnemar = level.mcnemar			
+			)
+	
+	for (mc.i in 1:nmc){
+		power.nmc[,mc.i,]<- JOFC.wiki.res[[mc.i]]$power.mc
+		
+	}
+	sfStop()
+	
 
 
 colors.vec <- c("red","green","gold4","purple","aquamarine",

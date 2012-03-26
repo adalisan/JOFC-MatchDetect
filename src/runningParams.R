@@ -8,7 +8,7 @@ run.in.linux<- (.Platform$OS.type=="unix")
 compare.pom.cca<-TRUE
 #c.vals<-c(0.01)
 c.vals<-c(0.01,0)
-
+d.vals<-c(2,3,5,10,14)
 verbose<-TRUE
 oos <-TRUE
 

@@ -7,11 +7,10 @@
 #setwd(paste(Sys.getenv("R_HOME") ,"./../projects/",collapse=""))
 
 
-
-source("./src/runningParams.R")
-
+if (!run.for.Sweave) source("./src/runningParams.R")
 
 
+print("debug.mode")
 print(debug.mode)
 if (par.compute){
 	if (par.compute.sf){
@@ -63,7 +62,7 @@ estim.wstar<-c()
 
 
 if (gauss.sim)
-	sim.res.g<-list()
+	sim.res.g.Kcond<-list()
 if (dirichlet.sim)
 	sim.res.d<-list()
 
@@ -142,9 +141,55 @@ for (c.val in c.vals) {
 		#sink()
 		#parameter logging end
 		info(logger,"Gaussian Setting Simulation Starting")
-		sim.res.g<-simulate.generate.test.model.plot.Kcond("MVN",params,par.compute,K)
+		sim.res.g.Kcond<-simulate.generate.test.model.plot.Kcond("MVN",params,par.compute,K)
 			print("Gaussian Setting Simulation Ended")
 		par(lty=1)
+		estim.wstar<-c(estim.wstar,sim.res.g.Kcond$wstar)	
+		
+		
+		
+		
+		
+		
+		avg.cont.table<- (sim.res.g.Kcond$conting.table+0.001)/nmc
+		print("Aggregate Cont Table: ")
+		print(avg.cont.table)
+		p.val <-mcnemar.test(avg.cont.table)$p.value
+		print("Aggregate Cont Table: McNemar's p-val")
+		print(p.val)
+		
+		sink(paste(results.dir,model.letter,"-n",params$n,"c",params$c.val,"sign-tests.txt",collapse=""))
+		sign.test <- try(sign.test.cont.table(sim.res.g.Kcond$conting.table.list))
+		
+		if (inherits(sign.test,"try-error")) {
+			print(paste("error in ",model,collapse=""))
+			print(sim.res.g.Kcond$conting.table.list)
+		}		else{
+			print("Cont Table List: sign test p-val")
+			print(sign.test$p.value)
+		}
+		
+		
+		
+		sign.rank.sum.test<-sign.rank.sum.test.cont.table(sim.res.g.Kcond$conting.table.list)
+		print("Cont Table List: signed rank sum test p-val")
+		print(sign.rank.sum.test$p.value)
+		sink()
+
+		
+		conting.table.list.g <- lapply(sim.res.g.Kcond$conting.table.list,function(x) x+0.001)
+		
+		p.vals.list <- lapply(conting.table.list.g,mcnemar.test)
+		p.vals.mcnemar<-c()
+		for (t in p.vals.list)
+			p.vals.mcnemar<- c(p.vals.mcnemar,t$p.value)
+		p.vals.mcnemar <- sort(p.vals.mcnemar)
+		sink(paste(results.dir,"McNemars-pvals-MVN","c",params$c.val,"-n",params$n,".txt",collapse=""))
+		print("MC Replicate Cont Tables: McNemar's p-val")
+		print(p.vals.mcnemar)
+		sink()
+		save.image(paste(results.dir,"MVN","c",params$c.val,"-n",params$n,Sys.Date(),"-Kcond.RData",collapse=""))
+		
 		
 	}
 } #end c.vals
