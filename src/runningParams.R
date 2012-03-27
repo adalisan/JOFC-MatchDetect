@@ -11,7 +11,7 @@ c.vals<-c(0.01,0)
 d.vals<-c(2,3,5,10,14)
 verbose<-TRUE
 oos <-TRUE
-
+num.cpus <- 8
 
 gauss.sim <-T
 dirichlet.sim <- T

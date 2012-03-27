@@ -1344,12 +1344,6 @@ for (mc.i in 1:nmc){
 sfStop()
 
 
-
-
-
-
-
-
 @
 
 <<wiki-2cond-plot, echo=FALSE,fig=TRUE,results=hide,cache=FALSE >>=
@@ -1455,6 +1449,116 @@ first.est<- density(oos.diss.all.params.d.0[1,fix.i,])
   legend("bottomright",legend=legend.txt,col=colors.vec[1:4],lty=rep(1,4))
 @
 The plot here shows the effect of $d$ on Fidelity and Commensurability errors.
+
+<<FidComm-d-sim, echo=FALSE,fig=FALSE,results=hide,cache=TRUE >>=
+run.for.Sweave<-TRUE
+source("./src/GaussianSimFidCommTradeoffMain.R")
+
+
+@
+
+<<FidComm-d-plot-Gaussian, echo=FALSE,fig=FALSE,results=hide,cache=TRUE >>=
+w.val.len<-length(w.vals)
+for (i in 1: length(d.vals)){
+	first.ind[i]<-which(params.df$d.i==d.vals[i])
+}
+
+
+if (verbose) print(c("Fid1","Fid2","Comm"))
+if (verbose) print(cbind(Fid1,Fid2,Comm))
+if( run.in.linux) X11() else {windows()}
+
+plot.graph.with.CI(Fid1,"Fid and Comm Terms","red",conf.int=TRUE,   add=FALSE,fp.points=w.vals,
+		customx.labels=NULL,customy.labels=NULL,ispowercurve=FALSE)
+
+plot.graph.with.CI(Fid2,"Fid and Comm Terms","orange",conf.int=TRUE,add=TRUE,fp.points=w.vals,
+		customx.labels=NULL,customy.labels=NULL,ispowercurve=FALSE)
+
+plot.graph.with.CI(Comm,"Fid and Comm Terms","blue",conf.int=TRUE,  add=TRUE,fp.points=w.vals,
+		customx.labels=NULL,customy.labels=NULL,ispowercurve=FALSE)
+
+
+fname<- file.path('graphs',paste(c(model,"-FidCommTerms-n",n,"-",ifelse(oos,"OOS","noOOS"),"c",c.val),collapse="",sep=""))
+if(!run.in.linux&(!run.for.Sweave))  savePlot(paste(fname,".pdf",sep="",collapse=""),type="pdf")
+if(!run.in.linux&(!run.for.Sweave))  savePlot(filename=paste(fname,".ps",sep="",collapse=""),type="ps")
+if(!run.in.linux&(!run.for.Sweave)) savePlot(filename=paste(fname,".png",collapse="",sep=""),type="png")
+
+
+if( run.in.linux) X11() else {windows()}
+
+for (w.i in 1:w.val.len){
+	if (w.i==1) {plot (d.vals,avg.Fid1.alt.G[first.ind, w.i],type="l",col="red")}
+	else {lines (d.vals,avg.Fid1.alt.G[first.ind, w.i],col="red")}
+	lines(d.vals,avg.Fid2.alt.G[first.ind, w.i],col="orange")
+	lines(d.vals,avg.Comm.alt.G[first.ind, w.i],col="blue")
+}
+
+
+
+for (w.i in 1:w.val.len){
+	if (w.i==1) {plot (d.vals,avg.FCratios.List.G[first.ind,w.i],type="l",col="red")}
+	else {lines (d.vals,avg.FCratios.List.G[first.ind,w.i],col="red")}
+	lines(d.vals,avg.wtFCratios.List.G[first.ind,w.i],col="blue")
+	
+}
+
+@
+
+<<FidComm-d-plot-Dirichlet, echo=FALSE,fig=FALSE,results=hide,cache=TRUE >>=
+
+for (i in 1: length(d.vals)){
+	first.ind[i]<-which(params.df$d.i==d.vals[i])
+}
+
+
+
+if (verbose) print(c("Fid1","Fid2","Comm"))
+if (verbose) print(cbind(Fid1.D,Fid2.D,Comm.D))
+if( run.in.linux) X11() else {windows()}
+
+plot.graph.with.CI(Fid1,"Fid and Comm Terms","red",conf.int=TRUE,   add=FALSE,fp.points=w.vals,
+		customx.labels=NULL,customy.labels=NULL,ispowercurve=FALSE)
+
+plot.graph.with.CI(Fid2,"Fid and Comm Terms","orange",conf.int=TRUE,add=TRUE,fp.points=w.vals,
+		customx.labels=NULL,customy.labels=NULL,ispowercurve=FALSE)
+
+plot.graph.with.CI(Comm,"Fid and Comm Terms","blue",conf.int=TRUE,  add=TRUE,fp.points=w.vals,
+		customx.labels=NULL,customy.labels=NULL,ispowercurve=FALSE)
+
+
+fname<- file.path('graphs',paste(c(model,"-FidCommTerms-n",n,"-",ifelse(oos,"OOS","noOOS"),"c",c.val),collapse="",sep=""))
+if(!run.in.linux&(!run.for.Sweave))  savePlot(paste(fname,".pdf",sep="",collapse=""),type="pdf")
+if(!run.in.linux&(!run.for.Sweave))  savePlot(filename=paste(fname,".ps",sep="",collapse=""),type="ps")
+if(!run.in.linux&(!run.for.Sweave)) savePlot(filename=paste(fname,".png",collapse="",sep=""),type="png")
+
+
+if( run.in.linux) X11() else {windows()}
+
+for (w.i in 1:w.val.len){
+	if (w.i==1) {plot (d.vals,avg.Fid1.alt.D[first.ind, w.i],type="l",col="red")}
+	else {lines (d.vals,avg.Fid1.alt.D[first.ind, w.i],col="red")}
+	lines(d.vals,avg.Fid2.alt.D[first.ind, w.i],col="orange")
+	lines(d.vals,avg.Comm.alt.D[first.ind, w.i],col="blue")
+}
+
+
+
+for (w.i in 1:w.val.len){
+	if (w.i==1) {plot (d.vals,avg.FCratios.List.D[first.ind,w.i],type="l",col="red")}
+	else {lines (d.vals,avg.FCratios.List.D[first.ind,w.i],col="red")}
+	lines(d.vals,avg.wtFCratios.List.D[first.ind,w.i],col="blue")
+	
+}
+
+@
+
+\begin{comment}
+\begin{figure}
+\includegraphics[scale=0.35]{OOS-MVN-power-w-d.pdf}
+\caption{$\beta$ vs $w$ plot for fixed $\alpha$ values for the Gaussian setting (noiseless case)}
+\label{fig:MVN-c0-beta-w}
+\end{figure}
+\end{comment}
 
 
 The following plot of ROC curves\cite{d-ROC} shows the effect of $d$ parameter on the performance of different methods. 
