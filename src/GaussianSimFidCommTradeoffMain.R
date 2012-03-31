@@ -41,6 +41,12 @@ if (par.compute){
 #Rprof(filename = "Rprof.out", append = FALSE, interval = 0.02,
 #       memory.profiling=FALSE)
 
+Fid1.List<-list()
+Fid2.List<-list()
+Comm.List<-list()
+avg.FCratios.List<-c()
+
+avg.wtFCratios.List<-c()
 
 Fid1.List.G<-list()
 Fid2.List.G<-list()
