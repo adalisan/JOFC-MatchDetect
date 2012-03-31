@@ -45,7 +45,7 @@
 \usepackage{ragged2e}
 
 
-\graphicspath{{./}{./../graphs/}{./../../DataFusion/graphs/}{./../../DataFusion_Kconditions/graphs/}}
+\graphicspath{{./}{./../graphs/}{./graphs/}}
 
 
 \usepackage{amssymb,amsmath,amsthm,amscd}
@@ -140,7 +140,7 @@ Baltimore, MD 21218-2682}
 }
 
 \SweaveOpts{echo=FALSE,results=hide,debug=TRUE,prefix.string=FidCommPaper}
-#file.path("doc","FidCommPaper")
+
 
 <<Init>>=
 	rm(list=ls())
@@ -300,20 +300,6 @@ In our hypothesis testing task, we are given dissimilarities   between a new pai
 %the test points into  the existing configuration so as to be as consistent as possible with these dissimilarities (the distances %between points are as close as possible to the dissimilarities as measured by the criterion function). 
 Out-of-sample embedding can be done one observation at a time, or jointly if the dissimilarities among multiple test observations are also available. 
 
-
-
-\section{Related Work}
-There have many efforts toward solving ``manifold alignment", which is a related  problem. ``Manifold alignment" seeks to find correspondences between observations from different ``conditions". The setting that is most similar to ours is the semi-supervised setting, where a set of correspondences are given and the task is to find correspondences between a new set of points in each condition. In contrast, our hypothesis testing task is to determine whether any given pair of points is ``matched" or not. The proposed solutions follow a common approach in that they look for a common commensurate or a latent space, such that the representations (possibly projections or embeddings) of the observations in the commensurate space match.
-
-Wang and Mahedavan~\cite{Wang2008} suggest an  approach that uses embedding followed by Procrustes Analysis to find a map to a commensurate space. Given a paired set of points, Procrustes Analysis~\cite{Sibson}, finds a transformation from one set of points to another in the same space that minimizes sum of squared distances, subject to some constraints on the transformation. In the case mentioned in \cite{Wang2008}, the paired set of points are corresponding low-dimensional embeddings of kernel matrices.   For the embedding step, they made the choice of using Laplacian Eigenmaps, though their algorithm allows for any appropriate embedding method.
-
- Zhai et al.~\cite{Zhai2010}  finds two projection matrices to minimize three terms in an energy function similar to our JOFC approach (see Section \ref{sec:JOFC}). One of the terms is the \emph{correspondence preserving term} which is the sum of the squared distances between corresponding points and is analogous to our commensurability error term. The other two terms are \emph{manifold regularization terms} and consist of the reconstruction error for a Locally Linear Embedding of the projected points. These terms, analogous to fidelity, make sure the projections in the lower dimension retain the structure of the original points. For fidelity error terms in our setting, this is done by preserving dissimilarities. For manifold regularization terms, this is done by preserving the local neighborhood of points, such that close points are not mapped apart.
-
-Another view to look at the data from different sources is to consider disparate data as different views to be reconciled. According to this view, for observations of $n$ objects under $K$ conditions, $n$ points are embedded instead of $nK$ points. Choi et al.\ \cite{Choi:2008:MIM:1619995.1620064} use the Markov random walk interpretation of multiple kernel matrices to combine into one kernel matrix.  Many other ``Multiple Kernel Learning"  methods exist in the literature~\cite{McFee:2011:LMS:1953048.1953063,Lin2009,Lanckriet2004}.
-
-Another approach is Three-way Multidimensional scaling\cite{3wayNMDS,borg+groenen:1997}.
- This approach assumes the  different ``conditions" of the data are linear transformations of a single configuration and aims to find this single configuration. For our setting, one would first embed the in-sample dissimilarities via the three-way MDS, which would give as the linear transformations that map from group configuration to individual configurations under each condition. This is followed by out-of-embedding the OOS dissimilarities, and use the inverse of the transformation matrices to find the out-of-sample embeddings with respect to the group configuration. Since the out-of-sample embeddings are commensurate, the test statistic can be computed as the distance between the OOS embeddings. 
-%According to our ideas of tradeoff between fidelity and commensurability, this always maximizes commensurability without regard for fidelity and the constraint of the linear transformations between the group and condition configurations allows the approach to recoup some fidelity. 
 
 \section{Fidelity and Commensurability constraints for Manifold Matching\label{sec:FidComm}}
 Unless 
@@ -482,6 +468,21 @@ and   the original dissimilarities are $D(X_1)$ and $D(X_2) $,
 \end{thm}
 
 
+
+\section{Related Work}
+There have many efforts toward solving ``manifold alignment", which is a related  problem. ``Manifold alignment" seeks to find correspondences between observations from different ``conditions". The setting that is most similar to ours is the semi-supervised setting, where a set of correspondences are given and the task is to find correspondences between a new set of points in each condition. In contrast, our hypothesis testing task is to determine whether any given pair of points is ``matched" or not. The proposed solutions follow a common approach in that they look for a common commensurate or a latent space, such that the representations (possibly projections or embeddings) of the observations in the commensurate space match.
+
+Wang and Mahedavan~\cite{Wang2008} suggest an  approach that uses embedding followed by Procrustes Analysis to find a map to a commensurate space. Given a paired set of points, Procrustes Analysis~\cite{Sibson}, finds a transformation from one set of points to another in the same space that minimizes sum of squared distances, subject to some constraints on the transformation. In the case mentioned in \cite{Wang2008}, the paired set of points are corresponding low-dimensional embeddings of kernel matrices.   For the embedding step, they made the choice of using Laplacian Eigenmaps, though their algorithm allows for any appropriate embedding method.
+
+ Zhai et al.~\cite{Zhai2010}  finds two projection matrices to minimize three terms in an energy function similar to our JOFC approach (see Section \ref{sec:JOFC}). One of the terms is the \emph{correspondence preserving term} which is the sum of the squared distances between corresponding points and is analogous to our commensurability error term. The other two terms are \emph{manifold regularization terms} and consist of the reconstruction error for a Locally Linear Embedding of the projected points. These terms, analogous to fidelity, make sure the projections in the lower dimension retain the structure of the original points. For fidelity error terms in our setting, this is done by preserving dissimilarities. For manifold regularization terms, this is done by preserving the local neighborhood of points, such that close points are not mapped apart.
+
+Another view to look at the data from different sources is to consider disparate data as different views to be reconciled. According to this view, for observations of $n$ objects under $K$ conditions, $n$ points are embedded instead of $nK$ points. Choi et al.\ \cite{Choi:2008:MIM:1619995.1620064} use the Markov random walk interpretation of multiple kernel matrices to combine into one kernel matrix.  Many other ``Multiple Kernel Learning"  methods exist in the literature~\cite{McFee:2011:LMS:1953048.1953063,Lin2009,Lanckriet2004}.
+
+Another approach is Three-way Multidimensional scaling\cite{3wayNMDS,borg+groenen:1997}.
+ This approach assumes the  different ``conditions" of the data are linear transformations of a single configuration and aims to find this single configuration. For our setting, one would first embed the in-sample dissimilarities via the three-way MDS, which would give as the linear transformations that map from group configuration to individual configurations under each condition. This is followed by out-of-embedding the OOS dissimilarities, and use the inverse of the transformation matrices to find the out-of-sample embeddings with respect to the group configuration. Since the out-of-sample embeddings are commensurate, the test statistic can be computed as the distance between the OOS embeddings. 
+%According to our ideas of tradeoff between fidelity and commensurability, this always maximizes commensurability without regard for fidelity and the constraint of the linear transformations between the group and condition configurations allows the approach to recoup some fidelity. 
+
+
 \section{Fidelity and Commensurability Tradeoff}
 The major question  addressed in this work is whether in the tradeoff between preservation of fidelity and preservation of  commensurability , there is an optimal point for our hypothesis testing task.  The weights in raw stress allow us to answer this question relatively easily. Since in equation \eqref{eq:FidCommSep},  each term indexed with $i$, $j$ is either a fidelity or a commensurability term, setting $w_{ij}$ to $w$ and $1-w$  for commensurability  and fidelity  terms respectively will allow us to control the importance of fidelity and commensurability terms in the optimization by varying $w$. 
 \begin{align*}
@@ -635,24 +636,26 @@ One of the important questions to be explored is   the uniqueness of  $w^*$.   T
 \begin{comment}
 First, note that  $\beta(w)$ is continuous with respect to $w$ and locally convex  with respect to embedding coordinates $\hat{X}_{.}$
 \end{comment}
-\subsubsection{ A short detour : Discontinuity in configurations}
+\subsubsection{ A short detour : Discontinuity in weighted raw stress OOS configurations}
 
-Note that it is possible to have multiple local minima in the embedding step(see example in$\ref{}$) and have $w$ control which is the global minimum among the configurations of $\hat{X}_{.}$. 
+Note that it is possible to have multiple local minima in the embedding step(see example in \cite{TrossetLocalMin}). We will construct an example  where $w$ controls which of the local minima is the global minimum among the configurations of $\hat{X}_{.}$. 
 Global Minimum Configuration determined by $w$ .
 
 Consider five in-sample points in $\mathbb{R}$ with locations $X_1=(0,0)$,$X_2=(1,0)$,$X_3=(1,1)$
  and $X_4=(1,0)$, $X_5=(.5,.5)$ and two out-of-sample  points with coordinates $X_6=(1,0)$ and $X_7=(0,1)$.
+ \begin{figure}
+ \insertgraphics{multmin-diag}
+ \end{figure} 
   Suppose $X_6$ is matched with $X_2$ and $X_7$ is matched with $X_4$. 
   Denote the Euclidean distance matrix by $D$. 
   Suppose, due to noise, or due to dissimilarities not being Euclidean distances, 
   our dissimilarity matrix is $D'_{ij}=\begin{cases}
-  D_ij-1.4 & \textrm{if  $i==4 & j==6$ or $i==6 & j==4$ or $i==2 & j==7$  or $i==7 & j==2$}  \\
+  D_ij-1.4 & \textrm{if  $i$==4 and $j$==6 or $i$==6 & $j$==4 or $i$==2 & $j$==7  or $i$==7 & $j$==2}  \\
   D_ij  & \textrm{ otherwise}\\
-  \end{cases}$. Quantitatively, the three points $X_1$, $X_7$ and $X_3$ form a barrier which to cross for the oos points to reach their matched counterparts.
+  \end{cases}$. Qualitatively, the three points $X_1$, $X_7$ and $X_3$ form a barrier which  the OOS points need to cross  to reach their matched counterparts.
    
    Based on the initial configuration, the  embedding coordinates of $\hat{X}_6$ might be closer
-    to $X_4$ compared to $X_2$. This is due to a local minimum in the configuration space, 
-    because while $\hat{X}_6$ starts from the initial configuration at the start of optimization, 
+    to $X_4$ compared to $X_2$. This is due to a local minimum in the configuration space.  If $\hat{X}_6$ starts from the initial configuration where it's located on the $X_4$ side of the y=x line at the start of optimization, 
     it might have to cross paths with the embedding of  ${X}_1,{X}_3,{X}_7$ with which it has a  nonzero dissimilarity.  
     Based on value of $w$, it might be easier to get out of this local minimum. 
     In fact, depending on w can this  local minimum can be a global minimum. 
@@ -664,34 +667,75 @@ Consider five in-sample points in $\mathbb{R}$ with locations $X_1=(0,0)$,$X_2=(
 source("./src/multipleMinimaTest.R")
 @
 \begin{figure}
+\begin{minipage}[b]{0.5\linewidth}
+\centering
 \includegraphics[scale=0.35]{true-min-w-0_1.pdf}
+
+\label{fig:figure1-1}
+\end{minipage}
+\hspace{0.5cm}
+\begin{minipage}[b]{0.5\linewidth}
+\centering
 \includegraphics[scale=0.35]{other-min-w-0_1.pdf}
+
+\label{fig:figure1-2}
+\end{minipage}
+
 \caption{Final configurations for for different $w=0.1$ }
 \label{fig:Finalconfig-MultMin-w-0_1}
+
 \end{figure}
 
 
 
 
 \begin{figure}
+\begin{minipage}[b]{0.5\linewidth}
+\centering
 \includegraphics[scale=0.35]{true-min-w-0_5.pdf}
+
+\label{fig:figure2-1}
+\end{minipage}
+\hspace{0.5cm}
+\begin{minipage}[b]{0.5\linewidth}
+\centering
 \includegraphics[scale=0.35]{other-min-w-0_5.pdf}
+
+\label{fig:figure2-2}
+\end{minipage}
+
 \caption{Final configurations for for different $w=0.5$ }
 \label{fig:Finalconfig-MultMin-w-0_5}
-\end{figure}
 
+\end{figure}
 
 
 \begin{figure}
+\begin{minipage}[b]{0.5\linewidth}
+\centering
 \includegraphics[scale=0.35]{true-min-w-0_99.pdf}
+
+\label{fig:figure2-1}
+\end{minipage}
+\hspace{0.5cm}
+\begin{minipage}[b]{0.5\linewidth}
+\centering
 \includegraphics[scale=0.35]{other-min-w-0_99.pdf}
+
+\label{fig:figure2-2}
+\end{minipage}
+
 \caption{Final configurations for for different $w=0.99$ }
 \label{fig:Finalconfig-MultMin-w-0_99}
+
 \end{figure}
+
+
 
 
 <<multMin-table,  echo=FALSE,fig=FALSE,results=tex >>=
 min.config.stress.w.table
+#xtable(min.config.stress.w.table)
 @
 
 
@@ -1011,11 +1055,6 @@ sfStop()
 
 Setting p and q to 5 and 10, respectively, for $n=150$ and $m=150$, the average of the power values for $nmc=150$ Monte Carlo replicates are computed at  different $\alpha$s and are plotted in Figure \ref{fig:MVN-c001-ROC} against $\alpha$ for the Gaussian setting.  Qualititatively similar plots for the Dirichlet setting  exist.  The plot in Figure \ref{fig:MVN-c001-ROC} shows that for different values of  $w$, we have varying power curves, and some $w$ values outperform others in terms of power. In Figure \ref{fig:MVN-c001-beta-w},  $\beta(w)$ is plotted against $w$ for fixed values of $\alpha$. It is  interesting that the optimal value of $w$ seems to be in the range of $(0.85,1)$ for all settings, which suggests commensurability might be more critical for our hypothesis testing task. 
 
-%The same pair of plots are included for various values of parameters $p$,$q$ ,$r$ and $c$.
-
-
-
-
 
 
 
@@ -1094,17 +1133,21 @@ Setting p and q to 5 and 10, respectively, for $n=150$ and $m=150$, the average 
 The same pair of plots are included for various values of parameters $p$,$q$ ,$r$ and $c$.
 
 
+
+
+
+
 \section{The general case of more than two conditions}
 
 
-As it was mentioned, all of the approaches are generalizable to $K>2$ conditions, though some ambiguities need to be resolved. For example,  the alternative hypothesis could be  defined as the event that at least one of the K new dissimilarities are unmatched ($ H_{A1}: \exists i, j , 1\leq i < j \leq K :\bm{y}_{i} \nsim \bm{y}_{j} $ ) or it could be defined as the case that absolutely none of the K dissimilarities are matched   ($H_{A2}: \forall i, j , 1\leq i < j \leq K :\bm{y}_{i} \nsim \bm{y}_{j}$ )  .
+As it was mentioned, all of the approaches are generalizable to $K>2$ conditions, though some ambiguities need to be resolved. For example,  the alternative hypothesis could be  defined as the event that at least one of the K new dissimilarities are pairwise unmatched ($ H_{A1}: \exists i, j , 1\leq i < j \leq K :\bm{y}_{i} \nsim \bm{y}_{j} $ ) or it could be defined as the case that absolutely none of the K dissimilarities are matched   ($H_{A2}: \forall i, j , 1\leq i < j \leq K :\bm{y}_{i} \nsim \bm{y}_{j}$ )  .
 % and the sample from the alternative must be generated accordingly during Monte Carlo simulation. In the first case, an appropriate test statistic is then the maximum of the pairwise %distances between embeddings of each test K-tuple.
 
-For PoM, one can use Procrustes analysis  generalized to more than two configurations. Generalized Procrustes Analysis \cite{} is a well established method for finding a collection of linear transformations that minimizes the mismatch between the transformed configurations and a "mean`` shape computed from these configurations. 
+For PoM, one can use Procrustes analysis  generalized to more than two configurations. Generalized Procrustes Analysis \cite{GPCA} is a well established method for finding a collection of linear transformations that minimizes the mismatch between the transformed configurations and a "mean`` shape computed from these configurations. 
 
 For CCA, there are multiple generalizations available as the correlation between more than two configurations can be defined in multiple ways \cite{generalCCA}. Let $X_1,\ldots,X_K$ be random vectors. Consider the first set of canonical variates to be computed, $Z_1^{1},\ldots,Z_K^{1}$. Denote  the correlation matrix of  $Z_1^{1},\ldots,Z_K^{1}$ by $\Phi^{(1)}$.   The following three criteria  are proposed in \cite{generalCCA}.
 \begin{itemize}
-\item SUMCOR. Maximize the sum of the elements of $\Phi^{(1)}$ : $\mathbf{1'}\(Phi^{(1)})\mathbf{1'}$
+\item SUMCOR. Maximize the sum of the elements of $\Phi^{(1)}$ : $\mathbf{1'}(\Phi^{(1)})\mathbf{1'}$
 \item MAXVAR. Maximize the largest eigenvalue of $\Phi^{(1)}$ : $\lambda^{(1)}_1$ 
 \item  MINVAR. Minimize  the smallest eigenvalue of $\Phi^{(1)}$ : $\lambda^{(m)}_1$ 
 \end{itemize}
@@ -1116,9 +1159,9 @@ An interesting question is whether any of these generalizations is more appropri
 
 A multivariate normal model with $K=3$ conditions were used to generate $K$-condition matched data. 
 The simulations in the previous section\ref{sec:Simulation Results} were repeated with this $K$-condition data. 
-The alternative was chosen as $ H_{A1}$ and SUMCOR was chosen for generalized CCA.
- $q$-dimensional noise vectors of magnitude $c$ was added to the matched measurements. 
- The ROC curves are shown in \ref{fig:MVN-c001-ROC-Kcond}.
+The alternative was chosen as $ H_{A1}$ and SUMCOR was chosen as the generalization of CCA.
+ $q$-dimensional noise vectors of magnitude $c$ were added to the matched measurements. 
+ The ROC curves for these simulations are shown in \ref{fig:MVN-c001-ROC-Kcond}.
 
 
  
@@ -1169,11 +1212,11 @@ sfStop()
 \end{figure}
 
 \section{Experiments on Wiki Data}
-A collection of articles are collected from the English Wikipedia, consisting of the
+To test the JOFC approach with real data, a collection of articles are collected from the English Wikipedia, consisting of the
  directed 2-neighborhood of the document "Algebraic Geometry". 
    This  collection of 1382 articles and the correspondence of each article in French 
 Wikipedia is our real-life dataset. These documents are processed, and dissimilarities between documents  in the same language are computed by the Lin-Pantel discounted mutual information \cite{LinPantel}
- and cosine dissimilarity $k(x_{ik}; x_{jk}) = 1  (x_{ik} x_{jk})=(k(x_{ik})k2kx_{jk}k2)$. It is possible to utilize both textual content of the documents and the hyperlink graph structure.
+ and cosine dissimilarity $k(x_{ik}; x_{jk}) = 1 - (x_{ik} x_{jk})/(\|x_{ik}\|_2\|x_{ik}\|_2)$. It is possible to utilize both textual content of the documents and the hyperlink graph structure.
 We will only consider dissimilarities based on the textual content in this example.   
 For hypothesis testing,   randomly held out four documents - one matched pair and one unmatched pair
  -  are used to compute empirical type I error $\alpha$ and estimate of power based on the critical value computed
@@ -1453,8 +1496,8 @@ The plot here shows the effect of $d$ on Fidelity and Commensurability errors.
 <<FidComm-d-sim, echo=FALSE,fig=FALSE,results=hide,cache=TRUE >>=
 run.for.Sweave<-TRUE
 source("./src/runningParams.R")
+dirichlet.sim<-F
 source("./src/GaussianSimFidCommTradeoffMain.R")
-
 
 @
 
@@ -1507,55 +1550,6 @@ for (w.i in 1:w.val.len){
 
 @
 
-<<FidComm-d-plot-Dirichlet, echo=FALSE,fig=FALSE,results=hide,cache=FALSE >>=
-
-for (i in 1: length(d.vals)){
-	first.ind[i]<-which(params.df$d.i==d.vals[i])
-}
-
-
-
-if (verbose) print(c("Fid1","Fid2","Comm"))
-if (verbose) print(cbind(Fid1.D,Fid2.D,Comm.D))
-
-plot.graph.with.CI(Fid1,"Fid and Comm Terms","red",conf.int=TRUE,   add=FALSE,fp.points=w.vals,
-		customx.labels=NULL,customy.labels=NULL,ispowercurve=FALSE)
-
-plot.graph.with.CI(Fid2,"Fid and Comm Terms","orange",conf.int=TRUE,add=TRUE,fp.points=w.vals,
-		customx.labels=NULL,customy.labels=NULL,ispowercurve=FALSE)
-
-plot.graph.with.CI(Comm,"Fid and Comm Terms","blue",conf.int=TRUE,  add=TRUE,fp.points=w.vals,
-		customx.labels=NULL,customy.labels=NULL,ispowercurve=FALSE)
-
-
-fname<- file.path('graphs',paste(c(model,"-FidCommTerms-n",n,"-",ifelse(oos,"OOS","noOOS"),"c",c.val),collapse="",sep=""))
-if(!run.in.linux&(!run.for.Sweave))  savePlot(paste(fname,".pdf",sep="",collapse=""),type="pdf")
-if(!run.in.linux&(!run.for.Sweave))  savePlot(filename=paste(fname,".ps",sep="",collapse=""),type="ps")
-if(!run.in.linux&(!run.for.Sweave)) savePlot(filename=paste(fname,".png",collapse="",sep=""),type="png")
-@
-
-
-<<FidComm-d-plot-Dirichlet-2, echo=FALSE,fig=TRUE,results=hide,cache=FALSE >>=
-if( run.in.linux) X11() else {windows()}
-
-for (w.i in 1:w.val.len){
-	if (w.i==1) {plot (d.vals,avg.Fid1.alt.D[first.ind, w.i],type="l",col="red")}
-	else {lines (d.vals,avg.Fid1.alt.D[first.ind, w.i],col="red")}
-	lines(d.vals,avg.Fid2.alt.D[first.ind, w.i],col="orange")
-	lines(d.vals,avg.Comm.alt.D[first.ind, w.i],col="blue")
-}
-
-@
-
-<<FidComm-d-plot-Dirichlet-3, echo=FALSE,fig=TRUE,results=hide,cache=FALSE >>=
-for (w.i in 1:w.val.len){
-	if (w.i==1) {plot (d.vals,avg.FCratios.List.D[first.ind,w.i],type="l",col="red")}
-	else {lines (d.vals,avg.FCratios.List.D[first.ind,w.i],col="red")}
-	lines(d.vals,avg.wtFCratios.List.D[first.ind,w.i],col="blue")
-	
-}
-
-@
 
 \begin{comment}
 \begin{figure}
@@ -1636,24 +1630,24 @@ That is, we seek a permutation matrix $P \in \{0,1\}^{s \times s}$ such that $A=
 
 Using omnibus  embedding, it is possible to embed the vertices of two graphs in a commensurate space.
 Therefore, the JOFC approach can be used here for determining the pairwise distance between  the vertices of $A$ and $B$.
-The next step is to use the pairwise distances to find the optimal 1-1 matchings by the Hungarian algorithm \cite{Hung-algo}.
+The next step is to use the pairwise distances to find the optimal 1-1 matchings by the Hungarian algorithm \cite{Hung-algo}. The Hungarian algorithm finds an optimal matching between two sets of nodes such that the total  cost which is the sum of the pairwise distances of matched nodes is minimized.
  
 One useful property of dissimilarity representation is that the structure of data is irrelevant once an appropriate dissimilarity function  for the data is available. 
 There are many distances that can be defined between vertices in graphs. We assume that an appropriate distance measure is available to us.
-In our experiments we will use three different dissimilarities:
+In our experiments we will use three different dissimilarities between vertices in a graph:
 \begin{itemize}
  \item the shortest path on the  unweighted graph whose adjacency matrix is available
  \item the shortest path on a weighted version of the graph whose adjacency matrix is available
  \item diffusion distance between vertices on the (unweighted?) graph.
  \end{itemize}
- Note that these dissimilarities can only be defined between vertices of the same graph. We impute the inter-condition dissimilarities as
+ Note that these dissimilarities can only be defined between vertices of the same graph. We impute the inter-condition dissimilarities 
   as described before\label{omnibus}.
  
   In the following simulation, $A$ is the adjacency matrix of an Erdos-Renyi graph, that is
   $\[A\]_{ij} \sim Binomial(p)$ where $\[A\]_{ij}$ is $ij$-th entry of the adjacency matrix  $A$.
    and the adjacency matrix  $B$ is a entry-wise bit-flipped version of the adjacency matrix of $A$, that is
    $\[B\]_{ij}|\[A\]_{ij}=0 \sim Binomial(p_{10})$ $\[B\]_{ij}|\[A\]_{ij}=1 \sim Binomial(p_{11})$. Suppose $p_{10}=p_{11}=p$
-  The probability of flipping an entry of the adjacency matrix is the perturbation parameter $p$ which is the variable on the x-axis. 
+  The probability of flipping an entry of the adjacency matrix is the perturbation parameter $p_{pert}$ which is the variable on the x-axis. 
   The performance measure is the proportion of true matches to the number of matches. Note that 
   under chance the expected number of true matches is 1, as shown with the dashed line.
 <<JOFC-on-ER-Graph, echo=FALSE,fig=FALSE,results=hide,cache=TRUE>>=
