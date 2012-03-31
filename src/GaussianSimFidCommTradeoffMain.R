@@ -89,6 +89,7 @@ Comm.List.D<-list()
 
 
 
+
 if (gauss.sim)
 	sim.res.g<-list()
 if (dirichlet.sim)
@@ -116,45 +117,16 @@ if (profile.mode) Rprof(filename = "Rprof.out", append = FALSE, interval = 0.02,
 
 params.df<-expand.grid(d.i=d.vals,n.i=n.vals,c.i = c.vals)
 param.count <- nrow(params.df)
+
+power.vals.g<- array(0,dim=c(param.count,length(params$w.vals),params$nmc,length(size)))
+power.vals.d<- array(0,dim=c(param.count,length(params$w.vals),params$nmc,length(size)))
+
 for (param.i in 1:param.count){
 	d.v <- params.df$d.i[param.i]
 	n.v <- params.df$n.i[param.i]
 	c.val <- params.df$c.i[param.i]
+	print(paste(d.v,n.v,c.val))
 	
-	#coincid.vec.dotpr.thres <-0.9
-	#eigen.spectrum <- F
-	#grassmannian.dist <- F
-	#use.Euc.points.x <-F
-	#use.Euc.points.y <-F
-	#p<-6
-	#r<-3
-	
-	#q<-14
-	
-	#d<-2
-	
-	#oos <- TRUE
-	#
-	# assume oos observations in different conditions are matched for oos-embedding
-	#
-	#assume.matched.for.oos <-TRUE
-	#fp.points<- seq(0,1,0.01)
-	#w.vals<-c(0.001,seq(.1,.9,0.1),0.999)
-	#rival.w<- 0.999
-	
-	#Ignore separability error, Set weights to 0 for dissimilarities
-	#between different objects under different conditions
-	# Weights corresponding to off-diagonal entries of L
-	#separability.entries.w<- FALSE
-	#
-	#Use imputed dissimilarities between in-sample and out-of sample objects of different conditions
-	# weights corresponding to V_{12}, V_{21} in the omnibus matrix
-	#
-	#oos.use.imputed <- FALSE
-	
-	
-	#plot.title <- ""
-	#old.gauss.model <- F
 	
 	
 	methods.vec<-c("jofc","pom","cca")
@@ -208,6 +180,7 @@ for (param.i in 1:param.count){
 		sim.res.g<-simulate.generate.test.model.plot("MVN",params,par.compute)
 		print("Gaussian Setting Simulation Ended")
 		
+		power.vals.g[param.i,,,]<- sim.res.g$power
 		Fid1<-sim.res.g$FidComm.Terms$F1
 		Fid2<-sim.res.g$FidComm.Terms$F2
 		Comm<-sim.res.g$FidComm.Terms$C
@@ -355,7 +328,7 @@ for (param.i in 1:param.count){
 		
 		if (cca.reg)
 			legend.txt <-c(legend.txt ,"cca.reg")
-		legend.txt <-c(legend.txt ,"bound")
+		if (compute.bound) {legend.txt <-c(legend.txt ,"bound")}
 		legend("bottomright",legend=legend.txt,
 				col=colors.vec,lty=lty.i.vec,lwd=lwd.i.vec)
 		
@@ -421,7 +394,8 @@ for (param.i in 1:param.count){
 		lty.i.vec <- c(lty.i.vec,i)	
 		legend.txt <- plot.w.vals
 		if (compare.pom.cca)
-			legend.txt <-c(legend.txt ,"pom","cca","bound")
+			legend.txt <-c(legend.txt ,"pom","cca")
+		if (compute.bound) legend.txt <-c(legend.txt ,"bound")
 		
 		legend("bottomright",legend=legend.txt,
 				col=colors.vec[1:(num.w.vals.plotted+2)],lty=lty.i.vec,lwd=lwd.i.vec)
@@ -446,10 +420,10 @@ for (param.i in 1:param.count){
 		params$p<-p.dir
 		params$r<-r.dir
 		params$q<-q.dir
-
+		
 		params$oos <- TRUE
 		
-	
+		
 		
 		
 		params.text.1 <- bquote(p==.(params$p) | r==.(params$r) |q==.(params$q) |c==.(params$c.val)|d==.(params$d))
@@ -474,6 +448,7 @@ for (param.i in 1:param.count){
 		run.time<-Sys.time()-begin.time
 		print("Dirichlet Setting Simulation Ended")
 		
+		power.vals.d[param.i,,,]<- sim.res.d$power
 		
 		Fid1.D<-sim.res.d$FidComm.Terms$F1
 		Fid2.D<-sim.res.d$FidComm.Terms$F2
@@ -608,7 +583,7 @@ for (param.i in 1:param.count){
 		if (cca.reg)
 			legend.txt <-c(legend.txt ,"cca.reg")
 		
-		legend.txt <-c(legend.txt ,"bound")
+		if (compute.bound) {legend.txt <-c(legend.txt ,"bound")}
 		legend("bottomright",legend=legend.txt,
 				col=colors.vec,lty=lty.i.vec,lwd=lwd.i.vec)
 		
@@ -730,7 +705,8 @@ sink()
 
 sink("wstar-vals")
 
-print(estim.wstar)
+print(estim.wstar.G)
+print(estim.wstar.D)
 sink()
 
 

@@ -1,18 +1,19 @@
 
 results.dir <- "./graphs/"
 
-run.for.Sweave <-FALSE
+run.for.Sweave <-TRUE
 par.compute <- TRUE
 par.compute.sf <- TRUE
 run.in.linux<- (.Platform$OS.type=="unix")
 compare.pom.cca<-TRUE
-#c.vals<-c(0.01)
-c.vals<-c(0.01,0)
-d.vals<-c(2,3,5,10,14)
+c.vals<-c(0.01)
+#c.vals<-c(0.01,0)
+d.vals<-c(2,4,8,10)
 verbose<-TRUE
 oos <-TRUE
 num.cpus <- 8
 
+compute.bound<-FALSE
 gauss.sim <-T
 dirichlet.sim <- T
 run.mcnemars.test <- F

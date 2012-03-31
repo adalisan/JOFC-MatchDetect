@@ -1452,12 +1452,13 @@ The plot here shows the effect of $d$ on Fidelity and Commensurability errors.
 
 <<FidComm-d-sim, echo=FALSE,fig=FALSE,results=hide,cache=TRUE >>=
 run.for.Sweave<-TRUE
+source("./src/runningParams.R")
 source("./src/GaussianSimFidCommTradeoffMain.R")
 
 
 @
 
-<<FidComm-d-plot-Gaussian, echo=FALSE,fig=FALSE,results=hide,cache=TRUE >>=
+<<FidComm-d-plot-Gaussian, echo=FALSE,fig=FALSE,results=hide,cache=FALSE >>=
 w.val.len<-length(w.vals)
 for (i in 1: length(d.vals)){
 	first.ind[i]<-which(params.df$d.i==d.vals[i])
@@ -1482,9 +1483,10 @@ fname<- file.path('graphs',paste(c(model,"-FidCommTerms-n",n,"-",ifelse(oos,"OOS
 if(!run.in.linux&(!run.for.Sweave))  savePlot(paste(fname,".pdf",sep="",collapse=""),type="pdf")
 if(!run.in.linux&(!run.for.Sweave))  savePlot(filename=paste(fname,".ps",sep="",collapse=""),type="ps")
 if(!run.in.linux&(!run.for.Sweave)) savePlot(filename=paste(fname,".png",collapse="",sep=""),type="png")
+@
 
+<<FidComm-d-plot-Gaussian-2, echo=FALSE,fig=TRUE,results=hide,cache=FALSE >>=
 
-if( run.in.linux) X11() else {windows()}
 
 for (w.i in 1:w.val.len){
 	if (w.i==1) {plot (d.vals,avg.Fid1.alt.G[first.ind, w.i],type="l",col="red")}
@@ -1493,8 +1495,9 @@ for (w.i in 1:w.val.len){
 	lines(d.vals,avg.Comm.alt.G[first.ind, w.i],col="blue")
 }
 
+@
 
-
+<<FidComm-d-plot-Gaussian-3, echo=FALSE,fig=TRUE,results=hide,cache=FALSE >>=
 for (w.i in 1:w.val.len){
 	if (w.i==1) {plot (d.vals,avg.FCratios.List.G[first.ind,w.i],type="l",col="red")}
 	else {lines (d.vals,avg.FCratios.List.G[first.ind,w.i],col="red")}
@@ -1504,7 +1507,7 @@ for (w.i in 1:w.val.len){
 
 @
 
-<<FidComm-d-plot-Dirichlet, echo=FALSE,fig=FALSE,results=hide,cache=TRUE >>=
+<<FidComm-d-plot-Dirichlet, echo=FALSE,fig=FALSE,results=hide,cache=FALSE >>=
 
 for (i in 1: length(d.vals)){
 	first.ind[i]<-which(params.df$d.i==d.vals[i])
@@ -1514,7 +1517,6 @@ for (i in 1: length(d.vals)){
 
 if (verbose) print(c("Fid1","Fid2","Comm"))
 if (verbose) print(cbind(Fid1.D,Fid2.D,Comm.D))
-if( run.in.linux) X11() else {windows()}
 
 plot.graph.with.CI(Fid1,"Fid and Comm Terms","red",conf.int=TRUE,   add=FALSE,fp.points=w.vals,
 		customx.labels=NULL,customy.labels=NULL,ispowercurve=FALSE)
@@ -1530,8 +1532,10 @@ fname<- file.path('graphs',paste(c(model,"-FidCommTerms-n",n,"-",ifelse(oos,"OOS
 if(!run.in.linux&(!run.for.Sweave))  savePlot(paste(fname,".pdf",sep="",collapse=""),type="pdf")
 if(!run.in.linux&(!run.for.Sweave))  savePlot(filename=paste(fname,".ps",sep="",collapse=""),type="ps")
 if(!run.in.linux&(!run.for.Sweave)) savePlot(filename=paste(fname,".png",collapse="",sep=""),type="png")
+@
 
 
+<<FidComm-d-plot-Dirichlet-2, echo=FALSE,fig=TRUE,results=hide,cache=FALSE >>=
 if( run.in.linux) X11() else {windows()}
 
 for (w.i in 1:w.val.len){
@@ -1541,8 +1545,9 @@ for (w.i in 1:w.val.len){
 	lines(d.vals,avg.Comm.alt.D[first.ind, w.i],col="blue")
 }
 
+@
 
-
+<<FidComm-d-plot-Dirichlet-3, echo=FALSE,fig=TRUE,results=hide,cache=FALSE >>=
 for (w.i in 1:w.val.len){
 	if (w.i==1) {plot (d.vals,avg.FCratios.List.D[first.ind,w.i],type="l",col="red")}
 	else {lines (d.vals,avg.FCratios.List.D[first.ind,w.i],col="red")}
@@ -1562,6 +1567,38 @@ for (w.i in 1:w.val.len){
 
 
 The following plot of ROC curves\cite{d-ROC} shows the effect of $d$ parameter on the performance of different methods. 
+
+<<d-ROC, echo=FALSE,fig=TRUE,results=hide,cache=FALSE >>=
+lty.i.vec<-c()
+lwd.i.vec <- c()
+line.width<-1.5
+w.val.len<- length(params$w.vals)
+plot.w.vals<-params$w.vals[1:w.val.len]
+
+# w.val.indices<-c(1:4,7,9,10)
+
+w.val.index <-5
+#w.val.indices<-c(1,5,8)
+
+first.ind[i]<-which(params.df$d.i==d.vals[i])
+
+for (d.i in 1:length(d.vals)){
+	 
+	lty.i <- 1+((d.i-1)%%10)
+	line.width<-1.5
+	lty.i.vec <- c(lty.i.vec,lty.i)
+	lwd.i.vec <- c(lwd.i.vec,line.width)
+	par(lty=lty.i)
+	plot.ROC.with.CI(power.vals.g[first.ind[d.i],w.val.index,,],plot.title="",plot.col = colors.vec[d.i],
+			conf.int=FALSE,add=(d.i>1),linewd=line.width,ylim=1)
+}
+	
+legend.txt <- d.vals
+
+legend("bottomright",legend=legend.txt,
+		col=colors.vec,lty=lty.i.vec,lwd=lwd.i.vec)
+
+@
 
 \section{Experiments on Graph Data}
 
@@ -1612,9 +1649,13 @@ In our experiments we will use three different dissimilarities:
  Note that these dissimilarities can only be defined between vertices of the same graph. We impute the inter-condition dissimilarities as
   as described before\label{omnibus}.
  
-  In the following simulation, $A$ is an Erdos-Renyi graph and the adjacency matrix of $B$ is a entry-wise bit-flipped version of the adjacency matrix of $A$.
-  The probability of flipping an entry of the adjacency matrix is the perturbation parameter which is the variable on the x-axis. 
-  The performance measure is the proportion of true measures.
+  In the following simulation, $A$ is the adjacency matrix of an Erdos-Renyi graph, that is
+  $\[A\]_{ij} \sim Binomial(p)$ where $\[A\]_{ij}$ is $ij$-th entry of the adjacency matrix  $A$.
+   and the adjacency matrix  $B$ is a entry-wise bit-flipped version of the adjacency matrix of $A$, that is
+   $\[B\]_{ij}|\[A\]_{ij}=0 \sim Binomial(p_{10})$ $\[B\]_{ij}|\[A\]_{ij}=1 \sim Binomial(p_{11})$. Suppose $p_{10}=p_{11}=p$
+  The probability of flipping an entry of the adjacency matrix is the perturbation parameter $p$ which is the variable on the x-axis. 
+  The performance measure is the proportion of true matches to the number of matches. Note that 
+  under chance the expected number of true matches is 1, as shown with the dashed line.
 <<JOFC-on-ER-Graph, echo=FALSE,fig=FALSE,results=hide,cache=TRUE>>=
 cep=TRUE
 verbose= FALSE
@@ -1796,8 +1837,9 @@ abline(h=1/(n-m),lty=2) ### chance?  apparently not!?
 abline(v=1/2,lty=2) ### chance?  gotta be!?
 @
 
-
-<<JOFC-graph-sim-2, echo=FALSE,fig=FALSE,results=hide,cache=TRUE >>=
+This graph shows the effect of embedding dimension $d$ on the probability of true matches.
+  
+<<JOFC-graph-sim-d, echo=FALSE,fig=FALSE,results=hide,cache=TRUE >>=
 
 d.dim.vec<-c(4,6,10)
 
@@ -1932,38 +1974,36 @@ for (d.dim in d.dim.vec){
 @
 
 
-### notice that the %correctmatches decreases as perturbation parameter increases! :-)
-
-<<graph-plot-2, echo=FALSE,fig=TRUE,results=hide,cache=FALSE >>=
-
-colors.vec<-c( "red","blue","orange","green","purple")
-
-colors.vec<-colors.vec[1:length(d.dim.vec)]
-plot(pert,apply(nc.jofc.diff.d[,,1],1,mean)/(n-m),xlab="perturbation parameter",ylab="Fraction of  correct matches",ylim=c(0,1),col=colors.vec[1])
-for (d.i in 2:length(d.dim.vec)){
-	points(pert,apply(nc.jofc.diff.d[,,d.i],1,mean)/(n-m),xlab="perturbation parameter",ylab="Fraction of  correct matches",ylim=c(0,1),pch=1,col=colors.vec[d.i])
-}
-for (d.i in 1:length(d.dim.vec)){
-	points(pert,apply(nc.cmds.d[,,d.i],1,mean)/(n-m),xlab="perturbation parameter",ylab="Fraction of  correct matches",ylim=c(0,1),pch=2,col=colors.vec[d.i])
-}
-for (d.i in 1:length(d.dim.vec)){
-	points(pert,apply(nc.jofc.weighted.d[,,d.i],1,mean)/(n-m),xlab="perturbation parameter",ylab="Fraction of  correct matches",ylim=c(0,1),pch=3,col=colors.vec[d.i])
-}
-for (d.i in 1:length(d.dim.vec)){
-	points(pert,apply(nc.jofc.unweighted.d[,,d.i],1,mean)/(n-m),xlab="perturbation parameter",ylab="Fraction of  correct matches",ylim=c(0,1),pch=4,col=colors.vec[d.i])
-}
-legend.txt<- c("diff dist","CMDS","weighted.graph","unweighted.graph")
-legend.txt <- c(legend.txt,d.dim.vec)
-legend(x="topright",legend=legend.txt, 
-		col =c(rep(1,4),colors.vec),pch=c(1:4,rep(1,length(d.dim.vec))))
-title("marriage o jofc")
-abline(h=1/(n-m),lty=2) ### chance?  apparently not!?
-abline(v=1/2,lty=2) ### chance?  gotta be!?
-@
+%<<graph-plot-2, echo=FALSE,fig=TRUE,results=hide,cache=FALSE >>=
+%
+%colors.vec<-c( "red","blue","orange","green","purple")
+%
+%colors.vec<-colors.vec[1:length(d.dim.vec)]
+%plot(pert,apply(nc.jofc.diff.d[,,1],1,mean)/(n-m),xlab="perturbation parameter",ylab="Fraction of  correct matches",ylim=c(0,1),col=colors.vec[1])
+%for (d.i in 2:length(d.dim.vec)){
+%	points(pert,apply(nc.jofc.diff.d[,,d.i],1,mean)/(n-m),xlab="perturbation parameter",ylab="Fraction of  correct matches",ylim=c(0,1),pch=1,col=colors.vec[d.i])
+%}
+%for (d.i in 1:length(d.dim.vec)){
+%	points(pert,apply(nc.cmds.d[,,d.i],1,mean)/(n-m),xlab="perturbation parameter",ylab="Fraction of  correct matches",ylim=c(0,1),pch=2,col=colors.vec[d.i])
+%}
+%for (d.i in 1:length(d.dim.vec)){
+%	points(pert,apply(nc.jofc.weighted.d[,,d.i],1,mean)/(n-m),xlab="perturbation parameter",ylab="Fraction of  correct matches",ylim=c(0,1),pch=3,col=colors.vec[d.i])
+%}
+%for (d.i in 1:length(d.dim.vec)){
+%	points(pert,apply(nc.jofc.unweighted.d[,,d.i],1,mean)/(n-m),xlab="perturbation parameter",ylab="Fraction of  correct matches",ylim=c(0,1),pch=4,col=colors.vec[d.i])
+%}
+%legend.txt<- c("diff dist","CMDS","weighted.graph","unweighted.graph")
+%legend.txt <- c(legend.txt,d.dim.vec)
+%legend(x="topright",legend=legend.txt, 
+%		col =c(rep(1,4),colors.vec),pch=c(1:4,rep(1,length(d.dim.vec))))
+%title("marriage o jofc")
+%abline(h=1/(n-m),lty=2) ### chance?  apparently not!?
+%abline(v=1/2,lty=2) ### chance?  gotta be!?
+%@
 
 
 <<graph-plot-3, echo=FALSE,fig=TRUE,results=hide,cache=FALSE >>=
-ccolors.vec<-c( "red","blue","orange","green","purple")
+colors.vec<-c( "red","blue","orange","green","purple")
 
 colors.vec<-colors.vec[1:length(d.dim.vec)]
 plot(pert,apply(nc.jofc.diff.d[,,1],1,mean)/(n-m),
@@ -2074,8 +2114,7 @@ for(imc in 1:nmc)
 	}
 }
 @
-
-### notice that the %correctmatches decreases as perturbation parameter increases! :-)
+This graph shows the effect of the weight parameter of stress $w$ on the probability of true matches.
 
 <<graph-plot-4, echo=FALSE,fig=TRUE,results=hide,cache=FALSE >>=
 
@@ -2107,6 +2146,9 @@ title("marriage o jofc")
 abline(h=1/(n-m),lty=2) ### chance?  apparently not!?
 abline(v=1/2,lty=2) ### chance?  gotta be!?
 @
+
+
+This graph shows the effect of the diffusion distance parameter $T$ on the probability of true matches.
 
 
 <<JOFC-graph-sim-5, echo=FALSE,fig=FALSE,results=hide,cache=TRUE >>=
@@ -2161,8 +2203,7 @@ for (T.i in 1:length(T.diff.vec)){
 		}
 	}
 }
-
-### notice that the %correctmatches decreases as perturbation parameter increases! :-)
+@
 
 <<graph-plot-5, echo=FALSE,fig=TRUE,results=hide,cache=FALSE >>=
 		
@@ -2188,7 +2229,17 @@ abline(v=1/2,lty=2) ### chance?  gotta be!?
 
 
 \section{Conclusion}
- We have investigated the tradeoff between Fidelity and Commensurability and the relation to the weighted raw stress criterion for MDS. Two alternative approaches, P$\circ$M and CCA, were presented as extremes of the tradeoff  between Fidelity and Commensurability. For  hypothesis testing as the exploitation task, the three approaches were compared in terms of testing power. The results indicate that the joint optimization (JOFC) approach is superior to CCA and  P$\circ$M, and is also robust to spurious correlations CCA suffers from. Also when doing a joint optimization, one should consider an optimal compromise point between Fidelity and Commensurability, which corresponds to an optimal weight $w^*$ of the weighted raw stress criterion in contrast to the unweighted raw stress  for omnibus matrix embedding. 
+ We have investigated the tradeoff between Fidelity and Commensurability and the relation to the weighted raw stress criterion for MDS.
+  Two alternative approaches, P$\circ$M and CCA, were presented as extremes of the tradeoff  between Fidelity and Commensurability.
+   For  hypothesis testing as the exploitation task, the three approaches were compared in terms of testing power.
+    The results indicate that the joint optimization (JOFC) approach is superior to CCA and  P$\circ$M,
+     and is also robust to spurious correlations CCA suffers from.
+      Also when doing a joint optimization, one should consider an optimal compromise point between Fidelity and Commensurability,
+       which corresponds to an optimal weight $w^*$ of the weighted raw stress criterion in contrast to the unweighted raw stress 
+        for omnibus matrix embedding. 
+        The JOFC approach is quite versatile and can be applied to many problems where data of multiple modalities have to be made commensurate. 
+        We have applied JOFC to  test for matches between Wiki articles and pairs of vertices in random graph data.  Performance of JOFC shows that it 
+        it is appropriate for these settings.  
 
 <<after-conclusion,fig=FALSE,echo=FALSE,results=hide,cache=TRUE,prefix.string="JOFCpaper">>=
 
