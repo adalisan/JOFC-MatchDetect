@@ -1,14 +1,15 @@
 
 results.dir <- "./graphs/"
 
-run.for.Sweave <-TRUE
+
 par.compute <- TRUE
 par.compute.sf <- TRUE
 run.in.linux<- (.Platform$OS.type=="unix")
 compare.pom.cca<-TRUE
-c.vals<-c(0.01)
-#c.vals<-c(0.01,0)
-d.vals<-c(2,4,8,10)
+#c.vals<-c(0.01)
+c.vals<-c(0.01,0)
+#d.vals<-c(2,4,8,10)
+d.vals<-c(2)
 verbose<-TRUE
 oos <-TRUE
 num.cpus <- 8

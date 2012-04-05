@@ -139,10 +139,11 @@ Baltimore, MD 21218-2682}
 \abstract{For matched data from disparate sources (objects observed under different conditions), optimality of information fusion must be defined with respect to the inference task at hand. Defining the task as matched/unmatched hypothesis testing for dissimilarity observations, the forthcoming Manifold Matching paper by Priebe et al.~\cite{JOFC} presents an embedding method based on joint optimization of fidelity (preservation of within-condition dissimilarities between observations of an object) and commensurability (preservation of between-condition dissimilarities between observations) . We investigate the tradeoff between fidelity and commensurability by varying weights in weighted embedding of an omnibus dissimilarity matrix. Optimal (defined with respect to the power of the test) weights for the optimization correspond to an optimal compromise between fidelity and commensurability. The two extremes of this tradeoff are commensurability optimization prioritized over fidelity optimization and vice versa. Results indicate optimal weights are different than equal weights for commensurability and fidelity and our weighted embedding scheme provides significant improvements in test power.
 }
 
-\SweaveOpts{echo=FALSE,results=hide,debug=TRUE,prefix.string=FidCommPaper}
+\SweaveOpts{echo=FALSE,results=hide,debug=TRUE,prefix.string=graphs/FidCommPaper}
 
 
-<<Init>>=
+
+<<Init,cache=TRUE>>=
 	rm(list=ls())
 	library(ProjectTemplate)
 	load.project()
@@ -644,13 +645,13 @@ Global Minimum Configuration determined by $w$ .
 Consider five in-sample points in $\mathbb{R}$ with locations $X_1=(0,0)$,$X_2=(1,0)$,$X_3=(1,1)$
  and $X_4=(1,0)$, $X_5=(.5,.5)$ and two out-of-sample  points with coordinates $X_6=(1,0)$ and $X_7=(0,1)$.
  \begin{figure}
- \insertgraphics{multmin-diag}
+ \includegraphics{multmin-diag}
  \end{figure} 
   Suppose $X_6$ is matched with $X_2$ and $X_7$ is matched with $X_4$. 
   Denote the Euclidean distance matrix by $D$. 
   Suppose, due to noise, or due to dissimilarities not being Euclidean distances, 
   our dissimilarity matrix is $D'_{ij}=\begin{cases}
-  D_ij-1.4 & \textrm{if  $i$==4 and $j$==6 or $i$==6 & $j$==4 or $i$==2 & $j$==7  or $i$==7 & $j$==2}  \\
+  D_ij-1.4 & \textrm{if  $(i,j) in \{(4,6),(6,4),(2,7),(7,2)   \}$ }\\
   D_ij  & \textrm{ otherwise}\\
   \end{cases}$. Qualitatively, the three points $X_1$, $X_7$ and $X_3$ form a barrier which  the OOS points need to cross  to reach their matched counterparts.
    
@@ -663,7 +664,7 @@ Consider five in-sample points in $\mathbb{R}$ with locations $X_1=(0,0)$,$X_2=(
     The following plots shows the local minimum $\hat{X}_6$ ends up in, depending on initial configuration. 
     Depending on $w$ value, one of these minima has a lower weighted stress than the other.   
 
-<<multMin,  echo=FALSE,fig=FALSE,results=hide,cache=TRUE >>=
+<<multMin,  echo=FALSE,fig=FALSE,results=hide,cache=TRUE ,trace=TRUE>>=
 source("./src/multipleMinimaTest.R")
 @
 \begin{figure}
@@ -733,9 +734,9 @@ source("./src/multipleMinimaTest.R")
 
 
 
-<<multMin-table,  echo=FALSE,fig=FALSE,results=tex >>=
-min.config.stress.w.table
-#xtable(min.config.stress.w.table)
+<<multMin-table,  echo=FALSE,fig=FALSE,results=tex ,dependson=multMin>>=
+#min.config.stress.w.table
+xtable(min.config.stress.w.table)
 @
 
 
@@ -753,7 +754,7 @@ By the continuity of the distance function with respect to configurations, the t
 
 
  
-<<null-alt,  echo=FALSE,fig=FALSE,results=hide,cache=TRUE >>=
+<<null-alt,  echo=FALSE,fig=FALSE,results=hide,cache=TRUE ,trace=TRUE>>=
 source("./src/Null.Alt.Stat.for.JOFC.R")
 oos.stats<-compute.stats.for.params(params.list,"p_r")
 
@@ -767,7 +768,7 @@ par(lwd=2)
 @
 
 
-<<fig-stats-p, echo=FALSE,fig=TRUE,results=hide,cache=FALSE>>=
+<<fig-stats-p, echo=FALSE,fig=TRUE,results=hide,cache=FALSE,dependson=null-alt>>=
   fix.i <-1
 
    par(lty=1)
@@ -802,7 +803,7 @@ Consider  an increase in $r$, this will cause the test statistic under null to b
 
 
 
-<<fig-stats-r, echo=FALSE,fig=TRUE, results=hide, cache=FALSE >>=
+<<fig-stats-r, echo=FALSE,fig=TRUE, results=hide, cache=FALSE,dependson=null-alt >>=
 	
 par(lty=1)
 first.est<- density(oos.diss.all.params.0[1,fix.i,])
@@ -826,7 +827,7 @@ first.est<- density(oos.diss.all.params.0[1,fix.i,])
 Consider increases in $c$, which will increase the dissimilarity  both between matched and between unmatched vectors. 
 
 
-<<stats-c-sim, echo=FALSE,fig=FALSE,results=hide,cache=TRUE >>=
+<<stats-c-sim, echo=FALSE,fig=FALSE,results=hide,cache=TRUE,trace=TRUE >>=
 source("./src/Null.Alt.Stat.for.JOFC.R")
 
 debug.mode<-FALSE
@@ -863,7 +864,7 @@ oos.diss.all.params.c.A <- oos.stats.c$stats.A
 sfStop()
 @
 
-<<fig-stats-c, echo=FALSE,fig=TRUE,results=hide,cache=FALSE >>=
+<<fig-stats-c, echo=FALSE,fig=TRUE,results=hide,cache=FALSE,dependson=stats-c-sim >>=
 
 fix.i<-1
 first.est<- density(oos.diss.all.params.c.0[1,fix.i,])
@@ -891,7 +892,7 @@ first.est<- density(oos.diss.all.params.c.0[1,fix.i,])
 
 Consider increases in $q$,  the test statistic under both null and alternative is inflated\ref{fig-stats-q}. 
 
-<<stats-q-sim, echo=FALSE,fig=FALSE,results=hide,cache=TRUE >>=
+<<stats-q-sim, echo=FALSE,fig=FALSE,results=hide,cache=TRUE ,trace=TRUE>>=
 source("./src/Null.Alt.Stat.for.JOFC.R")
 
 debug.mode<-FALSE
@@ -925,7 +926,7 @@ oos.diss.all.params.q.A <- oos.stats.q$stats.A
 sfStop()
 @
 
-<<fig-stats-q, echo=FALSE,fig=TRUE,results=hide,cache=FALSE >>=
+<<fig-stats-q, echo=FALSE,fig=TRUE,results=hide,cache=FALSE, dependson=stats-q-sim >>=
 
 fix.i<-1
 first.est<- density(oos.diss.all.params.q.0[1,fix.i,])
@@ -982,7 +983,7 @@ Given the setting ("Gaussian","Dirichlet"),   the steps for each Monte Carlo rep
 \end{itemize}
 
 
-<<sim-two-cond-pre,fig=FALSE,echo=FALSE,results=hide,cache=FALSE,prefix.string="JOFCpaper">>=
+<<sim-two-cond-pre,fig=FALSE,echo=FALSE,results=hide,cache=TRUE,prefix.string="JOFCpaper",trace=TRUE>>=
 rm(list=ls())
 
 #setwd(file.path("./../../DataFusion/"))
@@ -1010,6 +1011,7 @@ run.for.Sweave<-TRUE
 
 
 <<sim-two-cond,fig=FALSE,echo=FALSE,results=verbatim,cache=TRUE,prefix.string="JOFCpaper">>=
+#,dependson=sim-two-cond-pre>>=
 debug.mode<- FALSE
 source("./src/GaussianSimFidCommTradeoffMain.R")
 sfStop()
@@ -1166,7 +1168,7 @@ The alternative was chosen as $ H_{A1}$ and SUMCOR was chosen as the generalizat
 
  
 
-<<sim-Kcond-pre,fig=FALSE,echo=FALSE,results=verbatim,cache=FALSE,prefix.string="JOFCpaper">>=
+<<sim-Kcond-pre,fig=FALSE,echo=FALSE,results=verbatim,cache=TRUE,prefix.string="JOFCpaper">>=
 #rm(list=ls())
 
 #setwd(file.path("./../DataFusion_Kconditions/"))
@@ -1194,6 +1196,7 @@ run.for.Sweave<-TRUE
 
 
 <<sim-Kcond,fig=FALSE,echo=FALSE,results=hide,cache=TRUE,prefix.string="JOFCpaper">>=
+#,dependson=sim-Kcond-pre>>=
 #debug.mode<- FALSE
 K<-3
 #sink("./logs/debug.trymsg.txt")
@@ -1232,12 +1235,8 @@ Target dimensionality d is determined by the Zhu and Ghodsi  automatic dimension
 method \cite{ZhuGhodsi}, resulting in d = 6 for this data set.
 
 
-<<wiki-2cond, echo=FALSE,fig=FALSE,results=hide,cache=TRUE >>=
-
-
-
-
-
+<<wiki-2cond, echo=FALSE,fig=FALSE,results=hide,cache=TRUE>>=
+#,depenson=Init >>=
 model= "gaussian"
 w.vals = c(0.1,0.2,0.4,0.5,0.8,0.9,0.925,0.95,0.99,0.999)
 w.val.len <- length(w.vals)
@@ -1389,7 +1388,7 @@ sfStop()
 
 @
 
-<<wiki-2cond-plot, echo=FALSE,fig=TRUE,results=hide,cache=FALSE >>=
+<<wiki-2cond-plot, echo=FALSE,fig=TRUE,results=hide,cache=FALSE,dependson=wiki-2cond >>=
 
 
 colors.vec <- c("red","green","gold4","purple","aquamarine",
@@ -1432,8 +1431,11 @@ However we require a more precise selection of this parameter, since it plays su
 First consider the distribution of the test statistic for different values of the embedding dimension.
 
 <<stats-d-sim, echo=FALSE,fig=FALSE,results=hide,cache=TRUE >>=
+rm(list=ls())
+load.project()
+require(MASS)
 source("./src/Null.Alt.Stat.for.JOFC.R")
-
+library(MASS)
 debug.mode<-FALSE
 if(debug.mode){
 	n.vals<-c(50)
@@ -1454,7 +1456,7 @@ vary.param<-"d"
 
 
 
-for (i in (1:length(q.vals))){
+for (i in (1:length(d.vals))){
 	params.list[[i]]$r <- r.vals[i]
 	params.list[[i]]$p <- p.vals[i]
 	params.list[[i]]$q <- q.vals[i]
@@ -1469,7 +1471,7 @@ oos.diss.all.params.d.A <- oos.stats.d$stats.A
 sfStop()
 @
 
-<<fig-stats-d, echo=FALSE,fig=TRUE,results=hide,cache=FALSE >>=
+<<fig-stats-d, echo=FALSE,fig=TRUE,results=hide,cache=FALSE , dependson= stats-d-sim>>=
 
 fix.i<-1
 first.est<- density(oos.diss.all.params.d.0[1,fix.i,])
@@ -1494,31 +1496,49 @@ first.est<- density(oos.diss.all.params.d.0[1,fix.i,])
 The plot here shows the effect of $d$ on Fidelity and Commensurability errors.
 
 <<FidComm-d-sim, echo=FALSE,fig=FALSE,results=hide,cache=TRUE >>=
+
 run.for.Sweave<-TRUE
 source("./src/runningParams.R")
+c.vals<-c(0.01)
+
+d.vals<-c(2,4,8,10)
+
+
 dirichlet.sim<-F
 source("./src/GaussianSimFidCommTradeoffMain.R")
 
 @
 
-<<FidComm-d-plot-Gaussian, echo=FALSE,fig=FALSE,results=hide,cache=FALSE >>=
-w.val.len<-length(w.vals)
+<<FidComm-d-plot-Gaussian, echo=FALSE,fig=FALSE,results=verbatim,cache=FALSE,dependson=FidComm-d-sim >>=
+run.for.Sweave<-TRUE
+source("./src/runningParams.R")
+dirichlet.sim<-F
+c.vals<-c(0.01)
+
+d.vals<-c(2,4,8,10)
+
+
+verbose<-TRUE
+w.val.len<-length(params$w.vals)
+first.ind<-rep(0,length(d.vals))
 for (i in 1: length(d.vals)){
 	first.ind[i]<-which(params.df$d.i==d.vals[i])
 }
 
-
-if (verbose) print(c("Fid1","Fid2","Comm"))
-if (verbose) print(cbind(Fid1,Fid2,Comm))
+sink("./logs/debug-fidcomm.txt")
+ print(str(Fid1))
+ print(c("Fid1","Fid2","Comm"))
+print(cbind(Fid1,Fid2,Comm))
+sink()
 if( run.in.linux) X11() else {windows()}
 
-plot.graph.with.CI(Fid1,"Fid and Comm Terms","red",conf.int=TRUE,   add=FALSE,fp.points=w.vals,
+plot.graph.with.CI(Fid1,"Fid and Comm Terms","red",conf.int=TRUE,   add=FALSE,fp.points=params$w.vals,
 		customx.labels=NULL,customy.labels=NULL,ispowercurve=FALSE)
 
-plot.graph.with.CI(Fid2,"Fid and Comm Terms","orange",conf.int=TRUE,add=TRUE,fp.points=w.vals,
+plot.graph.with.CI(Fid2,"Fid and Comm Terms","orange",conf.int=TRUE,add=TRUE,fp.points=params$w.vals,
 		customx.labels=NULL,customy.labels=NULL,ispowercurve=FALSE)
 
-plot.graph.with.CI(Comm,"Fid and Comm Terms","blue",conf.int=TRUE,  add=TRUE,fp.points=w.vals,
+plot.graph.with.CI(Comm,"Fid and Comm Terms","blue",conf.int=TRUE,  add=TRUE,fp.points=params$w.vals,
 		customx.labels=NULL,customy.labels=NULL,ispowercurve=FALSE)
 
 
@@ -1528,7 +1548,7 @@ if(!run.in.linux&(!run.for.Sweave))  savePlot(filename=paste(fname,".ps",sep="",
 if(!run.in.linux&(!run.for.Sweave)) savePlot(filename=paste(fname,".png",collapse="",sep=""),type="png")
 @
 
-<<FidComm-d-plot-Gaussian-2, echo=FALSE,fig=TRUE,results=hide,cache=FALSE >>=
+<<FidComm-d-plot-Gaussian-2, echo=FALSE,fig=TRUE,results=hide,cache=FALSE,dependson=FidComm-d-sim >>=
 
 
 for (w.i in 1:w.val.len){
@@ -1540,7 +1560,7 @@ for (w.i in 1:w.val.len){
 
 @
 
-<<FidComm-d-plot-Gaussian-3, echo=FALSE,fig=TRUE,results=hide,cache=FALSE >>=
+<<FidComm-d-plot-Gaussian-3, echo=FALSE,fig=TRUE,results=hide,cache=FALSE,dependson=FidComm-d-sim >>=
 for (w.i in 1:w.val.len){
 	if (w.i==1) {plot (d.vals,avg.FCratios.List.G[first.ind,w.i],type="l",col="red")}
 	else {lines (d.vals,avg.FCratios.List.G[first.ind,w.i],col="red")}
@@ -1562,7 +1582,7 @@ for (w.i in 1:w.val.len){
 
 The following plot of ROC curves\cite{d-ROC} shows the effect of $d$ parameter on the performance of different methods. 
 
-<<d-ROC, echo=FALSE,fig=TRUE,results=hide,cache=FALSE >>=
+<<d-ROC, echo=FALSE,fig=TRUE,results=hide,cache=FALSE,depenson= FidComm-d-sim,trace=TRUE >>=
 lty.i.vec<-c()
 lwd.i.vec <- c()
 line.width<-1.5
@@ -1594,13 +1614,27 @@ legend("bottomright",legend=legend.txt,
 
 @
 
+This plot shows the histogram of the estimates of $ w^{*} $ (each estimate comes from a single MC replicate)  
+for different $ d $ values.
+
+<<d-w-hist, echo=FALSE,fig=TRUE,results=hide,cache=FALSE,depenson= FidComm-d-sim,trace=TRUE >>=
+d.vals.len<-length(d.vals)
+par(mfrow=c(ceiling(d.vals.len/2),2))
+for (i in 1:d.vals.len)
+	hist(best.w.g[i,],breaks=length(params$w.vals),
+			main=expression(paste("Best w for d=",d.vals[i])))
+
+@
+
+
+
 \section{Experiments on Graph Data}
 
 We wish to apply our approach to  the vertex matching problem in multiple graphs.
  We are again in a semi-supervised setting, where matchings between some vertices in different graphs are known 
   and wish to infer the correspondences between the remaining collection of vertices in the graphs.
 
-Suppose $A,B \in \R^{(r+s)\times (r+s)}$ are adjacency matrices for graphs 
+Suppose $A,B \in \mathcal{R}^{(r+s)\times (r+s)}$ are adjacency matrices for graphs 
  partitioned as ($r$ rows then $s$ rows, $r$ columns then $s$ columns)
 \[  A =\left [
 \begin{array}{cc} A_{11} & A_{12} \\ A_{21} & A_{22} \end{array} \right ]
@@ -1646,11 +1680,15 @@ In our experiments we will use three different dissimilarities between vertices 
   In the following simulation, $A$ is the adjacency matrix of an Erdos-Renyi graph, that is
   $\[A\]_{ij} \sim Binomial(p)$ where $\[A\]_{ij}$ is $ij$-th entry of the adjacency matrix  $A$.
    and the adjacency matrix  $B$ is a entry-wise bit-flipped version of the adjacency matrix of $A$, that is
-   $\[B\]_{ij}|\[A\]_{ij}=0 \sim Binomial(p_{10})$ $\[B\]_{ij}|\[A\]_{ij}=1 \sim Binomial(p_{11})$. Suppose $p_{10}=p_{11}=p$
+   In the following simulation, $A$ is the adjacency matrix of an Erdos-Renyi graph, that is
+  $\left[A\right]_{ij} \sim Binomial(p)$ where $\left[A\right]_{ij}$ is $ij$-th entry of the adjacency matrix  $A$.
+   and the adjacency matrix  $B$ is a entry-wise bit-flipped version of the adjacency matrix of $A$, that is
+   $\left[B\right]_{ij}|\left[A\right]_{ij}=0 \sim Binomial(p_{10})$ $\left[B\right]_{ij}|\left[A\right]_{ij}=1 \sim Binomial(p_{11})$. Suppose $p_{10}=p_{11}=p$.
+  
   The probability of flipping an entry of the adjacency matrix is the perturbation parameter $p_{pert}$ which is the variable on the x-axis. 
   The performance measure is the proportion of true matches to the number of matches. Note that 
   under chance the expected number of true matches is 1, as shown with the dashed line.
-<<JOFC-on-ER-Graph, echo=FALSE,fig=FALSE,results=hide,cache=TRUE>>=
+<<JOFC-on-ER-Graph, echo=FALSE,fig=FALSE,results=hide,cache=TRUE,trace=TRUE>>=
 cep=TRUE
 verbose= FALSE
 oos=TRUE
@@ -1811,7 +1849,7 @@ for(imc in 1:nmc)
 
 
 
-<<graph-plot-1, echo=FALSE,fig=TRUE,results=hide,cache=FALSE >>=
+<<graph-plot-1, echo=FALSE,fig=TRUE,results=hide,cache=FALSE,dependson=JOFC-on-ER-Graph >>=
 ### notice that the %correctmatches decreases as perturbation parameter increases! :-)
 
 
@@ -1833,7 +1871,7 @@ abline(v=1/2,lty=2) ### chance?  gotta be!?
 
 This graph shows the effect of embedding dimension $d$ on the probability of true matches.
   
-<<JOFC-graph-sim-d, echo=FALSE,fig=FALSE,results=hide,cache=TRUE >>=
+<<JOFC-graph-sim-d, echo=FALSE,fig=FALSE,results=hide,cache=TRUE,depenson=JOFC-on-ER-Graph >>=
 
 d.dim.vec<-c(4,6,10)
 
@@ -1996,7 +2034,7 @@ for (d.dim in d.dim.vec){
 %@
 
 
-<<graph-plot-3, echo=FALSE,fig=TRUE,results=hide,cache=FALSE >>=
+<<graph-plot-3, echo=FALSE,fig=TRUE,results=hide,cache=FALSE,dependson=JOFC-graph-sim-d >>=
 colors.vec<-c( "red","blue","orange","green","purple")
 
 colors.vec<-colors.vec[1:length(d.dim.vec)]
@@ -2026,7 +2064,7 @@ abline(v=1/2,lty=2) ### chance?  gotta be!?
 
 
 
-<<JOFC-graph-sim-3, echo=FALSE,fig=FALSE,results=hide,cache=TRUE >>=
+<<JOFC-graph-sim-3, echo=FALSE,fig=FALSE,results=hide,cache=TRUE,trace=TRUE,depenson=JOFC-on-ER-Graph >>=
 
 nc.jofc.diff.w       = array(0,dim=c(npert,nmc,length(w.vals.vec)))
 nc.jofc.weighted.w   = array(0,dim=c(npert,nmc,length(w.vals.vec)))
@@ -2110,7 +2148,7 @@ for(imc in 1:nmc)
 @
 This graph shows the effect of the weight parameter of stress $w$ on the probability of true matches.
 
-<<graph-plot-4, echo=FALSE,fig=TRUE,results=hide,cache=FALSE >>=
+<<graph-plot-4, echo=FALSE,fig=TRUE,results=hide,cache=FALSE,dependson=JOFC-graph-sim-3 >>=
 
 colors.vec<-c( "red","blue","orange","black","purple")
 colors.vec<- colors.vec[1:w.max.index]
@@ -2145,10 +2183,10 @@ abline(v=1/2,lty=2) ### chance?  gotta be!?
 This graph shows the effect of the diffusion distance parameter $T$ on the probability of true matches.
 
 
-<<JOFC-graph-sim-5, echo=FALSE,fig=FALSE,results=hide,cache=TRUE >>=
+<<JOFC-graph-sim-5, echo=FALSE,fig=FALSE,results=hide,cache=TRUE,trace=TRUE,depenson=JOFC-on-ER-Graph >>=
 
 T.diff.vec<- c(0.5,1,2,5,10)
-nc.jofc.diff.T       = array(0,dim=c(npert,nmc,length(d.dim.vec)))
+nc.jofc.diff.T       = array(0,dim=c(npert,nmc,length(T.diff.vec)))
 
 
 
@@ -2199,7 +2237,7 @@ for (T.i in 1:length(T.diff.vec)){
 }
 @
 
-<<graph-plot-5, echo=FALSE,fig=TRUE,results=hide,cache=FALSE >>=
+<<graph-plot-5, echo=FALSE,fig=TRUE,results=hide,cache=FALSE,dependson=JOFC-graph-sim-5 >>=
 		
 
 colors.vec<-c( "red","blue","orange","green","purple")

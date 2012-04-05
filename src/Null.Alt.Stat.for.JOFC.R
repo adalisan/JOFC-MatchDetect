@@ -153,7 +153,9 @@ vary.param<-"p_r"
 
 #Function runs JOFC embedding with the given parameters to get test statistics 
 run.one.repl.with.params<-function(mc.counter,params){
-	results<-with(params, {	
+	require(MASS)
+	results<-with(params, {
+				require(MASS)
 				w.max.index <-length(w.vals)
 				oos.diss.mc.0<- array(0,dim=c(w.max.index ))
 				oos.diss.mc.A<- array(0,dim=c(w.max.index ))
@@ -373,7 +375,7 @@ run.one.repl.with.params<-function(mc.counter,params){
 
 compute.stats.for.params<-function(params.list,vary.param){
 	
-	
+	require(MASS)
 	T0.agg<-array(0,dim=c(nmc,w.max.index,params.list[[1]]$s))
 	TA.agg<-array(0,dim=c(nmc,w.max.index,params.list[[1]]$s))
 	
@@ -498,7 +500,7 @@ compute.stats.for.params<-function(params.list,vary.param){
 		#sink(paste("log-params-",vary.param,param.index,".txt",sep="",collapse=""))
 
 		
-
+		sfStop()
 		sfInit(parallel=TRUE,cpus=7)
 		sfExport("w.max.index",
 				"size",
@@ -527,7 +529,10 @@ compute.stats.for.params<-function(params.list,vary.param){
 				"compare.pom.cca"
 						
 		)
-		
+		sfLibrary(MASS)
+		sfSource("./lib/oosIM.R")
+		sfSource("./lib/simulation_math_util_fn.R")
+		sfSource("./lib/smacofM.R")
 #		attach(params)		
 #		pprime1     = ifelse(model=="gaussian",p+q,p+q+2)   # cca arguments , signal+noise dimension
 #		pprime2     = ifelse(model=="gaussian",p+q,p+q+2)   # cca arguments, signal+noise dimension

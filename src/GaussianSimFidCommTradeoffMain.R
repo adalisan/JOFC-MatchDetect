@@ -96,11 +96,14 @@ Comm.List.D<-list()
 
 
 
-if (gauss.sim)
+if (gauss.sim){
 	sim.res.g<-list()
-if (dirichlet.sim)
+sim.res.g.list<-list()
+}
+if (dirichlet.sim){
 	sim.res.d<-list()
-
+	sim.res.d.list<-list()
+}
 
 
 p.g <- 3
@@ -126,7 +129,8 @@ param.count <- nrow(params.df)
 
 power.vals.g<- array(0,dim=c(param.count,length(params$w.vals),params$nmc,length(size)))
 power.vals.d<- array(0,dim=c(param.count,length(params$w.vals),params$nmc,length(size)))
-
+best.w.g<-array(param.count,nmc)
+best.w.d<-array(param.count,nmc)
 for (param.i in 1:param.count){
 	d.v <- params.df$d.i[param.i]
 	n.v <- params.df$n.i[param.i]
@@ -185,8 +189,13 @@ for (param.i in 1:param.count){
 		print("Gaussian Setting Simulation Starting, running simulate.generate.test.model.plot")
 		sim.res.g<-simulate.generate.test.model.plot("MVN",params,par.compute)
 		print("Gaussian Setting Simulation Ended")
-		
+		#sim.res.g.list<-c(sim.res.g.list,sim.res.g)
 		power.vals.g[param.i,,,]<- sim.res.g$power
+		for (mc in 1:nmc)
+			best.w.g[param.i,mc]<-sim.res.g$best.w[mc]
+		
+		
+		
 		Fid1<-sim.res.g$FidComm.Terms$F1
 		Fid2<-sim.res.g$FidComm.Terms$F2
 		Comm<-sim.res.g$FidComm.Terms$C
@@ -452,9 +461,15 @@ for (param.i in 1:param.count){
 		
 		sim.res.d<-simulate.generate.test.model.plot("Dirichlet",params,par.compute)
 		run.time<-Sys.time()-begin.time
+		#sim.res.d.list<-c(sim.res.d.list,sim.res.d)
 		print("Dirichlet Setting Simulation Ended")
 		
 		power.vals.d[param.i,,,]<- sim.res.d$power
+		
+		for (mc in 1:nmc)
+			best.w.d[param.i,mc]<-sim.res.d$best.w[mc]
+		
+		
 		
 		Fid1.D<-sim.res.d$FidComm.Terms$F1
 		Fid2.D<-sim.res.d$FidComm.Terms$F2
