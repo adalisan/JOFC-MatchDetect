@@ -629,6 +629,25 @@ Even for  given $\mathbf{F}_u,\mathbf{F}_m$,   $w^*$ must be defined with respec
 Investigation of some  properties of $w^{*}$  is included in  \ref{sec:Simulation Results} section
 
 Some of the questions to be explored relate to   the nature of the function  $\beta_{\alpha}\left( w\right)$. We have defined $w^*$ to be the argmin of  the power function with respect to $w$ and some important questions relate to $\beta_{\alpha}\left( w\right)$ 
+
+An closed-form expression for this function will be hard to find  even in the most simple of cases. So consider the estimate from the Monte Carlo simulation $\beta^{(m)}_{\alpha}(w)$ for the estimate computed from $2m$ testing pairs, m matched pairs and m unmatched pairs. By LLN $\beta^{(m)}_{\alpha}\rightarrow\beta_{\alpha}(w)$ pointwise. We will assume an arbitrary element $\omega$ of sample space $\Omega$. Suppose the test statistic values  are $T_0^{i}$, $T_A^{i}$ $i=1,\ldots,m$  respectively for matched and unmatched test pairs.Note that $\beta^{(m)}_{\alpha}$ can be written as $\sum_{j=1}^m I(T_A^{j}>T_0^{(i)})$ where $T_0^{(i)}$ is the $i=\lceil {m*(1-\alpha)} \rceil^{th}$ order statistic of $T_0^{i},i=1,\ldots,m$. Replacing the indicator function with the unit step function
+\[
+\sum_{j=1}^m u(T_A^{j}-T_0^{(i)})
+\]
+
+Instead of this function which is not differentiable with respect to  $T_0^{i}$ and  $T_A^{i}$, consider the ``soft" approximation of this function with the sigmoid function
+\[
+\mathcal{B}_{alpha}^{(m)}=\sum_{j=1}^m \sigma(T_A^{j}-T_0^{(i)})
+\]
+
+Now we can consider the derivative  $\frac{d\mathcal{B}_{alpha}^{(m)}}{dw}$, which is equal to 
+\[
+\frac{d\mathcal{B}_{alpha}^{(m)}}{dw}=\sum_{j=1}^m \frac{\partial{\sigma(T_A^{j}-T_0^{(i)})}}{\partial{\T_A^{j}}} \frac{\partial{\T_A^{j}}}{w}+ \sum_{j=1}^m \frac{\partial{\sigma(T_A^{j}-T_0^{(i)})}}{\partial{\T_0^{j}}} \frac{\partial{\T_0^{j}}}{\partial{w}}
+\] if the partial derivatives exist.
+To prove differentiability of $\beta_{\alpha}\left( w\right)$ , we refer to Theorem 5.3.3 in \cite{ElClassAnalysis-5-3-3}, which requires that $\mathcal{B}_{alpha}^{(m)}$ converges pointwise to  $\beta_{\alpha}\left( w\right)$ , that $\frac{d\mathcal{B}_{alpha}^{(m)}}{dw}$ are continuous and that they  converge \emph{uniformly} to a function $g$. Since the sigmoid function $\sigma(\cdot)$ is continously differentiable, our attention will be on $ \frac{\partial{\T_0^{j}}}{\partial{w}}$ and $ \frac{\partial{\T_0^{j}}}{\partial{w}}$. We show  $\T_0^{j}$ and $\T_A^{i}$ to be not  continuous everywhere for a particular example in \ref{subsubsec:Discontinuity}. 
+For the theorem to hold, a uniform bound on the derivatives with respect to $w$.
+
+
 \begin{comment}
 One of the important questions to be explored is   the uniqueness of  $w^*$.   The first step in answering this question is to determine whether $\beta(w)$ is multimodal. In the two settings we described,   $\beta(w)$ seems to have one maxima that is $\in (0,1)$.
 \end{comment}
@@ -637,7 +656,7 @@ One of the important questions to be explored is   the uniqueness of  $w^*$.   T
 \begin{comment}
 First, note that  $\beta(w)$ is continuous with respect to $w$ and locally convex  with respect to embedding coordinates $\hat{X}_{.}$
 \end{comment}
-\subsubsection{ A short detour : Discontinuity in weighted raw stress OOS configurations}
+\subsubsection{ A short detour : Discontinuity in weighted raw stress OOS configurations\label{subsubsec:Discontinuity}}
 
 Note that it is possible to have multiple local minima in the embedding step(see example in \cite{TrossetLocalMin}). We will construct an example  where $w$ controls which of the local minima is the global minimum among the configurations of $\hat{X}_{.}$. 
 Global Minimum Configuration determined by $w$ .
@@ -951,6 +970,56 @@ first.est<- density(oos.diss.all.params.q.0[1,fix.i,])
  If commensurability can be preserved in the face of the increase in $q$, the power of the test may be preserved. However a very large increase in $w$ is not guarenteed to increase the preservation of commensurability, since the extra dimensions are noise, trying to   make the differences between coordinates  small in those dimensions will not  help in power, in fact may be disruptive since,
   more fidelity may be lost in the effort to bring the pair of points together.
 
+
+
+<<sim-two-cond-vary-p,fig=FALSE,echo=FALSE,results=verbatim,cache=TRUE,prefix.string="JOFCpaper",dependson=Init>>=
+debug.mode<- FALSE
+source("./src/runningParams.R")
+gaussian.sim<-TRUE
+dirichlet.sim<-FALSE
+run.for.Sweave<-TRUE
+vary.params<-TRUE
+
+
+params$nmc<-100
+p.vals.vec<-c(2,5,10,15)
+q.vals.vec<-10
+r.vals.vec<-20
+c.vals.vec<-NULL
+
+source("./src/GaussianSimFidCommTradeoffMain.R")
+sfStop()
+@
+
+<<sim-two-cond-vary-q,fig=FALSE,echo=FALSE,results=verbatim,cache=TRUE,prefix.string="JOFCpaper",
+dependson=sim-two-cond-vary-p>>=
+debug.mode<- FALSE
+
+p.vals.vec<-5
+q.vals.vec<-c(5,10,15,20)
+
+
+source("./src/GaussianSimFidCommTradeoffMain.R")
+sfStop()
+@
+
+<<sim-two-cond-vary-r,fig=FALSE,echo=FALSE,results=verbatim,cache=TRUE,prefix.string="JOFCpaper",
+dependson=sim-two-cond-vary-q>>=
+debug.mode<- FALSE
+r.vals.vec<-c(3,10,50,100)
+q.vals.vec<-5
+source("./src/GaussianSimFidCommTradeoffMain.R")
+sfStop()
+@
+
+<<sim-two-cond-vary-c,fig=FALSE,echo=FALSE,results=verbatim,cache=TRUE,prefix.string="JOFCpaper",
+dependson=sim-two-cond-vary-r>>=
+debug.mode<- FALSE
+r.vals.vec<-20
+c.vals<-c(0.5,0.1,0.01,0.001)
+source("./src/GaussianSimFidCommTradeoffMain.R")
+sfStop()
+@
 
 
 

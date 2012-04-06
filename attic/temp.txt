@@ -1,0 +1,50 @@
+
+
+<<sim-two-cond-vary-p,fig=FALSE,echo=FALSE,results=verbatim,cache=TRUE,prefix.string="JOFCpaper">>=
+debug.mode<- FALSE
+source("./src/runningParams.R")
+gaussian.sim<-TRUE
+dirichlet.sim<-FALSE
+run.for.Sweave<-TRUE
+vary.params<-TRUE
+
+
+params$nmc<-100
+p.vals.vec<-c(2,5,10,15)
+q.vals.vec<-10
+r.vals.vec<-20
+c.vals.vec<-NULL
+
+source("./src/GaussianSimFidCommTradeoffMain.R")
+sfStop()
+@
+
+<<sim-two-cond-vary-q,fig=FALSE,echo=FALSE,results=verbatim,cache=TRUE,prefix.string="JOFCpaper",
+dependson=sim-two-cond-vary-p>>=
+debug.mode<- FALSE
+
+p.vals.vec<-5
+q.vals.vec<-c(5,10,15,20)
+
+
+source("./src/GaussianSimFidCommTradeoffMain.R")
+sfStop()
+@
+
+<<sim-two-cond-vary-r,fig=FALSE,echo=FALSE,results=verbatim,cache=TRUE,prefix.string="JOFCpaper",
+dependson=sim-two-cond-vary-q>>=
+debug.mode<- FALSE
+r.vals.vec<-c(3,10,50,100)
+q.vals.vec<-5
+source("./src/GaussianSimFidCommTradeoffMain.R")
+sfStop()
+@
+
+<<sim-two-cond-vary-c,fig=FALSE,echo=FALSE,results=verbatim,cache=TRUE,prefix.string="JOFCpaper",
+dependson=sim-two-cond-vary-r>>=
+debug.mode<- FALSE
+r.vals.vec<-20
+c.vals<-c(0.5,0.1,0.01,0.001)
+source("./src/GaussianSimFidCommTradeoffMain.R")
+sfStop()
+@
