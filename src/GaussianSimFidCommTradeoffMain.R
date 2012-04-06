@@ -123,8 +123,12 @@ q.dir<-22
 if (profile.mode) Rprof(filename = "Rprof.out", append = FALSE, interval = 0.02,
 			memory.profiling=FALSE)
 
-
-params.df<-expand.grid(d.i=d.vals,n.i=n.vals,c.i = c.vals)
+if (vary.params){
+params.df<-expand.grid(d.i=d.vals,n.i=n.vals,c.i = c.vals,p.i=p.vals.vec,q.i=q.vals.vec,r.i=r.vals.vec)
+}else{
+	params.df<-expand.grid(d.i=params$d,n.i=params$n,
+			c.i = n.i=params$c,p.i=params$p,q.i=params$q,r.i=params$r)
+}
 param.count <- nrow(params.df)
 
 power.vals.g<- array(0,dim=c(param.count,length(params$w.vals),params$nmc,length(size)))
@@ -135,6 +139,7 @@ for (param.i in 1:param.count){
 	d.v <- params.df$d.i[param.i]
 	n.v <- params.df$n.i[param.i]
 	c.val <- params.df$c.i[param.i]
+	
 	print(paste(d.v,n.v,c.val))
 	
 	
@@ -163,13 +168,27 @@ for (param.i in 1:param.count){
 	params$n <- n.v
 	
 	params$d<-d.v
+	
+	
+	
 	if (gauss.sim){
-		
+		if (!vary.param){
 		params$p <- p.g
 		params$r <- r.g
 		
 		params$q <- q.g
+		}
+		else{
+			
+			params$p <- params.df$p.i[param.i]
+			params$r <- params.df$r.i[param.i]
+			
+			params$q <- params.df$q.i[param.i]
+			
+		}
+			
 		params$oos <- TRUE
+		
 		
 		
 		
@@ -432,9 +451,24 @@ for (param.i in 1:param.count){
 	run.time <-0
 	
 	if (dirichlet.sim){
-		params$p<-p.dir
-		params$r<-r.dir
-		params$q<-q.dir
+		
+		if (!vary.param){
+			params$p<-p.dir
+			params$r<-r.dir
+			params$q<-q.dir
+		
+		}
+		else{
+			
+			params$p <- params.df$p.i[param.i]
+			params$r <- params.df$r.i[param.i]
+			
+			params$q <- params.df$q.i[param.i]
+			
+		}
+		
+		
+		
 		
 		params$oos <- TRUE
 		

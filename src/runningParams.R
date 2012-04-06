@@ -13,6 +13,7 @@ d.vals<-c(2)
 verbose<-TRUE
 oos <-TRUE
 num.cpus <- 8
+vary.params<-FALSE
 
 compute.bound<-FALSE
 gauss.sim <-T
