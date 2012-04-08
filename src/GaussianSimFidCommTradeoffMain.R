@@ -127,7 +127,7 @@ if (vary.params){
 params.df<-expand.grid(d.i=d.vals,n.i=n.vals,c.i = c.vals,p.i=p.vals.vec,q.i=q.vals.vec,r.i=r.vals.vec)
 }else{
 	params.df<-expand.grid(d.i=params$d,n.i=params$n,
-			c.i = n.i=params$c,p.i=params$p,q.i=params$q,r.i=params$r)
+			c.i =params$c.val,p.i=params$p,q.i=params$q,r.i=params$r)
 }
 param.count <- nrow(params.df)
 
@@ -172,7 +172,7 @@ for (param.i in 1:param.count){
 	
 	
 	if (gauss.sim){
-		if (!vary.param){
+		if (!vary.params){
 		params$p <- p.g
 		params$r <- r.g
 		
@@ -452,7 +452,7 @@ for (param.i in 1:param.count){
 	
 	if (dirichlet.sim){
 		
-		if (!vary.param){
+		if (!vary.params){
 			params$p<-p.dir
 			params$r<-r.dir
 			params$q<-q.dir

@@ -268,7 +268,7 @@ Measurements $X_{ik}$ carry the signal that is relevant to our exploitation task
   
 
 \section{Manifold Matching\label{sec:JOFC}}
-  Our approach can be summarized as  ``manifold matching", which is defined as simultaneous ``manifold learning" and ``manifold alignment" -- identifying embeddings of multiple disparate data sources into the same low-dimensional space where joint inference can be pursued. The inference task either requires the fusion of data from disparate sources( as in the test of matchedness) or gathers performance gains from the fusion. The assumption is that the data in each measurement space lie approximately in a low dimensional manifold. An effort is made to match the low-dimensional manifolds so that matched measurements from different conditions are as close as possible to each other.  The embeddings from the dissimilarities in the measurement spaces into the commensurate space are implicit mapping from the measurement space($\Xi_k$)  to the commensurate space( $\mathcal{X}$ in \ref{}). The learning problem involves estimating these maps(whether implicit as in the dissimilarity representation of multiple sensor measurements or explicit in the  feature representation setting)  from a training data of matched measurements.
+  Our approach can be summarized as  ``manifold matching", which is defined as simultaneous ``manifold learning" and ``manifold alignment" -- identifying embeddings of multiple disparate data sources into the same low-dimensional space where joint inference can be pursued. The inference task either requires the fusion of data from disparate sources( as in the test of matchedness) or gathers performance gains from the fusion. The assumption is that the data in each measurement space lie approximately in a low dimensional manifold. An effort is made to match the low-dimensional manifolds so that matched measurements from different conditions are as close as possible to each other.  The embeddings from the dissimilarities in the measurement spaces into the commensurate space are implicit mapping from the measurement space($\Xi_k$)  to the commensurate space( $\mathcal{X}$ in ~\ref{fig:fig1}). The learning problem involves estimating these maps(whether implicit as in the dissimilarity representation of multiple sensor measurements or explicit in the  feature representation setting)  from a training data of matched measurements.
 
 
 We will assume  the commensurate space  $\mathcal{X}$  is  $\mathbb{R}^d$ where $d$ is pre-specified. The selection of $d$ -- model selection -- is  a task that requires much attention and is  beyond the scope of this article.
@@ -389,7 +389,7 @@ For the optimization of commensurability with fidelity as  secondary priority, a
  The omnibus embedding  approach is expected to be more powerful for the exploitation task than either of  the sequential optimizations, since the exploitation task (testing matchedness) requires both optimization of fidelity and commensurability.
 
 \subsection{Procrustes Analysis on Multidimensional Scaling Embeddings\label{subsec:PoM}} 
-Since separate  condition dissimilarities are available, a straightforward approach is to embed each conditional dissimilarity matrix, $\Delta_1$ and $\Delta_2$, separately  in  $d$-dimensional Euclidean space (call these embedded configurations $X_1$ and $X_2$, respectively) and then find a mapping function $\rho :\mathbb{R}^{d}\rightarrow\mathbb{R}^{d}$ that maps each point in $X_2$ to approximately its corresponding point in $X_1$. This approach can be seen as a specific example of the general setting where the commensurate space is d-dimensional  Euclidean space and $\rho_1$ in \ref{} is the identity map. 
+Since separate  condition dissimilarities are available, a straightforward approach is to embed each conditional dissimilarity matrix, $\Delta_1$ and $\Delta_2$, separately  in  $d$-dimensional Euclidean space (call these embedded configurations $X_1$ and $X_2$, respectively) and then find a mapping function $\rho :\mathbb{R}^{d}\rightarrow\mathbb{R}^{d}$ that maps each point in $X_2$ to approximately its corresponding point in $X_1$. This approach can be seen as a specific example of the general setting where the commensurate space is d-dimensional  Euclidean space and $\rho_1$ in  ~\ref{fig:fig1} is the identity map. 
 
 Estimation of $\rho$ is carried out using  Procrustes Analysis  on training data. Procrustes Analysis~\cite{Sibson} finds a orthonormal matrix $\mathbf{Q}^*$ that minimizes the sum of squared distances between the  target configuration $X_1$ and  the configuration $X_2$ transformed by $\mathbf{Q}^*$, i.e.,
  \[\mathbf{Q}^* = \argmin_{Q^TQ = I} \|X_1 - X_2Q\|_F\] 
@@ -862,7 +862,6 @@ p.vals<-rep(5,5)
 r.vals<-rep(50,5)
 q.vals<-rep(5,5)
 c.vals<- c(0,0.01,0.1,0.2,0.5)
-vary.param<-"c"
 
 param.index.count<-length(c.vals)
 params.list <- rep(list(params),param.index.count)
@@ -928,7 +927,7 @@ params.list <- rep(list(params),param.index.count)
 p.vals<-rep(5,4)
 r.vals<-rep(50,4)
 q.vals<-c(5,10,25,40)
-vary.param<-"q"
+
 
 
 
@@ -1521,7 +1520,7 @@ r.vals<-rep(50,4)
 q.vals<-rep(5,4)
 d.vals<-c(2,4,8,10)
 
-vary.param<-"d"
+
 
 
 
