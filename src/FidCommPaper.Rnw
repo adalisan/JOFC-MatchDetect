@@ -470,7 +470,7 @@ and   the original dissimilarities are $D(X_1)$ and $D(X_2) $,
 
 
 
-\section{Related Work}
+\section{Related Work \label{sec:RelatedWork}}
 There have many efforts toward solving ``manifold alignment", which is a related  problem. ``Manifold alignment" seeks to find correspondences between observations from different ``conditions". The setting that is most similar to ours is the semi-supervised setting, where a set of correspondences are given and the task is to find correspondences between a new set of points in each condition. In contrast, our hypothesis testing task is to determine whether any given pair of points is ``matched" or not. The proposed solutions follow a common approach in that they look for a common commensurate or a latent space, such that the representations (possibly projections or embeddings) of the observations in the commensurate space match.
 
 Wang and Mahedavan~\cite{Wang2008} suggest an  approach that uses embedding followed by Procrustes Analysis to find a map to a commensurate space. Given a paired set of points, Procrustes Analysis~\cite{Sibson}, finds a transformation from one set of points to another in the same space that minimizes sum of squared distances, subject to some constraints on the transformation. In the case mentioned in \cite{Wang2008}, the paired set of points are corresponding low-dimensional embeddings of kernel matrices.   For the embedding step, they made the choice of using Laplacian Eigenmaps, though their algorithm allows for any appropriate embedding method.
@@ -1286,9 +1286,13 @@ sfStop()
 To test the JOFC approach with real data, a collection of articles are collected from the English Wikipedia, consisting of the
  directed 2-neighborhood of the document "Algebraic Geometry". 
    This  collection of 1382 articles and the correspondence of each article in French 
-Wikipedia is our real-life dataset. These documents are processed, and dissimilarities between documents  in the same language are computed by the Lin-Pantel discounted mutual information \cite{LinPantel}
- and cosine dissimilarity $k(x_{ik}; x_{jk}) = 1 - (x_{ik} x_{jk})/(\|x_{ik}\|_2\|x_{ik}\|_2)$. It is possible to utilize both textual content of the documents and the hyperlink graph structure.
-We will only consider dissimilarities based on the textual content in this example.   
+Wikipedia is our real-life dataset. It is possible to utilize both textual content of the documents and the hyperlink graph structure. The textual content of the documents is summarized by the bag-of-words model. Dissimilarities between documents  in the same language are computed by the Lin-Pantel discounted mutual information \cite{LinPantel}
+ and cosine dissimilarity $k(x_{ik}; x_{jk}) = 1 - (x_{ik} x_{jk})/(\|x_{ik}\|_2\|x_{ik}\|_2)$. 
+ The dissimilarities based on the hyperlink graph of the collection of the articles are 
+ for each pair of vertices $i$ and $j$, the number of vertices one must travel to go from $i$ to $j$.   
+We will only consider dissimilarities based on the textual content in this example.
+   
+Our exploitation task is still testing for matchedness of vertices between different conditions, in this case wiki articles from different languages.
 For hypothesis testing,   randomly held out four documents - one matched pair and one unmatched pair
  -  are used to compute empirical type I error $\alpha$ and estimate of power based on the critical value computed
   from the distribution of the test statistic for the remaining 1380 matched pairs. 
@@ -1494,9 +1498,9 @@ legend("bottomright",legend=legend.txt,
 
 
 \section{Model Selection}
-For the simulations presented up to now, the embedding dimension was set to 2. This was a convenient choice which allowed us to investigate various aspects of JOFC and competing approaches.
-However we require a more precise selection of this parameter, since it plays such a big role in performance in general learning settings. Specifically, we want to consider the effect of this parameter on Fidelity and Commensurability.
-First consider the distribution of the test statistic for different values of the embedding dimension.
+For the simulations presented up to now, the embedding dimension $d$ was set to 2. This was a convenient choice which allowed us to investigate various aspects of JOFC and competing approaches.
+However we require  more care in selection of this parameter, since it plays such a big role in performance in general learning settings. Specifically, we want to consider the effect of this parameter on Fidelity and Commensurability.
+First consider the distribution of the test statistic for different values of the embedding dimension in the Gaussian setting.
 
 <<stats-d-sim, echo=FALSE,fig=FALSE,results=hide,cache=TRUE >>=
 rm(list=ls())
@@ -1648,7 +1652,7 @@ for (w.i in 1:w.val.len){
 \end{comment}
 
 
-The following plot of ROC curves\cite{d-ROC} shows the effect of $d$ parameter on the performance of different methods. 
+The following plot of ROC curves\cite{d-ROC} shows the effect of $d$ parameter on the performance of different methods for the Gaussian setting. 
 
 <<d-ROC, echo=FALSE,fig=TRUE,results=hide,cache=FALSE,depenson= FidComm-d-sim,trace=TRUE >>=
 lty.i.vec<-c()
@@ -1698,9 +1702,8 @@ for (i in 1:d.vals.len)
 
 \section{Experiments on Graph Data}
 
-We wish to apply our approach to  the vertex matching problem in multiple graphs.
- We are again in a semi-supervised setting, where matchings between some vertices in different graphs are known 
-  and wish to infer the correspondences between the remaining collection of vertices in the graphs.
+We wish to apply our approach to  the vertex matching problem in multiple graphs. These simulations will be for the same semi-supervised setting as mentioned in \ref{sec:RelatedWork}, where matchings between some vertices in different graphs are known 
+  and the task is to infer the correspondences between the remaining collection of vertices in the graphs.
 
 Suppose $A,B \in \mathcal{R}^{(r+s)\times (r+s)}$ are adjacency matrices for graphs 
  partitioned as ($r$ rows then $s$ rows, $r$ columns then $s$ columns)
@@ -1731,7 +1734,7 @@ That is, we seek a permutation matrix $P \in \{0,1\}^{s \times s}$ such that $A=
 \]
 
 Using omnibus  embedding, it is possible to embed the vertices of two graphs in a commensurate space.
-Therefore, the JOFC approach can be used here for determining the pairwise distance between  the vertices of $A$ and $B$.
+Therefore, the JOFC approach can be used here for determining the pairwise distances between  the vertices of $A$ and $B$.
 The next step is to use the pairwise distances to find the optimal 1-1 matchings by the Hungarian algorithm \cite{Hung-algo}. The Hungarian algorithm finds an optimal matching between two sets of nodes such that the total  cost which is the sum of the pairwise distances of matched nodes is minimized.
  
 One useful property of dissimilarity representation is that the structure of data is irrelevant once an appropriate dissimilarity function  for the data is available. 
@@ -1742,11 +1745,10 @@ In our experiments we will use three different dissimilarities between vertices 
  \item the shortest path on a weighted version of the graph whose adjacency matrix is available
  \item diffusion distance between vertices on the (unweighted?) graph.
  \end{itemize}
- Note that these dissimilarities can only be defined between vertices of the same graph. We impute the inter-condition dissimilarities 
-  as described before\label{omnibus}.
+ Note that these dissimilarities can only be defined between vertices of the same graph. We impute the inter-condition dissimilarities   as described before\ref{omnibus}.
  
   In the following simulation, $A$ is the adjacency matrix of an Erdos-Renyi graph, that is
-  $\[A\]_{ij} \sim Binomial(p)$ where $\[A\]_{ij}$ is $ij$-th entry of the adjacency matrix  $A$.
+  $\left[A\right]_{ij} \sim Binomial(p)$ where $\left[A\right]_{ij}$ is $ij$-th entry of the adjacency matrix  $A$.
    and the adjacency matrix  $B$ is a entry-wise bit-flipped version of the adjacency matrix of $A$, that is
    In the following simulation, $A$ is the adjacency matrix of an Erdos-Renyi graph, that is
   $\left[A\right]_{ij} \sim Binomial(p)$ where $\left[A\right]_{ij}$ is $ij$-th entry of the adjacency matrix  $A$.
@@ -1755,7 +1757,7 @@ In our experiments we will use three different dissimilarities between vertices 
   
   The probability of flipping an entry of the adjacency matrix is the perturbation parameter $p_{pert}$ which is the variable on the x-axis. 
   The performance measure is the proportion of true matches to the number of matches. Note that 
-  under chance the expected number of true matches is 1, as shown with the dashed line.
+  under chance the expected number of true matches is 1, as shown with the dashed line. In the simulation, $r=15$ and $s=5$. $p_{pert}$ varies from $0$ to $1$ in increments of $0.1$. 
 <<JOFC-on-ER-Graph, echo=FALSE,fig=FALSE,results=hide,cache=TRUE,trace=TRUE>>=
 cep=TRUE
 verbose= FALSE
