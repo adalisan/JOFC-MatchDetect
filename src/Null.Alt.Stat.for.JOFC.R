@@ -501,7 +501,7 @@ compute.stats.for.params<-function(params.list,vary.param){
 
 		
 		sfStop()
-		sfInit(parallel=TRUE,cpus=7)
+		sfInit(parallel=TRUE,cpus=num.cpus)
 		sfExport("w.max.index",
 				"size",
 				"len",
