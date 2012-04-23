@@ -763,6 +763,10 @@ xtable(min.config.stress.w.table)
 Other than such carefully constructed examples, we expect $w$ to have no effect on the ordering of the local minima according to their stress values.
 Therefore,  the argmin among these local minima is independent of $w$. The minimum configuration is then a continuous function of $w$. 
 By the continuity of the distance function with respect to configurations, the test statistic is continuous with respect to $w$. One can conclude $\beta(w) $ is a continuous function of $w$. 
+
+Does the discontinuity in configurations mean discontinuity  in the $\beta(w)$ function. Consider $\beta(w)$ as a stochastic process whose sample path is  a function of $w$ where the randomness comes from $\Delta_{m}$, $\Delta_{u}$ and $\mathcal{T}$ .  As a surrogate, we will make use of the area under the curve measure: $AUC(w)=P\left[T_a(w)>T_0(w)\right]$ where $T_a(w)$ and $T_0(w)$ can also be regarded as  stochastic processes whose sample paths are continuous functions of $w$ except finite number of points in $(0,1)$. If we assume stochastic continuity of $T_a(w)$ and $T_0(w)$ in $(0,1)$, ie the probability of a jump discontinuity of $T_0(w)$ at $w_0$ is 0, we can prove the continuity of $AUC(w)$.
+
+
 %It is possible this is not the global minimum in $\mathbb{R}^d$  
  
  Another avenue for investigation is  how $w^{*}$ depends on the parameters of the distributions of $\mathbf{F}_m$ and  $\mathbf{F}_u$ . 
