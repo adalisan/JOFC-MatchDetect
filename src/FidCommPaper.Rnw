@@ -976,6 +976,8 @@ first.est<- density(oos.diss.all.params.q.0[1,fix.i,])
 
 
 <<sim-two-cond-vary-p,fig=FALSE,echo=FALSE,results=verbatim,cache=TRUE,prefix.string="JOFCpaper",dependson=Init>>=
+graphics.off()
+load.project()
 debug.mode<- FALSE
 source("./src/runningParams.R")
 gaussian.sim<-TRUE
@@ -992,6 +994,7 @@ c.vals.vec<-NULL
 
 source("./src/GaussianSimFidCommTradeoffMain.R")
 sfStop()
+graphics.off()
 @
 
 <<sim-two-cond-vary-q,fig=FALSE,echo=FALSE,results=verbatim,cache=TRUE,prefix.string="JOFCpaper",
@@ -1004,24 +1007,28 @@ q.vals.vec<-c(5,10,15,20)
 
 source("./src/GaussianSimFidCommTradeoffMain.R")
 sfStop()
+graphics.off()
 @
 
 <<sim-two-cond-vary-r,fig=FALSE,echo=FALSE,results=verbatim,cache=TRUE,prefix.string="JOFCpaper",
-dependson=sim-two-cond-vary-q>>=
+dependson=sim-two-cond-vary-p>>=
 debug.mode<- FALSE
 r.vals.vec<-c(3,10,50,100)
 q.vals.vec<-5
 source("./src/GaussianSimFidCommTradeoffMain.R")
 sfStop()
+graphics.off()
 @
 
 <<sim-two-cond-vary-c,fig=FALSE,echo=FALSE,results=verbatim,cache=TRUE,prefix.string="JOFCpaper",
-dependson=sim-two-cond-vary-r>>=
+dependson=sim-two-cond-vary-p>>=
 debug.mode<- FALSE
 r.vals.vec<-20
-c.vals<-c(0.5,0.1,0.01,0.001)
+c.vals<-c(0.5,0.2,0.1,0.001)
+
 source("./src/GaussianSimFidCommTradeoffMain.R")
 sfStop()
+graphics.off()
 @
 
 
@@ -1057,7 +1064,7 @@ Given the setting ("Gaussian","Dirichlet"),   the steps for each Monte Carlo rep
 
 <<sim-two-cond-pre,fig=FALSE,echo=FALSE,results=hide,cache=TRUE,prefix.string="JOFCpaper",trace=TRUE>>=
 rm(list=ls())
-
+graphics.off()
 #setwd(file.path("./../../DataFusion/"))
 library(ProjectTemplate)
 load.project()
@@ -1443,7 +1450,7 @@ run.wiki.JOFC.sim.mc.replicate <- function(m.i,N, test.samp.size, w.val.len, m, 
 
 
 
-sfInit( parallel=TRUE, cpus=8 )
+sfInit( parallel=TRUE, cpus=num.cpus )
 
 
 

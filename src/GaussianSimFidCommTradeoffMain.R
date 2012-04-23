@@ -12,8 +12,11 @@
 
 
 
-if (!run.for.Sweave) source("./src/runningParams.R")
-
+if (!run.for.Sweave){
+	source("./src/runningParams.R")
+} else {
+#	sink(paste("run at ",Sys.Date()))
+}
 print(debug.mode)
 if (par.compute){
 	if (par.compute.sf){
@@ -133,8 +136,8 @@ param.count <- nrow(params.df)
 
 power.vals.g<- array(0,dim=c(param.count,length(params$w.vals),params$nmc,length(size)))
 power.vals.d<- array(0,dim=c(param.count,length(params$w.vals),params$nmc,length(size)))
-best.w.g<-array(param.count,nmc)
-best.w.d<-array(param.count,nmc)
+best.w.g<-array(list(),c(param.count,nmc))
+best.w.d<-array(list(),c(param.count,nmc))
 for (param.i in 1:param.count){
 	d.v <- params.df$d.i[param.i]
 	n.v <- params.df$n.i[param.i]
@@ -210,8 +213,8 @@ for (param.i in 1:param.count){
 		print("Gaussian Setting Simulation Ended")
 		#sim.res.g.list<-c(sim.res.g.list,sim.res.g)
 		power.vals.g[param.i,,,]<- sim.res.g$power
-		for (mc in 1:nmc)
-			best.w.g[param.i,mc]<-sim.res.g$best.w[mc]
+		
+		best.w.g[[param.i,mc]]<-sim.res.g$wstar.idx.estim.mc[[mc]]
 		
 		
 		
@@ -373,6 +376,7 @@ for (param.i in 1:param.count){
 		if(!run.in.linux&(!run.for.Sweave))  savePlot(filename=paste(fname,".ps",sep="",collapse=""),type="ps")
 		
 		if(!run.in.linux&(!run.for.Sweave)) savePlot(filename=paste(fname,".png",sep="",collapse=""),type="png")
+		dev.off()
 		
 		# Zoomed in plot of ROC curves
 		windows()
@@ -442,7 +446,7 @@ for (param.i in 1:param.count){
 		if(!run.in.linux&(!run.for.Sweave))  savePlot(filename=paste(fname,".ps",sep="",collapse=""),type="ps")
 		
 		if(!run.in.linux&(!run.for.Sweave)) savePlot(filename=paste(fname,".png",sep="",collapse=""),type="png")
-		
+		dev.off()
 	}
 	
 	
@@ -500,8 +504,8 @@ for (param.i in 1:param.count){
 		
 		power.vals.d[param.i,,,]<- sim.res.d$power
 		
-		for (mc in 1:nmc)
-			best.w.d[param.i,mc]<-sim.res.d$best.w[mc]
+		best.w.d[[param.i,mc]]<-sim.res.d$wstar.idx.estim.mc[[mc]]
+		
 		
 		
 		
@@ -653,7 +657,7 @@ for (param.i in 1:param.count){
 		
 		if(!run.in.linux&(!run.for.Sweave)) savePlot(filename=paste(fname,".png",sep="",collapse=""),type="png")
 		
-		
+		dev.off()
 		
 		
 		# Zoomed in plot of ROC curves
@@ -727,7 +731,7 @@ for (param.i in 1:param.count){
 		
 		
 		par(lty=1)
-		
+		dev.off()
 	} #end dirichlet-sim
 	
 	
@@ -770,6 +774,7 @@ traceback()
 sink()
 warnings()
 
+#if (run.for.Sweave) {sink()}
 #Rprof(NULL)
 if ((!run.in.linux) & par.compute & (!par.compute.sf)) 
 	stopWorkers(workers)

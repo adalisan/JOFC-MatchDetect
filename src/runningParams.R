@@ -12,7 +12,7 @@ c.vals<-c(0.01,0)
 d.vals<-c(2)
 verbose<-TRUE
 oos <-TRUE
-num.cpus <- 8
+num.cpus <- Sys.getenv('NUMBER_OF_PROCESSORS')
 vary.params<-FALSE
 
 compute.bound<-FALSE
