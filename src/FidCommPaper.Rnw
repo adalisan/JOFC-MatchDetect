@@ -767,10 +767,25 @@ Other than such carefully constructed examples, we expect $w$ to have no effect 
 Therefore,  the argmin among these local minima is independent of $w$. The minimum configuration is then a continuous function of $w$. 
 By the continuity of the distance function with respect to configurations, the test statistic is continuous with respect to $w$. One can conclude $\beta(w) $ is a continuous function of $w$. 
 
-Does the discontinuity in configurations mean discontinuity  in the $\beta(w)$ function. Consider $\beta(w)$ as a stochastic process whose sample path is  a function of $w$ where the randomness comes from $\Delta_{m}$, $\Delta_{u}$ and $\mathcal{T}$ .  As a surrogate, we will make use of the area under the curve measure: $AUC(w)=P\left[T_a(w)>T_0(w)\right]$ where $T_a(w)$ and $T_0(w)$ can also be regarded as  stochastic processes whose sample paths are continuous functions of $w$ except finite number of points in $(0,1)$. If we assume stochastic continuity of $T_a(w)$ and $T_0(w)$ in $(0,1)$, ie the probability of a jump discontinuity of $T_0(w)$ at $w_0$ is 0, we can prove the continuity of $AUC(w)$.
+Does the discontinuity in configurations mean discontinuity  in the $\beta(w)$ function. Consider $\beta(w)$ as a stochastic process whose sample path is  a function of $w$ where the randomness comes from $\Delta_{m}$, $\Delta_{u}$ and $\mathcal{T}$ .  As a surrogate, we will make use of the area under the curve measure: $AUC(w)=P\left[T_a(w)>T_0(w)\right]$ where $T_a(w)$ and $T_0(w)$ can also be regarded as  stochastic processes whose sample paths are continuous functions of $w$ except finite number of points in $(0,1)$. By  assuming stochastic continuity of $T_a(w)$ and $T_0(w)$ in $(0,1)$, ie the probability of a jump discontinuity of $T_0(w)$ at $w_0$ is 0, we will prove the continuity of $AUC(w)$.
 
+Let $T(w)$ be  a stochastic process indexed by $w$ in continuous interval (0,1). Assume  the process is continuous in probability, ie.
+$$ \forall a  \lim_{\delta \rightarrow 0} Pr\left[\|T(w+\delta)-T(w) \|>a \right] \rightarrow 0$$
+Now consider the event  $T(w)>0$ and $T(w+\delta)>0$ for any $\delta$. 
+\begin{eqnarray}
+\| Pr\left[T(w+\delta)>0 \right]- Pr\left[T(w+\delta)>0 \right]\| & = 
+& \| Pr\left[T(w+\delta)>0   \cap T(w) \leq 0 \right]- Pr\left[T(w+\delta)\leq 0  \cap T(w) > 0\right]\| \\
+&= &\| Pr\left[T(w+\delta)>0 - T(w) = \epsilon_1 > 0 \right]- Pr\left[ T(w)- T(w+\delta) = \epsilon_2 > 0   \right]\| \\
+&= &\| Pr\left[T(w+\delta) - T(w) = a_1 > 0 \right]- Pr\left[ T(w)- T(w+\delta) = a_2 > 0   \right]\| \textrm{for some a_1 and a_2} \\
+& <= & Pr\left[\|T(w+\delta) - T(w)\| = \max (a_1 ,a_2) >0 \right] \\
 
+\end{eqnarray} 
+ Let $a=\max (a_1 ,a_2)$. For any $a_1,a_2$, there exists a $\delta$ for which the probability of the event $Pr\left[\|T(w+\delta) - T(w)\| > a$  is smaller than any given $\epsilon$ by the continuity in probability. The absolute difference of the two probabilities $\| Pr\left[T(w+\delta)>0 \right]- Pr\left[T(w+\delta)>0 \right]\| $ is also smaller than  this $\epsilon$ since it's upper bounded by the probability of that event.
+Therefore $Pr\left[T(w)>0 \right]$  as a function of $w$ is continuous with respect to $w$. 
+
+Let $T(w)=T_a(w)-T_0(w)$. Then $AUC(w)=P\left[T_a(w)-T_0(w) >0 \right]$ is continuous with respect to $w$.
 %It is possible this is not the global minimum in $\mathbb{R}^d$  
+ The main assumption we used is the stochastic continuity of $T_0(w)$ and $T_a(w)$ . If  a jump discontinuity at $w$ under the probability distribution that governs the data has measure  zero, then this assumption holds. In the constructed example, we assumed a certain symmetry in the realized configuration, which gave us a discontinuity at a particular point.  
  
  Another avenue for investigation is  how $w^{*}$ depends on the parameters of the distributions of $\mathbf{F}_m$ and  $\mathbf{F}_u$ . 
  Let us first investigate the effect of parameters on the empirical distribution of the test statistic, under null and alternative.
@@ -864,11 +879,13 @@ if(debug.mode){
 }
 
 
-params$w.vals<-c(0.75)	
-p.vals<-rep(5,5)
-r.vals<-rep(50,5)
-q.vals<-rep(5,5)
+params$w.vals.param<-c(0.75)	
+
 c.vals<- c(0,0.01,0.1,0.2,0.5,0.8,0.99)
+p.vals<-rep(5,length(c.vals))
+r.vals<-rep(30,length(c.vals))
+q.vals<-rep(10,length(c.vals))
+
 
 param.index.count<-length(c.vals)
 params.list <- rep(list(params),param.index.count)
@@ -876,10 +893,10 @@ params.list <- rep(list(params),param.index.count)
 
 
 for (i in (1:length(c.vals))){
-	params.list[[i]]$r <- r.vals[i]
-	params.list[[i]]$p <- p.vals[i]
-	params.list[[i]]$q <- q.vals[i]
-	params.list[[i]]$c <- c.vals[i]
+	params.list[[i]]$r.param <- r.vals[i]
+	params.list[[i]]$p.param <- p.vals[i]
+	params.list[[i]]$q.param <- q.vals[i]
+	params.list[[i]]$c.val.param <- c.vals[i]
 }
 
 debug.mode <- FALSE
@@ -891,14 +908,48 @@ sfStop()
 
 <<fig-stats-c, echo=FALSE,fig=TRUE,results=hide,cache=FALSE,dependson=stats-c-sim >>=
 
+
 fix.i<-1
-first.est<- density(oos.diss.all.params.c.0[1,fix.i,])
+
+first.est<- density(oos.diss.all.params.c.0[1,fix.i,],bw="bcv")
+par(lty=1)
+plot(first.est, col= colors.vec[1],
+		lty=1,type='l',ylim=c(0,0.4),main="")
+for (j in 2:length(c.vals)) {
+	lines(density(oos.diss.all.params.c.0[j,fix.i,],bw=first.est$bw), col= colors.vec[j])
+}
+
+par(lty=3)
+first.est.a<-density(oos.diss.all.params.c.A[1,fix.i,])
+lines(first.est.a, col= colors.vec[1])
+for (j in 2:length(c.vals)) {
+	lines(density(oos.diss.all.params.c.A[j,fix.i,],bw=first.est.a$bw), col= colors.vec[j])
+}
+
+
+title("Null and alternative test statistics for different c values ")
+legend.txt<- c.vals
+legend("bottomright",legend=legend.txt,col=colors.vec[1:length(c.vals)],lty=rep(1,5))
+
+
+
+
+
+if (0) {
+
+fix.i<-1
+oos.stats.plot <- oos.diss.all.params.c.0[1,fix.i,oos.diss.all.params.c.0[1,fix.i,]<0.12]
+first.est<- density(oos.stats.plot,bw="nrd0")
 	par(lty=1)
   plot(first.est, col= colors.vec[1],
-		  lty=1,type='l',ylim=c(0,0.4),main="")
+		  lty=1,type='l',main="")
+  print(length(oos.stats.plot))
  for (j in 2:length(c.vals)) {
-  lines(density(oos.diss.all.params.c.0[j,fix.i,],bw=first.est$bw), col= colors.vec[j])
+	 oos.stats.j <- oos.diss.all.params.c.0[j,fix.i,oos.diss.all.params.c.0[j,fix.i,]<0.12]
+	 print(length(oos.stats.j))
+  lines(density(oos.stats.j,bw="nrd0"), col= colors.vec[j])
 	}
+	
    par(lty=3)
    first.est.a<-density(oos.diss.all.params.c.A[1,fix.i,])
   lines(first.est.a, col= colors.vec[1])
@@ -909,7 +960,8 @@ first.est<- density(oos.diss.all.params.c.0[1,fix.i,])
   
   title("Null and alternative test statistics for different c values ")
   legend.txt<- c.vals
-  legend("bottomright",legend=legend.txt,col=colors.vec[1:5],lty=rep(1,5))
+  legend("bottomright",legend=legend.txt,col=colors.vec[1:length(c.vals)],lty=rep(1,5))
+}
 @
 
 
@@ -928,7 +980,7 @@ if(debug.mode){
 }
 
 
-params$w.vals<-c(0.75)	
+params$w.vals.param<-c(0.75)	
 param.index.count<-4
 params.list <- rep(list(params),param.index.count)
 p.vals<-rep(5,4)
@@ -939,9 +991,9 @@ q.vals<-c(5,10,25,40)
 
 
 for (i in (1:length(q.vals))){
-	params.list[[i]]$r <- r.vals[i]
-	params.list[[i]]$p <- p.vals[i]
-	params.list[[i]]$q <- q.vals[i]
+	params.list[[i]]$r.param <- r.vals[i]
+	params.list[[i]]$p.param <- p.vals[i]
+	params.list[[i]]$q.param <- q.vals[i]
 }
 
 debug.mode <- FALSE
@@ -1530,7 +1582,7 @@ if(debug.mode){
 }
 
 
-params$w.vals<-c(0.75)	
+params$w.vals.param<-c(0.75)	
 param.index.count<-4
 params.list <- rep(list(params),param.index.count)
 p.vals<-rep(5,4)
@@ -1543,11 +1595,11 @@ d.vals<-c(2,4,8,10)
 
 
 for (i in (1:length(d.vals))){
-	params.list[[i]]$r <- r.vals[i]
-	params.list[[i]]$p <- p.vals[i]
-	params.list[[i]]$q <- q.vals[i]
-	params.list[[i]]$d <- d.vals[i]
-	params.list[[i]]$c <- 0.01
+	params.list[[i]]$r.param <- r.vals[i]
+	params.list[[i]]$p.param <- p.vals[i]
+	params.list[[i]]$q.param <- q.vals[i]
+	params.list[[i]]$d.param <- d.vals[i]
+	params.list[[i]]$c.val.param <- 0.01
 }
 
 debug.mode <- FALSE

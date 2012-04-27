@@ -10,9 +10,6 @@ run.in.linux<- FALSE
 compare.pom.cca<-FALSE
 
 
-#c.vals<-c(0.01)
-c.vals<-c(0.1)
-
 verbose<-FALSE
 oos <-TRUE
 
@@ -47,20 +44,22 @@ if(debug.mode){
 
 
 params<-list(
-		nmc=nmc,
-		coincid.vec.dotpr.thres =0.9,
-		eigen.spectrum =F,
-		grassmannian.dist = F,
-		use.Euc.points.x = F,
-		use.Euc.points.y = F,
-		p = 5,
-		r = 10,
+		nmc.param=nmc,
+		p.param = 5,
+		r.param = 10,
 		
-		q =5,
+		q.param =5,
 		
-		d=3,
-		n=n.vals[1],
-		s=s,
+		d.param=3,
+		n.param=n.vals[1],
+		s.param=s,
+		
+		c.val.param=0.1,
+		#w.vals.param = c(0.001,0.1,0.5,0.8,0.85,0.9,0.925,0.95,0.99,0.999),
+		#w.vals.param = c(0.5,0.8,0.85,0.9,0.925,0.95,0.99,0.999),
+		#w.vals.param = c(0.5,0.75,0.95,0.999),
+		w.vals.param = 0.75,
+		
 		
 		
 		Wchoice="NA+diag(0)",
@@ -87,28 +86,19 @@ params<-list(
 		plot.title = "",
 		old.gauss.model = F,
 		verbose=verbose,
-		c.val=0.1,
-		#w.vals = c(0.001,0.1,0.5,0.8,0.85,0.9,0.925,0.95,0.99,0.999),
-		#w.vals = c(0.5,0.8,0.85,0.9,0.925,0.95,0.99,0.999),
-		#w.vals = c(0.5,0.75,0.95,0.999),
-		w.vals = 0.75,
 		wt.equalize=FALSE,
 		rival.w = 0.999,
 		power.comparison.test = F
 )
 
 
-w.max.index <- length(params$w.vals)	
+w.max.index <- length(params$w.vals.param)	
 size <- seq(0, 1, 0.01)
 len <- length(size)
 
 
 
 model="gaussian"
-
-attach(params)		
-pprime1     = ifelse(model=="gaussian",p+q,p+q+2)   # cca arguments , signal+noise dimension
-pprime2     = ifelse(model=="gaussian",p+q,p+q+2)   # cca arguments, signal+noise dimension
 
 pre.scaling = TRUE  #Make the measurement spaces have the same scale
 
@@ -125,7 +115,6 @@ def.w = 0.5          #The null hypothesis is that power(def.w) >= power(rival.w)
 proc.dilation=FALSE #when investigating convergence of JOFC to PoM, should Procrustes analysis of configurations include the dilation component?
 
 old.gauss.model.param <- FALSE
-detach(params)
 
 param.index.count<-20
 params.list <- rep(list(params),param.index.count)
@@ -133,14 +122,14 @@ p.vals<-rep(c(5,12,19,25,35),each=4)
 r.vals<-rep(c(5,20,50,150),5)
 
 for (i in (1:length(p.vals))){
-	params.list[[i]]$p <- p.vals[i]
+	params.list[[i]]$p.param <- p.vals[i]
 #params.list[[6]]$p <- 25
 	
 }
 
 for (i in (1:length(r.vals))){
-	params.list[[i]]$r <- r.vals[i]
-	params.list[[i]]$p <- p.vals[i]
+	params.list[[i]]$r.param <- r.vals[i]
+	params.list[[i]]$p.param <- p.vals[i]
 }
 
 #params.list[[5]]$r <- 100
@@ -148,7 +137,7 @@ for (i in (1:length(r.vals))){
 #q.vals<-rep(c(5,10,30,40),5)
 q.vals<-rep(c(5,10,30,40))
 vary.param<-"p_r"
-#params.list[[1]]$q <- 22
+#params.list[[1]]$q.param <- 22
 
 
 #Function runs JOFC embedding with the given parameters to get test statistics 
@@ -156,13 +145,15 @@ run.one.repl.with.params<-function(mc.counter,params){
 	require(MASS)
 	results<-with(params, {
 				require(MASS)
-				w.max.index <-length(w.vals)
+				w.max.index <-length(w.vals.param)
 				oos.diss.mc.0<- array(0,dim=c(w.max.index ))
 				oos.diss.mc.A<- array(0,dim=c(w.max.index ))
 				power.w.star <- 0
 				
-				m<-s
-				
+				m<-s.param
+				sink(paste(mc.counter,"c-check.txt"))
+				print(c.val.param)
+				sink()
 				T0 <- matrix(0,w.max.index,m)   #Test statistics for JOFC under null
 				TA <- matrix(0,w.max.index,m)    #Test statistics for JOFC under alternative
 				Y.oos.matched <- c()
@@ -175,40 +166,40 @@ run.one.repl.with.params<-function(mc.counter,params){
 				Fid.Err.Term.2 <- array(0,dim=c(w.max.index))
 				Comm.Err.Term <- array(0,dim=c(w.max.index))
 				
-				sigma <- matrix(0,p,p)
-				means <- array(0 , dim=c(w.max.index,2*d))
+				sigma <- matrix(0,p.param,p.param)
+				means <- array(0 , dim=c(w.max.index,2*d.param))
 				
 				
 				
 				
 					if (model=="gaussian"){
-						sigma<- diag(p)
-						if (old.gauss.model.param) sigma <-Posdef(p,r)
-						alpha.mc <- mvrnorm(n+(2*m), rep(0,p),sigma)
+						sigma<- diag(p.param)
+						if (old.gauss.model.param) sigma <-Posdef(p.param,r.param)
+						alpha.mc <- mvrnorm(n.param+(2*m), rep(0,p.param),sigma)
 					} else if (model=="dirichlet"){
-						alpha.mc <- rdirichlet(n+2*m, rep(1,p+1))
+						alpha.mc <- rdirichlet(n.param+(2*m), rep(1,p.param+1))
 					} else stop("unknown model")
 					
 					
 				
 				
-				## n pairs of matched points
+				## n.param pairs of matched points
 				if (model=="gaussian"){
-					xlist <- matched_rnorm(n, p, q, c.val, r, alpha=alpha.mc[1:n, ],sigma.alpha=sigma,old.gauss.model.param=old.gauss.model.param)
+					xlist <- matched_rnorm(n.param, p.param, q.param, c.val.param, r.param, alpha=alpha.mc[1:n.param, ],sigma.alpha=sigma,old.gauss.model.param=old.gauss.model.param)
 				} else{
-					xlist <- matched_rdirichlet(n, p, r, q, c.val, alpha.mc[1:n, ])
+					xlist <- matched_rdirichlet(n.param, p.param, r.param, q.param, c.val.param, alpha.mc[1:n.param, ])
 				}
 				
 				## m pairs of matched points
 				if (model=="gaussian"){
-					ylist <- matched_rnorm(m, p, q, c.val, r, alpha=as.array(alpha.mc[n+(1:m), ,drop=FALSE]),sigma.alpha=sigma,old.gauss.model.param=old.gauss.model.param)
+					ylist <- matched_rnorm(m, p.param, q.param, c.val.param, r.param, alpha=as.array(alpha.mc[n.param+(1:m), ,drop=FALSE]),sigma.alpha=sigma,old.gauss.model.param=old.gauss.model.param)
 				} else{
-					ylist <- matched_rdirichlet(m, p, r, q, c.val, alpha=as.array(alpha.mc[n+(1:m), ,drop=FALSE]))
+					ylist <- matched_rdirichlet(m, p.param, r.param, q.param, c.val.param, alpha=as.array(alpha.mc[n.param+(1:m), ,drop=FALSE]))
 				}
 				if (model=="gaussian"){
-					y.alt <- matched_rnorm(m, p, q, c.val, r, alpha=as.array((alpha.mc[n+m+(1:m), ,drop=FALSE])),sigma.alpha=sigma,old.gauss.model.param=old.gauss.model.param)
+					y.alt <- matched_rnorm(m, p.param, q.param, c.val.param, r.param, alpha=as.array((alpha.mc[n.param+m+(1:m), ,drop=FALSE])),sigma.alpha=sigma,old.gauss.model.param=old.gauss.model.param)
 				} else{
-					y.alt <- matched_rdirichlet(m, p, r, q, c.val,alpha= as.array(alpha.mc[n+m+(1:m), ,drop=FALSE]))
+					y.alt <- matched_rdirichlet(m, p.param, r.param, q.param, c.val.param,alpha= as.array(alpha.mc[n.param+m+(1:m), ,drop=FALSE]))
 				}
 				
 				
@@ -251,7 +242,7 @@ run.one.repl.with.params<-function(mc.counter,params){
 				} else if (Wchoice == "sqrt") {
 					L <- sqrt((D1^2 + D2^2)/2)
 				} else if (Wchoice == "NA+diag(0)") {
-					L <- matrix(NA,n,n)
+					L <- matrix(NA,n.param,n.param)
 					diag(L)<- 0
 				}
 				
@@ -264,7 +255,7 @@ run.one.repl.with.params<-function(mc.counter,params){
 				if (compare.pom.cca) init.conf<- pom.config
 				
 				# Embed in-sample using different weight matrices (differentw values)
-				X.embeds<-JOFC.Insample.Embed(M, d, w.vals, separability.entries.w, init.conf=init.conf,
+				X.embeds<-JOFC.Insample.Embed(M, d.param, w.vals.param, separability.entries.w, init.conf=init.conf,
 						wt.equalize=wt.equalize)
 				
 				Pert.mat.mc<-(as.matrix(dist(X.embeds[[1]])^2))-as.matrix(D.whole^2)
@@ -277,16 +268,16 @@ run.one.repl.with.params<-function(mc.counter,params){
 				
 				for (l in 1:w.max.index){
 					if (verbose) print("OOS embedding for JOFC for w= \n")
-					if (verbose) print(w.vals[l])
+					if (verbose) print(w.vals.param[l])
 					
-					w.val.l <- w.vals[l]
+					w.val.l <- w.vals.param[l]
 					X <- X.embeds[[l]]
 					
 					
-					oos.obs.flag<- c(rep(1,2*n),rep(0,2*m))
+					oos.obs.flag<- c(rep(1,2*n.param),rep(0,2*m))
 					
 					#Compute Weight matrix corresponding in-sample  entries
-					oos.Weight.mat.1<-w.val.to.W.mat(w.val.l,(2*n),separability.entries.w,wt.equalize)
+					oos.Weight.mat.1<-w.val.to.W.mat(w.val.l,(2*n.param),separability.entries.w,wt.equalize)
 					
 					#Compute Weight matrix corresponding OOS  entries
 					#oos.Weight.mat.2<-w.val.to.W.mat(w.val.l,(2*m),separability.entries.w,wt.equalize)
@@ -304,10 +295,10 @@ run.one.repl.with.params<-function(mc.counter,params){
 					# from different conditions like fidelity terms
 					# otherwise they are ignored
 					if (oos.use.imputed){
-						oos.Weight.mat.w <- matrix(1-w.val.l,2*n,2*m)
+						oos.Weight.mat.w <- matrix(1-w.val.l,2*n.param,2*m)
 					} else{
-						oos.Weight.mat.w <- rbind(cbind(matrix(1-w.val.l,n,m), matrix(0,n,m) ),
-								cbind(matrix(0,n,m),matrix(1-w.val.l,n,m))
+						oos.Weight.mat.w <- rbind(cbind(matrix(1-w.val.l,n.param,m), matrix(0,n.param,m) ),
+								cbind(matrix(0,n.param,m),matrix(1-w.val.l,n.param,m))
 						)
 					}
 					print(dim(oos.Weight.mat.1))
@@ -316,7 +307,7 @@ run.one.repl.with.params<-function(mc.counter,params){
 					oos.Weight.mat<-omnibusM(oos.Weight.mat.1,oos.Weight.mat.2,oos.Weight.mat.w)
 					# Since we are going to oos-embedding, set the weights  of in-sample embedding of stress
 					# We are using previous in-sample embeddings, anyway
-					oos.Weight.mat[1:(2*n),1:(2*n)]<-0
+					oos.Weight.mat[1:(2*n.param),1:(2*n.param)]<-0
 					if (verbose) print("dim(M.oos.0)")
 					if (verbose) print(dim(M.oos.0))
 					if (verbose) print("dim(M.oos.A)")
@@ -330,8 +321,8 @@ run.one.repl.with.params<-function(mc.counter,params){
 					
 					ideal.omnibus.0  <- as.matrix(dist(rbind(X1,X2,Y1,Y20)))
 					ideal.omnibus.A  <- as.matrix(dist(rbind(X1,X2,Y1,Y2A)))
-					omnibus.oos.D.0 <- omnibusM(M,M.oos.0,ideal.omnibus.0[1:(2*n),(2*n)+(1:(2*m))])
-					omnibus.oos.D.A <- omnibusM(M,M.oos.A, ideal.omnibus.A[1:(2*n),(2*n)+(1:(2*m))])
+					omnibus.oos.D.0 <- omnibusM(M,M.oos.0,ideal.omnibus.0[1:(2*n.param),(2*n.param)+(1:(2*m))])
+					omnibus.oos.D.A <- omnibusM(M,M.oos.A, ideal.omnibus.A[1:(2*n.param),(2*n.param)+(1:(2*m))])
 					oos.Weight.mat [is.na(omnibus.oos.D.0)]<-0
 					omnibus.oos.D.0[is.na(omnibus.oos.D.0)]<-1
 					omnibus.oos.D.A[is.na(omnibus.oos.D.A)]<-1
@@ -452,51 +443,11 @@ compute.stats.for.params<-function(params.list,vary.param){
     
 	for (param.index in 1:param.index.count){
 		
-		n<-n.vals
+		
 		params<- params.list[[param.index]]
 		
-		if (0) {
-		attach(params)
-		D.nmc<-array(0,dim=c(2*n,2*n,nmc))
-		
-		Pert.mat<-array(0,dim=c(2*n,2*n,nmc))
 		
 		
-		
-		Ideal.Gamma.matched<- rgamma  (150,shape=p/2,scale=4*(1-c.val)^2/r)+ 
-				rgamma(150,shape=q/2,scale=4*c.val^2*(1+1/r))
-		Ideal.Gamma.unmatched<- rgamma(150,shape=p/2,scale=4*(1-c.val)^2*(1+1/r))+ 
-				rgamma(150,shape=q/2,scale=4*(c.val)^2*(1+1/r))
-		
-		
-			windows()
-			hist(Ideal.Gamma.matched)
-			savePlot(file.path(results.dir,"Ideal.Gamma.matched.hist.pdf"),"pdf")
-			dev.off()
-			windows()
-			plot(density(Ideal.Gamma.matched))
-			savePlot(file.path(results.dir,"Ideal.Gamma.matched.dens.pdf"),"pdf")
-			dev.off()
-			windows()
-			hist(Ideal.Gamma.unmatched)
-			savePlot(file.path(results.dir,"Ideal.Gamma.unmatched.hist.pdf"),"pdf")
-			dev.off()
-			windows()
-			plot(density(Ideal.Gamma.unmatched))
-			savePlot(file.path(results.dir,"Ideal.Gamma.unmatched.dens.pdf"),"pdf")
-			dev.off()
-			windows()
-		
-		Pert.log.normal<-rgamma(150,shape=p/2, scale=0.006)
-		
-		Pert.Gamma.matched   <- Pert.log.normal+Ideal.Gamma.matched
-		Pert.Gamma.unmatched <-   Pert.log.normal+Ideal.Gamma.matched
-		
-		
-		
-		detach(params)
-		
-		}
 		#sink(paste("log-params-",vary.param,param.index,".txt",sep="",collapse=""))
 
 		
@@ -506,9 +457,6 @@ compute.stats.for.params<-function(params.list,vary.param){
 				"size",
 				"len",
 				"model",
-				"pprime1",
-				
-				"pprime2",
 				
 				
 				"pre.scaling", 
@@ -560,7 +508,7 @@ compute.stats.for.params<-function(params.list,vary.param){
 		results.agg<-sfLapply(1:nmc,run.one.repl.with.params,params)   
 		
 		for (mc in 1:nmc){
-			if (length(params$w.vals)==1) {
+			if (length(params$w.vals.param)==1) {
 				oos.diss.all.params.0[param.index,1,mc]<-results.agg[[mc]]$oos.0
 				oos.diss.all.params.A[param.index,1,mc]<-results.agg[[mc]]$oos.A
 				
