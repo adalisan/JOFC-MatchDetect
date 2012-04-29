@@ -97,7 +97,7 @@ source("./lib/diffusion_distance.R")
 }
 
 require(doSMP)
-workers <- startWorkers(8) 
+workers <- startWorkers(num.cpus) 
 registerDoSMP(workers)
  times <- 4	# times to run the loop
 run.per.batch <-12 
