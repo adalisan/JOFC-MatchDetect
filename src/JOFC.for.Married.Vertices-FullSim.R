@@ -559,7 +559,7 @@ colors.vec<-c( "red","blue","orange","green","purple")
 
 colors.vec<-colors.vec[1:length(T.diff.vec)]
 plot(pert,apply(nc.jofc.diff.T[,,1],1,mean)/(n-m),xlab="perturbation parameter",ylab="Fraction of  correct matches",ylim=c(0,1),col=colors.vec[1])
-for (d.i in 2:length(d.dim.vec)){
+for (T.i in 2:length(T.diff.vec)){
 	points(pert,apply(nc.jofc.diff.T[,,T.i],1,mean)/(n-m),xlab="perturbation parameter",ylab="Fraction of  correct matches",ylim=c(0,1),pch=1,col=colors.vec[T.i])
 }
 legend.txt <- c(T.diff.vec)

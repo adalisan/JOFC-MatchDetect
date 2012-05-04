@@ -56,13 +56,6 @@ d.dim<-10
 
 run.jofc.replicate.batch <- function(i, mc.rep.per.batch,method="jofc"){
 
-require(igraph)
-require(optmatch)
-source("./lib/simulation_math_util_fn.R")
-source("./lib/smacofM.R")
-source("./lib/oosIM.R")
-source("./lib/graph_embedding_fn.R")
-source("./lib/diffusion_distance.R")
       num.matches<-rep(0,mc.rep.per.batch)
 
       for ( j in 1:mc.rep.per.batch) {
@@ -96,14 +89,39 @@ source("./lib/diffusion_distance.R")
       return (num.matches)
 }
 
-require(doSMP)
-workers <- startWorkers(num.cpus) 
-registerDoSMP(workers)
+#require(doSMP)
+#workers <- startWorkers(num.cpus) 
+#registerDoSMP(workers)
  times <- 4	# times to run the loop
 run.per.batch <-12 
 
-run.results<-foreach(run.mc=1:(nmc/run.per.batch),.combine=c) %dopar% run.jofc.replicate.batch(run.mc,run.per.batch,method="jofc")
+#run.results<-foreach(run.mc=1:(nmc/run.per.batch),.combine=c) %dopar% run.jofc.replicate.batch(run.mc,run.per.batch,method="jofc")
+
+
+sfInit( parallel=TRUE, cpus=num.cpus )
+
+
+
+
+sfClusterSetupRNG()   
+sfLibrary (igraph)
+sfLibrary(optmatch)
+sfSource("./lib/simulation_math_util_fn.R")
+sfSource("./lib/smacofM.R")
+sfSource("./lib/oosIM.R")
+sfSource("./lib/graph_embedding_fn.R")
+sfSource("./lib/diffusion_distance.R")
+
+#p.prime.cond = p+q
+
+
+print("Starting parallelization in gaussian_simulation_jofc_tradeoff_sf") 
+run.results <- sfLapply( 1:nmc, run.jofc.replicate.batch,mc.rep.per.batch=run.per.batch,method="jofc")
+
+sfStop()
+
+
 # stop workers
-stopWorkers(workers)
+#stopWorkers(workers)
 
 
