@@ -1801,7 +1801,7 @@ That is, we seek a permutation matrix $P \in \{0,1\}^{s \times s}$ such that $A=
 
 Using omnibus  embedding, it is possible to embed the vertices of two graphs in a commensurate space.
 Therefore, the JOFC approach can be used here for determining the pairwise distances between  the vertices of $A$ and $B$.
-The next step is to use the pairwise distances to find the optimal 1-1 matchings by the Hungarian algorithm \cite{Hung-algo}. The Hungarian algorithm finds an optimal matching between two sets of nodes such that the total  cost which is the sum of the pairwise distances of matched nodes is minimized.
+The next step is to use the pairwise distances to find the optimal 1-1 matchings by the Hungarian algorithm \cite{Hung-algo}. The Hungarian algorithm finds an optimal matching between two sets of vertices such that the total  cost which is the sum of the pairwise distances of matched nodes is minimized.
  
 One useful property of dissimilarity representation is that the structure of data is irrelevant once an appropriate dissimilarity function  for the data is available. 
 There are many distances that can be defined between vertices in graphs. We assume that an appropriate distance measure is available to us.
@@ -1824,6 +1824,7 @@ In our experiments we will use three different dissimilarities between vertices 
   The probability of flipping an entry of the adjacency matrix is the perturbation parameter $p_{pert}$ which is the variable on the x-axis. 
   The performance measure is the proportion of true matches to the number of matches. Note that 
   under chance the expected number of true matches is 1, as shown with the dashed line. In the simulation, $r=15$ and $s=5$. $p_{pert}$ varies from $0$ to $1$ in increments of $0.1$. 
+  
 <<JOFC-on-ER-Graph, echo=FALSE,fig=FALSE,results=hide,cache=TRUE,trace=TRUE>>=
 cep=TRUE
 verbose= FALSE
@@ -2004,6 +2005,12 @@ title("marriage o jofc")
 abline(h=1/(n-m),lty=2) ### chance?  apparently not!?
 abline(v=1/2,lty=2) ### chance?  gotta be!?
 @
+
+In the plot above, JOFC approach applied to  dissimilarities based on weighted and unweighted graphs is compared with classical MDS on dissimilarities of weighted graphs.
+
+Note that JOFC for unweighted and weighted graphs  have better performance compared to CMDS. As the perturbation parameter gets larger, the performance degrades until it is indistinguishable from random chance at $pert=0.5$.
+
+
 
 This graph shows the effect of embedding dimension $d$ on the probability of true matches.
   
@@ -2321,7 +2328,7 @@ This graph shows the effect of the diffusion distance parameter $T$ on the proba
 
 <<JOFC-graph-sim-5, echo=FALSE,fig=FALSE,results=hide,cache=TRUE,trace=TRUE,depenson=JOFC-on-ER-Graph >>=
 
-T.diff.vec<- c(0.5,1,2,5,10)
+T.diff.vec<- c(0.1,1,2,5,10)
 nc.jofc.diff.T       = array(0,dim=c(npert,nmc,length(T.diff.vec)))
 
 
@@ -2379,9 +2386,9 @@ for (T.i in 1:length(T.diff.vec)){
 colors.vec<-c( "red","blue","orange","green","purple")
 
 colors.vec<-colors.vec[1:length(T.diff.vec)]
-plot(pert,apply(nc.jofc.diff.T[,,1],1,mean)/(n-m),xlab="perturbation parameter",ylab="Fraction of  correct matches",ylim=c(0,1),col=colors.vec[1])
-for (d.i in 2:length(d.dim.vec)){
-	points(pert,apply(nc.jofc.diff.T[,,T.i],1,mean)/(n-m),xlab="perturbation parameter",ylab="Fraction of  correct matches",ylim=c(0,1),pch=1,col=colors.vec[T.i])
+plot(pert,apply(nc.jofc.diff.T[,,1],1,mean)/(n-m),xlab="perturbation parameter",ylab="Fraction of  correct matches",ylim=c(0,1),col=colors.vec[1],type="l")
+for (T.i in 2:length(T.diff.vec)){
+	lines(pert,apply(nc.jofc.diff.T[,,T.i],1,mean)/(n-m),xlab="perturbation parameter",ylab="Fraction of  correct matches",ylim=c(0,1),pch=1,col=colors.vec[T.i])
 }
 legend.txt <- c(T.diff.vec)
 legend(x="topright",legend=legend.txt, 

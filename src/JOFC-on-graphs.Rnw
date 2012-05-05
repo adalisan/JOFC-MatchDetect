@@ -271,7 +271,7 @@ nc.jofc.unweighted.d = array(0,dim=c(npert,nmc,length(d.dim.vec)))
 
 
 
-nc.cmds.d           = array(0,dim=c(npert,nmc,length(d.dim.vec)-1))
+nc.cmds.d           = array(0,dim=c(npert,nmc,length(d.dim.vec)-2))
 
 # these three lines are not used, really ...
 # they just set up a dummy D.M which is the correct object for input to fullmatch".
@@ -349,7 +349,7 @@ for (d.dim in d.dim.vec){
 			
 			
 			
-			if (cep){
+			if (cep & (d.dim<12)){
 				U<-matrix()
 				
 				myD.M = D.M # i use just the object D.M ... none of the original entries!
@@ -434,7 +434,7 @@ for (d.i in 2:length(d.dim.vec)){
 	lines(pert,apply(nc.jofc.diff.d[,,d.i],1,mean)/(n-m),xlab="perturbation parameter",
 			ylab="Fraction of  correct matches",ylim=c(0,1),col=colors.vec[d.i])
 }
-for (d.i in 1:length(d.dim.vec)){
+for (d.i in 1:(length(d.dim.vec)-2)){
 	lines(pert,apply(nc.cmds.d[,,d.i],1,mean)/(n-m),xlab="perturbation parameter",
 			ylab="Fraction of  correct matches",ylim=c(0,1),lty=2,col=colors.vec[d.i])
 }
