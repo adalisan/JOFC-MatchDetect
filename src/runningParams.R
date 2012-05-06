@@ -36,15 +36,25 @@ profile.mode <- FALSE
 debug.mode<- FALSE
 
 if(debug.mode){
-  n.vals<-c(70)
+	n.vals<-c(70)
 	nmc<-3
 	s<-10
 }
 
 
 params<-list(
-  run.for.Sweave = run.for.Sweave,
-  	nmc=nmc,
+		run.for.Sweave = run.for.Sweave,
+		
+		p.g= 3,
+		r.g = 10,
+		
+		q.g =15,
+		
+		p.dir= 5,
+		r.dir =20,
+		
+		q.dir =22,
+		nmc=nmc,
 		coincid.vec.dotpr.thres =0.9,
 		eigen.spectrum =F,
 		grassmannian.dist = F,
@@ -87,7 +97,7 @@ params<-list(
 		c.val=0.01,
 		#w.vals = c(0.001,0.1,0.5,0.8,0.85,0.9,0.925,0.95,0.99,0.999),
 		w.vals = c(0.5,0.8,0.85,0.9,0.925,0.95,0.99,0.999),
-    #w.vals= c(0.5,0.999),
+		#w.vals= c(0.5,0.999),
 		wt.equalize=FALSE,
 		rival.w = 0.999,
 		power.comparison.test = F,

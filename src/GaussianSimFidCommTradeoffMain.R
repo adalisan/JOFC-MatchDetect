@@ -109,15 +109,6 @@ if (dirichlet.sim){
 }
 
 
-p.g <- 3
-r.g <- 10
-
-q.g <- 15
-params$oos <- TRUE
-p.dir<-5
-r.dir<-20
-
-q.dir<-22
 
 
 
@@ -126,7 +117,10 @@ q.dir<-22
 if (profile.mode) Rprof(filename = "Rprof.out", append = FALSE, interval = 0.02,
 			memory.profiling=FALSE)
 
-if (vary.params){
+#If testing the effect of variation of a parameter on optimal w,   params.df is the outer product
+# of  *.vals vectors
+# otherwise just get them from the params list (stored in runningParams.R)
+if (vary.params){ 
 params.df<-expand.grid(d.i=d.vals,n.i=n.vals,c.i = c.vals,p.i=p.vals.vec,q.i=q.vals.vec,r.i=r.vals.vec)
 }else{
 	params.df<-expand.grid(d.i=params$d,n.i=params$n,
@@ -136,8 +130,8 @@ param.count <- nrow(params.df)
 
 power.vals.g<- array(0,dim=c(param.count,length(params$w.vals),params$nmc,length(size)))
 power.vals.d<- array(0,dim=c(param.count,length(params$w.vals),params$nmc,length(size)))
-best.w.g<-array(list(),c(param.count,nmc))
-best.w.d<-array(list(),c(param.count,nmc))
+best.w.g<-array(list(),c(param.count,params$nmc))
+best.w.d<-array(list(),c(param.count,params$nmc))
 for (param.i in 1:param.count){
 	d.v <- params.df$d.i[param.i]
 	n.v <- params.df$n.i[param.i]
@@ -175,11 +169,15 @@ for (param.i in 1:param.count){
 	
 	
 	if (gauss.sim){
-		if (!vary.params){
-		params$p <- p.g
-		params$r <- r.g
+		#If testing the effect of variation of a parameter on optimal w,   params.df is the outer product
+		# of  *.vals vectors
+		# otherwise just get them from the params list (stored in runningParams.R)
 		
-		params$q <- q.g
+		if (!vary.params){
+		params$p <- params$p.g
+		params$r <- params$r.g
+		
+		params$q <- params$q.g
 		}
 		else{
 			
@@ -213,9 +211,9 @@ for (param.i in 1:param.count){
 		print("Gaussian Setting Simulation Ended")
 		#sim.res.g.list<-c(sim.res.g.list,sim.res.g)
 		power.vals.g[param.i,,,]<- sim.res.g$power
-		
-		best.w.g[[param.i,mc]]<-sim.res.g$wstar.idx.estim.mc[[mc]]
-		
+		for (mc in 1:(params$nmc)){
+			best.w.g[[param.i,mc]]<-sim.res.g$wstar.idx.estim.mc[[mc]]
+		}
 		
 		
 		Fid1<-sim.res.g$FidComm.Terms$F1
@@ -249,7 +247,7 @@ for (param.i in 1:param.count){
 		
 		save.image(paste(results.dir,"MVN","-c",params$c.val,"-n",params$n,Sys.Date(),".RData",collapse=""))
 		
-		avg.cont.table<- (sim.res.g$conting.table+0.001)/nmc
+		avg.cont.table<- (sim.res.g$conting.table+0.001)/params$nmc
 		print("Aggregate Cont Table: ")
 		print(avg.cont.table)
 		p.val <-mcnemar.test(avg.cont.table)$p.value
@@ -457,9 +455,9 @@ for (param.i in 1:param.count){
 	if (dirichlet.sim){
 		
 		if (!vary.params){
-			params$p<-p.dir
-			params$r<-r.dir
-			params$q<-q.dir
+			params$p<-params$p.dir
+			params$r<-params$r.dir
+			params$q<-params$q.dir
 		
 		}
 		else{
@@ -503,9 +501,9 @@ for (param.i in 1:param.count){
 		print("Dirichlet Setting Simulation Ended")
 		
 		power.vals.d[param.i,,,]<- sim.res.d$power
-		
-		best.w.d[[param.i,mc]]<-sim.res.d$wstar.idx.estim.mc[[mc]]
-		
+		for (mc in 1:params$nmc){
+			best.w.d[[param.i,mc]]<-sim.res.d$wstar.idx.estim.mc[[mc]]
+		}
 		
 		
 		
@@ -541,7 +539,7 @@ for (param.i in 1:param.count){
 		save.image(paste(results.dir,"Dirichlet","c",params$c.val,"-n",params$n,Sys.Date(),".RData",collapse=""))
 		
 		
-		avg.cont.table<- (sim.res.d$conting.table+0.001)/nmc
+		avg.cont.table<- (sim.res.d$conting.table+0.001)/params$nmc
 		print("Aggregate Cont Table: ")
 		print(avg.cont.table)
 		p.val <-mcnemar.test(avg.cont.table)$p.value
@@ -764,9 +762,43 @@ sink()
 
 sink("wstar-vals")
 
-print(estim.wstar.G)
-print(estim.wstar.D)
+if (gauss.sim) print(estim.wstar.G)
+if  (dirichlet.sim) print(estim.wstar.D)
 sink()
+
+if (gauss.sim) {
+best.w.g.for.param<-rep(0,param.count)
+for (param.i in 1:param.count){
+	best.w.g.list.param.i<-c()
+	for (mc in 1:params$nmc){
+		best.w.g.list.param.i<-c(best.w.g.list.param.i,unlist(best.w.g[[param.i,mc]]))
+	}
+	best.w.g.for.param[param.i] <- which.max(table(best.w.g.list.param.i))
+}
+sink("best-w-for-params-G.txt")
+print(best.w.g.for.param)
+
+sink()
+}
+
+
+
+if  (dirichlet.sim) {
+	
+	best.w.d.for.param<-rep(0,param.count)
+	for (param.i in 1:param.count){
+		best.w.d.list.param.i<-c()
+		for (mc in 1:params$nmc){
+			best.w.d.list.param.i<-c(best.w.d.list.param.i,unlist(best.w.d[[param.i,mc]]))
+		}
+		best.w.d.for.param[param.i] <- which.max(table(best.w.d.list.param.i))
+	}
+	sink("best-w-for-params-D.txt")
+	print(best.w.d.for.param)
+	
+	sink()
+	
+}
 
 
 sink("traceback.txt")
