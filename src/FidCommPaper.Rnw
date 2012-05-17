@@ -1342,6 +1342,12 @@ source("./src/runningParams.R")
 c.vals<-c(0.01)
 
 d.vals<-c(2,4,8,10)
+p.vals.vec<-3
+q.vals.vec<-15
+r.vals.vec<-10
+c.vals.vec<-NULL
+
+
 vary.params<-TRUE
 
 dirichlet.sim<-F
@@ -1356,7 +1362,6 @@ dirichlet.sim<-F
 c.vals<-c(0.01)
 
 d.vals<-c(2,4,8,10)
-
 
 verbose<-TRUE
 w.val.len<-length(params$w.vals)
