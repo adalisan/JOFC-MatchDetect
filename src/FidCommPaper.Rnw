@@ -1353,6 +1353,8 @@ c.vals.vec<-NULL
 
 vary.params<-TRUE
 
+params$w.vals = c(0.5,0.8,0.925,0.99,0.999)
+
 dirichlet.sim<-F
 source("./src/GaussianSimFidCommTradeoffMain.R")
 
@@ -1360,13 +1362,23 @@ source("./src/GaussianSimFidCommTradeoffMain.R")
 
 <<FidComm-d-plot-Gaussian, echo=FALSE,fig=FALSE,results=verbatim,cache=FALSE,dependson=FidComm-d-sim >>=
 run.for.Sweave<-TRUE
-source("./src/runningParams.R")
+
 dirichlet.sim<-F
 c.vals<-c(0.01)
 
 d.vals<-c(2,4,8,10)
 
+if (vary.params){ 
+	params.df<-expand.grid(d.i=d.vals,n.i=n.vals,c.i = c.vals,p.i=p.vals.vec,q.i=q.vals.vec,r.i=r.vals.vec)
+}else{
+	params.df<-expand.grid(d.i=params$d,n.i=params$n,
+			c.i =params$c.val,p.i=params$p,q.i=params$q,r.i=params$r)
+}
+
 verbose<-TRUE
+
+
+params$w.vals = c(0.5,0.8,0.925,0.99,0.999)
 w.val.len<-length(params$w.vals)
 first.ind<-rep(0,length(d.vals))
 for (i in 1: length(d.vals)){
@@ -1398,7 +1410,12 @@ if(!run.in.linux&(!run.for.Sweave)) savePlot(filename=paste(fname,".png",collaps
 
 <<FidComm-d-plot-Gaussian-2, echo=FALSE,fig=TRUE,results=hide,cache=FALSE,dependson=FidComm-d-sim >>=
 
+for (i in 1: length(d.vals)){
+	first.ind[i]<-which(params.df$d.i==d.vals[i])
+}
 
+
+w.val.len<-length(params$w.vals)
 for (w.i in 1:w.val.len){
 	if (w.i==1) {plot (d.vals,avg.Fid1.alt.G[first.ind, w.i],type="l",col="red")}
 	else {lines (d.vals,avg.Fid1.alt.G[first.ind, w.i],col="red")}
@@ -1469,7 +1486,7 @@ for different $ d $ values.
 d.vals.len<-length(d.vals)
 par(mfrow=c(ceiling(d.vals.len/2),2))
 for (i in 1:d.vals.len)
-	hist(best.w.g[i,],breaks=length(params$w.vals),
+	hist(best.w.g.list.param.i,breaks=length(params$w.vals),
 			main=expression(paste("Best w for d=",d.vals[i])))
 
 @
@@ -1519,8 +1536,10 @@ In our experiments we will use three different dissimilarities between vertices 
 \begin{itemize}
  \item the shortest path on the  unweighted graph whose adjacency matrix is available
  \item the shortest path on a weighted version of the graph whose adjacency matrix is available
- \item diffusion distance between vertices on the (unweighted?) graph.
+ \item diffusion distance between vertices on the (unweighted) graph.
  \end{itemize}
+ We will omit the results for weighted graph dissimilarities, since they seem to have the same performance as the weighted dissimilarities.
+ 
  Note that these dissimilarities can only be defined between vertices of the same graph. We impute the inter-condition dissimilarities   as described before\ref{omnibus}.
  
   In the following simulation, $A$ is the adjacency matrix of an Erdos-Renyi graph, that is
@@ -1533,7 +1552,7 @@ In our experiments we will use three different dissimilarities between vertices 
   
   The probability of flipping an entry of the adjacency matrix is the perturbation parameter $p_{pert}$ which is the variable on the x-axis. 
   The performance measure is the proportion of true matches to the number of matches. Note that 
-  under chance the expected number of true matches is 1, as shown with the dashed line. In the simulation, $r=15$ and $s=5$. $p_{pert}$ varies from $0$ to $1$ in increments of $0.1$. 
+  under chance the expected number of true matches is 1, as shown with the dashed line. In the simulation, $r=20$ and $s=5$. $p_{pert}$ varies from $0$ to $1$ in increments of $0.1$. 
   
 <<JOFC-on-ER-Graph, echo=FALSE,fig=FALSE,results=hide,cache=TRUE,trace=TRUE>>=
 cep=TRUE
@@ -1543,11 +1562,11 @@ oos.cep = TRUE
 
 a.cep <-20
 
-n = 20
-m = 15 # the first m pairs are known matches ; the last n-m pairs are to-be-matched
+n = 25
+m = 20 # the first m pairs are known matches ; the last n-m pairs are to-be-matched
 
 npert = 11
-nmc = 20
+nmc = 100
 pert=(0:10)/10
 nc.jofc.diff = matrix(0,npert,nmc)
 nc.jofc.weighted = matrix(0,npert,nmc)
@@ -1560,7 +1579,7 @@ nc.cmds = matrix(0,npert,nmc)
 matched.cost<-0.01
 
 
-w.vals.vec <- c(0.5,0.7,0.9,0.95)
+w.vals.vec <- c(0.2,0.5,0.7,0.9,0.95)
 
 w.max.index<-length(w.vals.vec)
 
@@ -1568,7 +1587,7 @@ matched.cost<-0.01 #If matched.cost is equal to 1, consider an unweighted graph,
 #If matched.cost is  between 0 and 1, the graph is weighted with edges between matched vertices with weights equal to matched.cost. Edges between 
 # vertices of the same condition have either weight 1 or 2 according to whether they're connected according to given adjacency matrix or not.
 
-d.dim<-4
+d.dim<-8
 T.diff<-1
 c.imp<- 20
 
@@ -1702,7 +1721,8 @@ for(imc in 1:nmc)
 
 colors.vec<-c( "red","blue","orange","green")
 colors.vec<-colors.vec[1:4]
-plot(pert,apply(nc.jofc.diff,1,mean)/(n-m),xlab="perturbation parameter",ylab="Fraction of  correct matches",ylim=c(0,1),col=colors.vec[1])
+plot(pert,apply(nc.jofc.diff,1,mean)/(n-m),xlab="perturbation parameter",ylab="Fraction of  correct matches",ylim=c(0,1),col=colors.vec[1],
+		type="l")
 lines(pert,apply(nc.cmds,1,mean)/(n-m),xlab="perturbation parameter",ylab="Fraction of  correct matches",ylim=c(0,1),pch=2,col=colors.vec[2])
 
 lines(pert,apply(nc.jofc.weighted,1,mean)/(n-m),xlab="perturbation parameter",ylab="Fraction of  correct matches",ylim=c(0,1),pch=3,col=colors.vec[3])
@@ -1710,8 +1730,8 @@ lines(pert,apply(nc.jofc.weighted,1,mean)/(n-m),xlab="perturbation parameter",yl
 lines(pert,apply(nc.jofc.unweighted,1,mean)/(n-m),xlab="perturbation parameter",ylab="Fraction of  correct matches",ylim=c(0,1),pch=4,col=colors.vec[4])
 
 legend.txt<- c("diff dist","CMDS","weighted.graph","unweighted.graph")
-legend(x="topright",legend=legend.txt, col =colors.vec,pch=1:4)
-title("marriage o jofc")
+legend(x="topright",legend=legend.txt, col =colors.vec,lty=rep(1,4))
+title("1-1 Matching performance of JOFC embedding followed by Hung. algo.")
 abline(h=1/(n-m),lty=2) ### chance?  apparently not!?
 abline(v=1/2,lty=2) ### chance?  gotta be!?
 @
@@ -1720,13 +1740,12 @@ In the plot above, JOFC approach applied to  dissimilarities based on weighted a
 
 Note that JOFC for unweighted and weighted graphs  have better performance compared to CMDS. As the perturbation parameter gets larger, the performance degrades until it is indistinguishable from random chance at $pert=0.5$.
 
+Another feature of the plot is the U-shape of the curve for diffusion-distance based dissimilarities. This invariancy with respect to complement of the graph should be investigated further.
 
-
-This graph shows the effect of embedding dimension $d$ on the probability of true matches.
   
 <<JOFC-graph-sim-d, echo=FALSE,fig=FALSE,results=hide,cache=TRUE,depenson=JOFC-on-ER-Graph >>=
 
-d.dim.vec<-c(4,6,10)
+d.dim.vec<-c(4,6,10,13,17)
 
 nc.jofc.diff.d       = array(0,dim=c(npert,nmc,length(d.dim.vec)))
 nc.jofc.weighted.d   = array(0,dim=c(npert,nmc,length(d.dim.vec)))
@@ -1734,7 +1753,7 @@ nc.jofc.unweighted.d = array(0,dim=c(npert,nmc,length(d.dim.vec)))
 
 
 
-nc.cmds.d           = array(0,dim=c(npert,nmc,length(d.dim.vec)))
+nc.cmds.d           = array(0,dim=c(npert,nmc,length(d.dim.vec)-2))
 
 # these three lines are not used, really ...
 # they just set up a dummy D.M which is the correct object for input to fullmatch".
@@ -1774,7 +1793,7 @@ for (d.dim in d.dim.vec){
 					oos=oos,
 					wt.matrix.1=NULL,
 					wt.matrix.2=NULL,
-					sep.graphs=TRUE)
+					sep.graphs=TRUE, T.param = 2)
 			
 			M = solveMarriage(J.1[[1]])
 			nc.jofc.diff.d[ipert,imc,d.i] = present(M)         # returns the number correct in the marriage?
@@ -1787,6 +1806,7 @@ for (d.dim in d.dim.vec){
 					w.vals.vec,
 					graph.is.directed=FALSE,
 					oos=oos,          
+					use.weighted.graph=TRUE,
 					wt.matrix.1=NULL,
 					wt.matrix.2=NULL,
 					sep.graphs=TRUE)
@@ -1812,7 +1832,7 @@ for (d.dim in d.dim.vec){
 			
 			
 			
-			if (cep){
+			if (cep & (d.dim<12)){
 				U<-matrix()
 				
 				myD.M = D.M # i use just the object D.M ... none of the original entries!
@@ -1858,6 +1878,7 @@ for (d.dim in d.dim.vec){
 }
 @
 
+This graph shows the effect of embedding dimension $d$ on the probability of true matches.
 
 %<<graph-plot-2, echo=FALSE,fig=TRUE,results=hide,cache=FALSE >>=
 %
@@ -1881,7 +1902,7 @@ for (d.dim in d.dim.vec){
 %legend.txt <- c(legend.txt,d.dim.vec)
 %legend(x="topright",legend=legend.txt, 
 %		col =c(rep(1,4),colors.vec),pch=c(1:4,rep(1,length(d.dim.vec))))
-%title("marriage o jofc")
+%title("1-1 Matching Performance of JOFC embedding followed by Hung. algo.")
 %abline(h=1/(n-m),lty=2) ### chance?  apparently not!?
 %abline(v=1/2,lty=2) ### chance?  gotta be!?
 %@
@@ -1897,31 +1918,57 @@ for (d.i in 2:length(d.dim.vec)){
 	lines(pert,apply(nc.jofc.diff.d[,,d.i],1,mean)/(n-m),xlab="perturbation parameter",
 			ylab="Fraction of  correct matches",ylim=c(0,1),col=colors.vec[d.i])
 }
-for (d.i in 1:length(d.dim.vec)){
+for (d.i in 1:(length(d.dim.vec)-2)){
 	lines(pert,apply(nc.cmds.d[,,d.i],1,mean)/(n-m),xlab="perturbation parameter",
 			ylab="Fraction of  correct matches",ylim=c(0,1),lty=2,col=colors.vec[d.i])
 }
+
 for (d.i in 1:length(d.dim.vec)){
-	lines(pert,apply(nc.jofc.weighted.d[,,d.i],1,mean)/(n-m), lty=4,lwd=2,
+	lines(pert,apply(nc.jofc.unweighted.d[,,d.i],1,mean)/(n-m), lty=3,lwd=2,
 			xlab="perturbation parameter",ylab="Fraction of  correct matches",ylim=c(0,1),col=colors.vec[d.i])
 }
 
-legend.txt <- c("diff dist","CMDS","weighted.graph")
-legend.txt <- c(legend.txt,d.dim.vec)
-legend(x="topright",legend=legend.txt, col =c(rep(1,3),colors.vec),
-		lty=c(c(1,2,4),rep(1,length(d.dim.vec))))
-title("marriage o jofc")
+
+
+for (d.i in 1:length(d.dim.vec)){
+#	lines(pert,apply(nc.jofc.weighted.d[,,d.i],1,mean)/(n-m), lty=4,lwd=2,
+#			xlab="perturbation parameter",ylab="Fraction of  correct matches",ylim=c(0,1),col=colors.vec[d.i])
+}
+
+legend.txt <- c("diff dist","CMDS","unweighted.graph")#,"weighted.graph")
+legend.txt <- c(legend.txt,paste("d=",d.dim.vec))
+legend.col <- c(rep(1,3),colors.vec)
+legend.lty <- c(c(1,2,3),rep(1,length(d.dim.vec)))
+legend.lwd <- rep(1,length(legend.lty))
+legend.lwd[3] <- 3
+legend(x="topright",legend=legend.txt, col =legend.col,
+		lty=legend.lty,lwd=legend.lwd)
+title("1-1 Matching performance of JOFC embedding")
 abline(h=1/(n-m),lty=2) ### chance?  apparently not!?
 abline(v=1/2,lty=2) ### chance?  gotta be!?
 @
 
 
+An interesting trend in the graph is that shortest-path based dissimilarities are an improvement over diffusion-path dissimilarities for perturbation parameter less than 0.5 , but as perturbation parameter increases past 0.5, fraction of correct matches for diffusion distance based dissimilarity recovers, while for other dissimilarities the fraction continues to fall. 
+
+The dissimilarity type that has the best improvement in performance is JOFC with shortest path distances in weighted graphs(unweighted graphs have similar performance)
+
+
+
 
 <<JOFC-graph-sim-3, echo=FALSE,fig=FALSE,results=hide,cache=TRUE,trace=TRUE,depenson=JOFC-on-ER-Graph >>=
+
+w.vals.vec <- c(0.2,0.5,0.7,0.8,0.9,0.99)
+
+w.max.index<-length(w.vals.vec)
+
+
 
 nc.jofc.diff.w       = array(0,dim=c(npert,nmc,length(w.vals.vec)))
 nc.jofc.weighted.w   = array(0,dim=c(npert,nmc,length(w.vals.vec)))
 nc.jofc.unweighted.w = array(0,dim=c(npert,nmc,length(w.vals.vec)))
+
+
 
 
 
@@ -1955,7 +2002,7 @@ for(imc in 1:nmc)
 		J.1 =jofc.diffusion.dist(G,Gp,
 				in.sample.ind,
 				d.dim=d.dim,
-				w.vals.vec,
+				w.vals.vec= w.vals.vec,
 				graph.is.directed=FALSE,
 				oos=oos,
 				wt.matrix.1=NULL,
@@ -1969,7 +2016,7 @@ for(imc in 1:nmc)
 		J.2 =jofc(G,Gp,
 				in.sample.ind,
 				d.dim=d.dim,
-				w.vals.vec,
+				w.vals.vec=w.vals.vec,
 				graph.is.directed=FALSE,
 				oos=oos,          
 				wt.matrix.1=NULL,
@@ -2014,26 +2061,26 @@ for (w.i in 2:w.max.index){
 }
 
 for (w.i in 1:w.max.index){
-	lines(pert,apply(nc.jofc.weighted.w[,,w.i],1,mean)/(n-m),
-			xlab="perturbation parameter",ylab="Fraction of  correct matches",
-			ylim=c(0,1),lty=3,col=colors.vec[w.i])
+	#lines(pert,apply(nc.jofc.weighted.w[,,w.i],1,mean)/(n-m),
+	#		xlab="perturbation parameter",ylab="Fraction of  correct matches",
+	#		ylim=c(0,1),lty=3,col=colors.vec[w.i])
 }
 for (w.i in 1:w.max.index){
 	lines(pert,apply(nc.jofc.unweighted.w[,,w.i],1,mean)/(n-m),
 			xlab="perturbation parameter",ylab="Fraction of  correct matches",
 			ylim=c(0,1),lty=4,col=colors.vec[w.i])
 }
-legend.txt<- c("diff dist","weighted.graph","unweighted.graph")
-legend.txt <- c(legend.txt,w.vals.vec)
-legend(x="topright",legend=legend.txt, col =c(rep(1,3),colors.vec),
-		lty=c(c(1,3,4),rep(1,w.max.index)))
-title("marriage o jofc")
+legend.txt<- c("diff dist","unweighted.graph") #"weighted.graph",
+legend.txt <- c(legend.txt,paste("w=",w.vals.vec))
+legend(x="topright",legend=legend.txt, col =c(rep(1,2),colors.vec),
+		lty=c(c(1,4),rep(1,w.max.index)))
+title("1-1 Matching performance of JOFC embedding")
 abline(h=1/(n-m),lty=2) ### chance?  apparently not!?
 abline(v=1/2,lty=2) ### chance?  gotta be!?
 @
 
 
-This graph shows the effect of the diffusion distance parameter $T$ on the probability of true matches.
+This graph shows the effect of the diffusion distance parameter $T$ on the probability of true matches for dissimilarities based on diffusion distance.
 
 
 <<JOFC-graph-sim-5, echo=FALSE,fig=FALSE,results=hide,cache=TRUE,trace=TRUE,depenson=JOFC-on-ER-Graph >>=
@@ -2081,7 +2128,8 @@ for (T.i in 1:length(T.diff.vec)){
 					oos=oos,
 					wt.matrix.1=NULL,
 					wt.matrix.2=NULL,
-					sep.graphs=TRUE)
+					sep.graphs=TRUE,
+					T.param=T.diff)
 			
 			M = solveMarriage(J.1[[1]])
 			nc.jofc.diff.T[ipert,imc,T.i] = present(M)         # returns the number correct in the marriage?							
@@ -2100,10 +2148,10 @@ plot(pert,apply(nc.jofc.diff.T[,,1],1,mean)/(n-m),xlab="perturbation parameter",
 for (T.i in 2:length(T.diff.vec)){
 	lines(pert,apply(nc.jofc.diff.T[,,T.i],1,mean)/(n-m),xlab="perturbation parameter",ylab="Fraction of  correct matches",ylim=c(0,1),pch=1,col=colors.vec[T.i])
 }
-legend.txt <- c(T.diff.vec)
+legend.txt <- paste("T=",T.diff.vec)
 legend(x="topright",legend=legend.txt, 
-		col =c(colors.vec),pch=rep(1,length(T.diff.vec)))
-title("marriage o jofc (different diffusion param T)")
+		col =c(colors.vec),lty=rep(1,length(T.diff.vec)))
+title("1-1 Matching Performance of  Hung. algo. o JOFC embedding ")
 abline(h=1/(n-m),lty=2) ### chance?  apparently not!?
 abline(v=1/2,lty=2) ### chance?  gotta be!?
 
