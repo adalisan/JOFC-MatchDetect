@@ -1358,9 +1358,9 @@ params$w.vals = c(0.5,0.8,0.925,0.99,0.999)
 dirichlet.sim<-F
 source("./src/GaussianSimFidCommTradeoffMain.R")
 
-@
+#@
 
-<<FidComm-d-plot-Gaussian, echo=FALSE,fig=FALSE,results=verbatim,cache=FALSE,dependson=FidComm-d-sim >>=
+#<<FidComm-d-plot-Gaussian,eval=FALSE, echo=FALSE,fig=FALSE,results=verbatim,cache=TRUE,dependson=FidComm-d-sim >>=
 run.for.Sweave<-TRUE
 
 dirichlet.sim<-F
@@ -1555,6 +1555,7 @@ In our experiments we will use three different dissimilarities between vertices 
   under chance the expected number of true matches is 1, as shown with the dashed line. In the simulation, $r=20$ and $s=5$. $p_{pert}$ varies from $0$ to $1$ in increments of $0.1$. 
   
 <<JOFC-on-ER-Graph, echo=FALSE,fig=FALSE,results=hide,cache=TRUE,trace=TRUE>>=
+library(optmatch)
 cep=TRUE
 verbose= FALSE
 oos=TRUE
