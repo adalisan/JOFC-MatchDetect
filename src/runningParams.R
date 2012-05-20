@@ -17,7 +17,7 @@ vary.params<-FALSE
 
 compute.bound<-FALSE
 gauss.sim <-T
-dirichlet.sim <- T
+dirichlet.sim <- F
 run.mcnemars.test <- F
 cca.reg <- F
 power.comparison.test<- F
