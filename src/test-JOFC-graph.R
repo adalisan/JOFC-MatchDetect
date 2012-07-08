@@ -21,11 +21,11 @@ run.experiment.JOFC<-function(G,Gp,n_vals,num_iter,embed.dim,diss_measure="defau
 			insample_logic_vec <- 1:N %in% sample(1:N,n_v,replace=FALSE)
 			print(insample_logic_vec)
 			insample_logic_vec <- c(insample_logic_vec,insample_logic_vec)
-			jofc.result<-try(JOFC.graph.custom.dist(G,Gp,in.sample.ind=insample_logic_vec,  d.dim=embed.dim,w.vals.vec=0.95,graph.is.directed=FALSE, vert_diss_measure=diss_measure))
+			jofc.result<- JOFC.graph.custom.dist(G,Gp,in.sample.ind=insample_logic_vec,  d.dim=embed.dim,w.vals.vec=0.95,graph.is.directed=FALSE, vert_diss_measure=diss_measure)
 			#jofc.result<-try(jofc(G,Gp, in.sample.ind=insample_logic_vec,  d.dim=embed.dim,w.vals.vec=0.9,graph.is.directed=FALSE, oos=TRUE,use.weighted.graph=FALSE))
-			if (inherits(jofc.result,"try-error")) {
-				print('Skipping iteration')
-				next}
+			#if (inherits(jofc.result,"try-error")) {
+			#	print('Skipping iteration')
+		#		next}
 			
 			jofc.res.1<-jofc.result[[1]]
 			
