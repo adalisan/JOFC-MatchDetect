@@ -6,9 +6,9 @@
 results.dir <- "graphs"
 
 par.compute <- TRUE
-run.in.linux<- run.in.linux<- (.Platform$OS.type=="unix")
+run.in.linux<- FALSE
 compare.pom.cca<-FALSE
-num.cpus <- as.numeric( Sys.getenv('NUMBER_OF_PROCESSORS'))
+
 
 verbose<-FALSE
 oos <-TRUE
@@ -151,9 +151,9 @@ run.one.repl.with.params<-function(mc.counter,params){
 				power.w.star <- 0
 				
 				m<-s.param
-				#sink(paste("./logs/",mc.counter,"c-check.txt",collapse=""))
+				sink(paste(mc.counter,"c-check.txt"))
 				print(c.val.param)
-				#sink()
+				sink()
 				T0 <- matrix(0,w.max.index,m)   #Test statistics for JOFC under null
 				TA <- matrix(0,w.max.index,m)    #Test statistics for JOFC under alternative
 				Y.oos.matched <- c()
@@ -365,8 +365,8 @@ run.one.repl.with.params<-function(mc.counter,params){
 }
 
 compute.stats.for.params<-function(params.list,vary.param){
-	param.index.count<-length(params.list)
-	#require(MASS)
+	
+	require(MASS)
 	T0.agg<-array(0,dim=c(nmc,w.max.index,params.list[[1]]$s))
 	TA.agg<-array(0,dim=c(nmc,w.max.index,params.list[[1]]$s))
 	
@@ -444,7 +444,7 @@ compute.stats.for.params<-function(params.list,vary.param){
 	for (param.index in 1:param.index.count){
 		
 		
-		params.i<- params.list[[param.index]]
+		params<- params.list[[param.index]]
 		
 		
 		
@@ -505,7 +505,7 @@ compute.stats.for.params<-function(params.list,vary.param){
 		
 		
 		
-		results.agg<-sfLapply(1:nmc,run.one.repl.with.params,params.i)   
+		results.agg<-sfLapply(1:nmc,run.one.repl.with.params,params)   
 		
 		for (mc in 1:nmc){
 			if (length(params$w.vals.param)==1) {
