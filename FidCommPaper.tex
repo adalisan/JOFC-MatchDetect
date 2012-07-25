@@ -687,7 +687,7 @@ Other than such carefully constructed examples, we expect $w$ to have no effect 
 Therefore,  the argmin among these local minima is independent of $w$. The minimum configuration is then a continuous function of $w$. 
 By the continuity of the distance function with respect to configurations, the test statistic is continuous with respect to $w$. One can conclude $\beta(w) $ is a continuous function of $w$. 
 %It is possible this is not the global minimum in $\mathbb{R}^d$  
- 
+
  Another avenue for investigation is  how $w^{*}$ depends on the parameters of the distributions of $\mathbf{F}_m$ and  $\mathbf{F}_u$ . 
  Let us first investigate the effect of parameters on the empirical distribution of the test statistic, under null and alternative.
  For our Multivariate Normal and Dirichlet models, consider the signal and noise dimensions $p$ and $q$ respectively.
@@ -696,7 +696,7 @@ By the continuity of the distance function with respect to configurations, the t
 
 
  
-
+ 
 
 \includegraphics{FidCommPaper-fig-stats-p}
 
@@ -936,7 +936,7 @@ A collection of articles are collected from the English Wikipedia, consisting of
    This  collection of 1382 articles and the correspondence of each article in French 
 Wikipedia is our real-life dataset. These documents are processed, and dissimilarities between documents  in the same language are computed by the Lin-Pantel discounted mutual information \cite{LinPantel}
  and cosine dissimilarity $k(x_{ik}; x_{jk}) = 1  (x_{ik} x_{jk})=(k(x_{ik})k2kx_{jk}k2)$. It is possible to utilize both textual content of the documents and the hyperlink graph structure.
-We will only consider dissimilarities based on the textual content in this example.   
+We will only consider dissimilarities based on the textual content in this example.
 For hypothesis testing,   randomly held out four documents - one matched pair and one unmatched pair
  -  are used to compute empirical type I error $\alpha$ and estimate of power based on the critical value computed
   from the distribution of the test statistic for the remaining 1380 matched pairs. 
@@ -963,4 +963,74 @@ First consider the distribution of the test statistic for different values of th
 
 \includegraphics{FidCommPaper-fig-stats-d}
 The plot here shows the effect of $d$ on Fidelity and Commensurability errors.
+ 
+There are many distances that can be defined between vertices in graphs. We assume that an appropriate distance measure is available to us.
+In our experiments we will use three different dissimilarities between vertices in a graph:
+\begin{itemize}
+ \item the shortest path on the  unweighted graph whose adjacency matrix is available
+ \item the shortest path on a weighted version of the graph whose adjacency matrix is available
+ \item diffusion distance between vertices on the (unweighted) graph.
+ \end{itemize}
+ We will omit the results for weighted graph dissimilarities, since they seem to have the same performance as the weighted dissimilarities.
+ 
+ Note that these dissimilarities can only be defined between vertices of the same graph. We impute the inter-condition dissimilarities   as described before\ref{omnibus}.
+ 
+  In the following simulation, $A$ is the adjacency matrix of an Erdos-Renyi graph, that is
+  $\left[A\right]_{ij} \sim Binomial(p)$ where $\left[A\right]_{ij}$ is $ij$-th entry of the adjacency matrix  $A$.
+   and the adjacency matrix  $B$ is a entry-wise bit-flipped version of the adjacency matrix of $A$, that is
+   In the following simulation, $A$ is the adjacency matrix of an Erdos-Renyi graph, that is
+  $\left[A\right]_{ij} \sim Binomial(p)$ where $\left[A\right]_{ij}$ is $ij$-th entry of the adjacency matrix  $A$.
+   and the adjacency matrix  $B$ is a entry-wise bit-flipped version of the adjacency matrix of $A$, that is
+   $\left[B\right]_{ij}|\left[A\right]_{ij}=0 \sim Binomial(p_{10})$ $\left[B\right]_{ij}|\left[A\right]_{ij}=1 \sim Binomial(p_{11})$. Suppose $p_{10}=p_{11}=p$.
+  
+  The probability of flipping an entry of the adjacency matrix is the perturbation parameter $p_{pert}$ which is the variable on the x-axis. 
+  The performance measure is the proportion of true matches to the number of matches. Note that 
+  under chance the expected number of true matches is 1, as shown with the dashed line. In the simulation, $r=20$ and $s=5$. $p_{pert}$ varies from $0$ to $1$ in increments of $0.1$. 
+\begin{figure}
+  \includegraphics[scale=0.65]{FidCommPapergraph-plot-1.pdf}
+\end{figure}
 
+In the plot above, JOFC approach applied to  dissimilarities based on weighted and unweighted graphs is compared with classical MDS on dissimilarities of weighted graphs.
+
+Note that JOFC for unweighted and weighted graphs  have better performance compared to CMDS. As the perturbation parameter gets larger, the performance degrades until it is indistinguishable from random chance at $pert=0.5$.
+
+Another feature of the plot is the U-shape of the curve for diffusion-distance based dissimilarities. This invariancy with respect to complement of the graph should be investigated further.
+
+An interesting trend in the graph is that shortest-path based dissimilarities are an improvement over diffusion-path dissimilarities for perturbation parameter less than 0.5 , but as perturbation parameter increases past 0.5, fraction of correct matches for diffusion distance based dissimilarity recovers, while for other dissimilarities the fraction continues to fall. 
+
+The dissimilarity type that has the best improvement in performance is JOFC with shortest path distances in weighted graphs(unweighted graphs have similar performance)
+
+
+
+This graph shows the effect of the weight parameter of stress $w$ on the probability of true matches.
+
+
+
+This graph shows the effect of the diffusion distance parameter $T$ on the probability of true matches for dissimilarities based on diffusion distance.
+
+
+
+
+
+
+\section{Conclusion}
+ We have investigated the tradeoff between Fidelity and Commensurability and the relation to the weighted raw stress criterion for MDS.
+  Two alternative approaches, P$\circ$M and CCA, were presented as extremes of the tradeoff  between Fidelity and Commensurability.
+   For  hypothesis testing as the exploitation task, the three approaches were compared in terms of testing power.
+    The results indicate that the joint optimization (JOFC) approach is superior to CCA and  P$\circ$M,
+     and is also robust to spurious correlations CCA suffers from.
+      Also when doing a joint optimization, one should consider an optimal compromise point between Fidelity and Commensurability,
+       which corresponds to an optimal weight $w^*$ of the weighted raw stress criterion in contrast to the unweighted raw stress 
+        for omnibus matrix embedding. 
+        The JOFC approach is quite versatile and can be applied to many problems where data of multiple modalities have to be made commensurate. 
+        We have applied JOFC to  test for matches between Wiki articles and pairs of vertices in random graph data.  Performance of JOFC shows that it 
+        it is appropriate for these settings.  
+
+
+
+\bibliographystyle{plain}
+\bibliography{priebe-thesis-JOFC}
+
+
+
+\end{document}
