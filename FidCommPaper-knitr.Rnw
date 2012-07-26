@@ -631,11 +631,12 @@ Define $F_Y$ as the   cumulative distribution function of  $Y$ where $Y$ can be 
  Then $$\beta_{\alpha}\left( w\right)=1-F_{d(\hat{X}_{1u},\hat{X}_{2u})}(F_{d(\hat{X}_{1m},\hat{X}_{2m})}^{-1}(1-\alpha)).$$
 
  Finally, define $$w^{*}=argmax_w{\beta_{\alpha}\left( w\right)}. $$
-Note that in a general setting, finding the exact value of $w^*$ is intractable. The estimate $\hat{w}^*$ will be based on noisy evaluations of $\beta(w^*)$.  A Monte Carlo simulation is run in   \ref{sec:Simulation Results} 
-to find the estimate of this function at various values of $w$.
+
 
 Even for  given $\mathbf{F}_u,\mathbf{F}_m$,   $w^*$ must be defined with respect to the value of allowable type I error rate $\alpha$.  For two different $\alpha$ values, it is quite possible that $\beta_{\alpha_1}(w_1)>\beta_{\alpha_1}(w_2)$  and $\beta_{\alpha_2}(w_1)<\beta_{\alpha_2}(w_2)$. This can be observed in results in Section \ref{sec:Simulation Results}.  
 Investigation of some  properties of $w^{*}$  is included in  \ref{sec:Simulation Results} section
+Note that in a general setting, finding the exact value of $w^*$ is intractable. The estimate $\hat{w}^*$ will be based on noisy evaluations of $\beta(w^*)$.  A Monte Carlo simulation is run in   \ref{sec:Simulation Results} 
+to find the estimate of this function at various values of $w$.
 
 Some of the questions to be explored relate to   the nature of the function  $\beta_{\alpha}\left( w\right)$. We have defined $w^*$ to be the argmin of  the power function with respect to $w$ and some important questions relate to $\beta_{\alpha}\left( w\right)$ 
 
@@ -667,7 +668,8 @@ First, note that  $\beta(w)$ is continuous with respect to $w$ and locally conve
 \end{comment}
 \subsubsection{ A short detour : Discontinuity in weighted raw stress OOS configurations\label{subsubsec:Discontinuity}}
 
-Note that it is possible to have multiple local minima in the embedding step(see example in \cite{TrossetLocalMin}). We will construct an example  where $w$ controls which of the local minima is the global minimum among the configurations of $\hat{X}_{.}$. 
+Note that it is possible to have multiple local minima in the embedding step(see example in \cite{TrossetLocalMin}). We will construct an example  where $w$ controls which of the local minima is the global minimum among the configurations of $\hat{X}_{.}$.
+ 
 Global Minimum Configuration determined by $w$ .
 
 Consider five in-sample points in $\mathbb{R}$ with locations $X_1=(0,0)$,$X_2=(1,0)$,$X_3=(1,1)$
