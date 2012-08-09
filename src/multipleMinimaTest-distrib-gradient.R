@@ -20,9 +20,9 @@ in.sample.ind<-c(1:4,n)#,8)
 indices.test.cluster.5<-seq(5,n-1,2)
 indices.test.cluster.6<-seq(6,n-1,2)
 
-X[indices.test.cluster.5,]<-mvrnorm(oos.copies,mu=c(X[5,]),Sigma=0.04*diag(2))
+X[indices.test.cluster.5,]<-mvrnorm(oos.copies,mu=c(X[5,]),Sigma=0.001*diag(2))
 
-X[indices.test.cluster.6,]<-mvrnorm(oos.copies,mu=c(X[6,]),Sigma=0.04*diag(2))
+X[indices.test.cluster.6,]<-mvrnorm(oos.copies,mu=c(X[6,]),Sigma=0.001*diag(2))
 
 d.X<- dist(X)
 
@@ -67,7 +67,15 @@ d.X[d.X<0]=0;
 
 init.config<-X
 w.vals<-c(0.1,0.45,0.5,0.55,0.99)
-w.vals<-c(0.1,0.5,0.55,0.75,0.9,0.99)
+w.vals<-c(0.1,0.45,0.5,0.55,0.75,0.9,0.99)
+
+
+CDF.T0<-array(0,dim=c(length(w.vals),3))
+CDF.TA<-array(0,dim=c(length(w.vals),3))
+ecdf.T0<-list()
+ecdf.TA<-list()
+
+
 #w.vals<-c(0.45,0.9)
 min.config.stress.1.w<- rep(0, length(w.vals))
 min.config.stress.2.w<- rep(0, length(w.vals))
@@ -89,6 +97,9 @@ TA.w.2 <-array(0, dim= c(length(w.vals),length(grid.seq.x)*length(grid.seq.y)*oo
 
 for (w.i in 1:length(w.vals)){
 	w <- w.vals[w.i]
+	
+	
+	
 	
 	W <- matrix(1-w,n,n)
 	for (o in indices.test.cluster.5)
@@ -229,7 +240,7 @@ for (w.i in 1:length(w.vals)){
 				
 			}else{
 				grid.resp[i,j]<-0
-				print("First Test Point")
+				#print("First Test Point")
 				print(X.embed.2.norm[5,])		
 				if (stress < min.stress.2){
 					min.stress.2<-stress
@@ -247,10 +258,10 @@ for (w.i in 1:length(w.vals)){
 			}
 			
 			stress.at.loc[i,j]<- stress
-			T0.1[i,j,]<- rowSums((X.embed.2.norm[indices.test.cluster.5,]-matrix(X.embed.2.norm[2,],oos.copies,2))^2)
-			T0.2[i,j,]<- rowSums((X.embed.2.norm[indices.test.cluster.6,]-matrix(X.embed.2.norm[4,],oos.copies,2))^2)
-			TA.1[i,j,]<- rowSums((X.embed.2.norm[indices.test.cluster.5,]-matrix(X.embed.2.norm[4,],oos.copies,2))^2)
-			TA.2[i,j,]<- rowSums((X.embed.2.norm[indices.test.cluster.6,]-matrix(X.embed.2.norm[2,],oos.copies,2))^2)
+			T0.1[i,j,]<- sqrt(rowSums((X.embed.2.norm[indices.test.cluster.5,]-matrix(X.embed.2.norm[2,],oos.copies,2,byrow=TRUE))^2))
+			T0.2[i,j,]<- sqrt(rowSums((X.embed.2.norm[indices.test.cluster.6,]-matrix(X.embed.2.norm[4,],oos.copies,2,byrow=TRUE))^2))
+			TA.1[i,j,]<- sqrt(rowSums((X.embed.2.norm[indices.test.cluster.5,]-matrix(X.embed.2.norm[4,],oos.copies,2,byrow=TRUE))^2))
+			TA.2[i,j,]<- sqrt(rowSums((X.embed.2.norm[indices.test.cluster.6,]-matrix(X.embed.2.norm[2,],oos.copies,2,byrow=TRUE))^2))
 			
 			
 			
@@ -265,17 +276,62 @@ for (w.i in 1:length(w.vals)){
 }
 
 
-bw.type <- 0.3
-windows()
-par(mfrow=c(length(w.vals)/2,2))
+
+for (w.i in 1:length(w.vals)){
+frac.1 <-sum(T0.w.1[w.i,]<0.45)/(dim(T0.w.1)[2])
+frac.2 <-sum(T0.w.1[w.i,]<0.9)/(dim(T0.w.1)[2])-frac.1
+frac.3<- 1-frac.1-frac.2
+CDF.T0[w.i,]<- c(frac.1,frac.2,frac.3)
+ecdf.T0 <- c(ecdf.T0,list(ecdf(T0.w.1[w.i,])))
+
+frac.1 <-sum(TA.w.1[w.i,]<0.45)/(dim(TA.w.1)[2])
+frac.2 <-sum(TA.w.1[w.i,]<0.9)/(dim(TA.w.1)[2])-frac.1
+frac.3<- 1-frac.1-frac.2
+CDF.TA[w.i,]<- c(frac.1,frac.2,frac.3)
+ecdf.TA <- c(ecdf.TA,list(ecdf(TA.w.1[w.i,])))
+}
+
+print("CDF.T0")
+print(CDF.T0)
+
+
+print("CDF.TA")
+print(CDF.TA)
+
+for (w.i in 1:length(w.vals)){
+  if (run.in.linux) {X11()} else {windows()}
+  par(mfrow=c(2,1))
+  plot(ecdf.T0[[w.i]],main="")
+  plot(ecdf.TA[[w.i]],main="")
+  title(substitute(w == w.i ,list(w.i=w.vals[w.i])))
+}
+
+
+bw.type <- 0.05
+if (run.in.linux) {X11()} else {windows()}
+#par(mfrow=c(length(w.vals)/2,2))
 for (w.i in 1:length(w.vals)){
 	h.1<-density(T0.w.1[w.i,],bw=bw.type)
 	bw.type <- h.1$bw
 	plot(h.1,main="")
-  title(expression("w.i==",w.i))
+ title(substitute(w == w.i ,list(w.i=w.vals[w.i])))
+	if (run.in.linux) {X11()} else {windows()}
 }
 
-windows()
+colors.vec<-rainbow(length(w.vals))
+if (run.in.linux) {X11()} else {windows()}
+for (w.i in 1:length(w.vals)){
+	h.1<-density(T0.w.1[w.i,],bw=bw.type)
+	bw.type <- h.1$bw
+	if (w.i==1) plot(h.1,type="l",col=colors.vec[w.i])
+	else {lines(h.1,main="",col=colors.vec[w.i])}
+  title(substitute(w == w.i ,list(w.i=w.i)))
+}
+legend.txt<-w.vals
+legend("bottomright", legend=legend.txt, col=colors.vec, lty=rep(1, length(w.vals)))
+
+
+if (run.in.linux) {X11()} else {windows()}
 par(mfrow=c(length(w.vals)/2,2))
 for (w.i in 1:length(w.vals)){
 	
@@ -284,7 +340,7 @@ for (w.i in 1:length(w.vals)){
 	plot(h.1,xlim=c(0,3.5),ylim=c(0,0.8))
 }
 
-windows()
+if (run.in.linux) {X11()} else {windows()}
 par(mfrow=c(length(w.vals)/2,2))
 for (w.i in 1:length(w.vals)){
 	
@@ -293,7 +349,7 @@ for (w.i in 1:length(w.vals)){
   plot(h.1,xlim=c(0,3.5),ylim=c(0,0.8))
 }
 
-windows()
+if (run.in.linux) {X11()} else {windows()}
 par(mfrow=c(length(w.vals)/2,2))
 for (w.i in 1:length(w.vals)){
 	
