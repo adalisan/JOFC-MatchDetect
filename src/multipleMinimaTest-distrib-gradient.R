@@ -60,6 +60,7 @@ i<-5
 j<-8
 ind<-(n*(i-1) - i*(i-1)/2 + j-i)
 
+d.X[d.X<0]=0;
 #d.X[ind]<- d.X[ind]-1.4
 
 #print(d.X)
@@ -88,9 +89,6 @@ TA.w.2 <-array(0, dim= c(length(w.vals),length(grid.seq.x)*length(grid.seq.y)*oo
 
 for (w.i in 1:length(w.vals)){
 	w <- w.vals[w.i]
-	
-	
-	
 	
 	W <- matrix(1-w,n,n)
 	for (o in indices.test.cluster.5)
