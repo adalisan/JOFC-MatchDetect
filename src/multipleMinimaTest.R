@@ -393,7 +393,7 @@ if (plot.in.3d){
 plot3d(x.coords, y.coords,
        #plot3d(unmatrix(mesh.grid.coords$x,byrow=FALSE),
        #	 unmatrix(mesh.grid.coords$y,byrow=FALSE),
-       stress.at.loc)
+       stress.at.loc,col=ifelse(unmatrix(sign.hessian.at.pt[w.i,,],byrow=FALSE)==1,"red","black"))
 surface3d(grid.seq.x,grid.seq.y,stress.at.loc)
 }
 }

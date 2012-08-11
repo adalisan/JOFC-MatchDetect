@@ -843,7 +843,10 @@ Given the setting ("Gaussian","Dirichlet"),   the steps for each Monte Carlo rep
 <<sim-two-cond-pre,fig=FALSE,echo=FALSE,results=hide,cache=FALSE,prefix.string="JOFCpaper",trace=TRUE>>=
 rm(list=ls())
 graphics.off()
-#setwd(file.path("./../../DataFusion/"))
+
+setwd(Sys.getenv("PROJECT_DIR"))
+setwd("./DataFusion/")
+
 library(ProjectTemplate)
 debug.mode<- FALSE
 run.for.Sweave<-TRUE
@@ -872,6 +875,10 @@ source("./src/runningParams.R")
 <<sim-two-cond,fig=FALSE,echo=FALSE,results=verbatim,cache=TRUE,prefix.string="JOFCpaper">>=
 #,dependson=sim-two-cond-pre>>=
 debug.mode<- FALSE
+
+setwd(Sys.getenv("PROJECT_DIR"))
+setwd("./DataFusion/")
+
 source("./src/GaussianSimFidCommTradeoffMain.R")
 sfStop()
 @
@@ -1030,8 +1037,11 @@ The alternative was chosen as $ H_{A1}$ and SUMCOR was chosen as the generalizat
 <<sim-Kcond-pre,fig=FALSE,echo=FALSE,results=verbatim,cache=FALSE,prefix.string="JOFCpaper">>=
 rm(list=ls())
 
-#setwd(file.path("./../DataFusion_Kconditions/"))
+setwd(Sys.getenv("PROJECT_DIR"))
+setwd("./DataFusion/")
+
 library(ProjectTemplate)
+
 debug.mode<- FALSE
 run.for.Sweave<-TRUE
 load.project()
@@ -1059,8 +1069,10 @@ run.for.Sweave<-TRUE
 <<sim-Kcond,fig=FALSE,echo=FALSE,results=hide,cache=TRUE,prefix.string="JOFCpaper">>=
 #,dependson=sim-Kcond-pre>>=
 #debug.mode<- FALSE
+setwd(Sys.getenv("PROJECT_DIR"))
+setwd("./DataFusion/")
 K<-3
-sink("./logs/debug.trymsg.txt")
+sink("./logs/debug.trymsgKcond.txt")
 source("./src/GaussianSimFidCommTradeoffMain_Kcond.R")
 sink()
 sfStop()
