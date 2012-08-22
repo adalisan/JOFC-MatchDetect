@@ -5,15 +5,15 @@ require(rgl)
 source("./lib/smacofM.R")
 source("./lib/oosIM.R")
 verbose <- FALSE
-run.in.linux<-TRUE
+run.in.linux<-FALSE
 results.dir<-"./graphs"
-plot.in.3d<-FALSE
+plot.in.3d<-TRUE
 
 meshgrid <- function(a,b) {
   list(
     x=outer(b*0,a,FUN="+"),
     y=outer(b,a*0,FUN="+")
-    )
+  )
 } 
 raw.stress.at <-function(config){
   sum(as.dist(W)*((dist(config)-d.X)^2))
@@ -219,191 +219,209 @@ for (w.i in 1:length(w.vals)){
         }
       }
       
-    hess.mat[hess.mat==0]<-t(hess.mat)[hess.mat==0]
+      hess.mat[hess.mat==0]<-t(hess.mat)[hess.mat==0]
       
-    hessian.at.pt[[w.i,i,j]]<- as.list(hess.mat)
-    
+      hessian.at.pt[[w.i,i,j]]<- as.list(hess.mat)
+      
       hess.mat<-hess.mat[9:12,9:12]
-    hess.eig<- eigen(hess.mat,symmetric=TRUE,only.values=TRUE)
+      hess.eig<- eigen(hess.mat,symmetric=TRUE,only.values=TRUE)
       e.vals<- hess.eig$values
       low.than.thres<- abs(e.vals)<1E-5
       e.vals[low.than.thres] <-  0 #sign(e.vals[low.than.thres])*1E-5 
-    if (sum(e.vals<0)==0){ 
-      sign.hessian.at.pt[w.i,i,j] <- 1 #pos definite
-    } else  if (sum(e.vals>0)==0) {
-      sign.hessian.at.pt[w.i,i,j] <- -1 #neg definite
-    } else{
-      sign.hessian.at.pt[w.i,i,j] <- 0  #neither pos nor neg definite  saddle point
+      if (sum(e.vals<0)==0){
+        if (sum((e.vals==0)>0)){
+          sign.hessian.at.pt[w.i,i,j] <- 2
+        } else{
+          sign.hessian.at.pt[w.i,i,j] <- 1 #pos definite
+        }
+      } else if (sum(e.vals>0)==0) {
+        if  (sum((e.vals==0)>0)){
+          sign.hessian.at.pt[w.i,i,j] <- -2 #neg definite
+        } else{
+          sign.hessian.at.pt[w.i,i,j] <- -1 #neg definite
+          
+        }
+        
+      } else{
+        sign.hessian.at.pt[w.i,i,j] <- 0  #neither pos nor neg definite  saddle point
+      }
+      final.coords.x.5[i,j]<-X.embed.2.norm[5,1]
+      final.coords.y.5[i,j]<-X.embed.2.norm[5,2]
+      final.coords.x.6[i,j]<-X.embed.2.norm[6,1]
+      final.coords.y.6[i,j]<-X.embed.2.norm[6,2]
+      #print("X.embed.2.norm")
+      #print(X.embed.2.norm)
+      stress <- sum(as.dist(W)*((dist(X.embed.2.norm)-d.X)^2))
+      stress.unif.wt <- sum(((dist(X.embed.2.norm)-d.X)^2))
+      stress.unif.abs <- sum(abs(dist(X.embed.2.norm)-d.X))
+      #print(stress)
+      #	print(stress.unif.wt)
+      #	print(stress.unif.abs)		
+      if (((X.embed.2.norm[6,2]>0.5)) & 
+        (((X.embed.2.norm[5,1]>X.embed.2.norm[6,1])))) { 
+        #& (sum(X.embed.2.norm[6,]<0.3)==1))
+        
+        
+        grid.resp[i,j]<-1
+        #	print("First Test Point")
+        #	print(X.embed.2.norm[5,])
+        if (stress < min.stress.1) {
+          min.stress.1<-stress
+          if (verbose)	print("Min stress found(real min)")
+          if (verbose) print(X.embed.2.norm)
+          min.config.1<-X.embed.2.norm
+          if (verbose) print(min.stress.1)
+          
+        }
+        close.to.init.1<-rbind(close.to.init.1,X.embed.2.norm[5,])
+        close.to.init.2<-rbind(close.to.init.2,X.embed.2.norm[6,])
+        
+        
+      } else{
+        grid.resp[i,j]<-0
+        #print("First Test Point")
+        if (verbose) print(X.embed.2.norm[5,])		
+        if (stress < min.stress.2){
+          min.stress.2<-stress
+          if (verbose) print("Min stress found(second min)")
+          if (verbose) print(X.embed.2.norm)
+          if (verbose) 	print(min.stress.2)
+          min.config.2<-X.embed.2.norm
+          
+        }
+        far.to.init.1<-rbind(far.to.init.1,X.embed.2.norm[5,])
+        far.to.init.2<-rbind(far.to.init.2,X.embed.2.norm[6,])
+        
+        #} else{
+        #	grid.resp[i,j] <- NA
+      }
+      
+      stress.at.loc[i,j]<- stress
+      
+      
+      
     }
-    final.coords.x.5[i,j]<-X.embed.2.norm[5,1]
-    final.coords.y.5[i,j]<-X.embed.2.norm[5,2]
-    final.coords.x.6[i,j]<-X.embed.2.norm[6,1]
-    final.coords.y.6[i,j]<-X.embed.2.norm[6,2]
-    #print("X.embed.2.norm")
-    #print(X.embed.2.norm)
-    stress <- sum(as.dist(W)*((dist(X.embed.2.norm)-d.X)^2))
-    stress.unif.wt <- sum(((dist(X.embed.2.norm)-d.X)^2))
-    stress.unif.abs <- sum(abs(dist(X.embed.2.norm)-d.X))
-    #print(stress)
-    #	print(stress.unif.wt)
-    #	print(stress.unif.abs)		
-    if (((X.embed.2.norm[6,2]>0.5)) & 
-      (((X.embed.2.norm[5,1]>X.embed.2.norm[6,1])))) { 
-      #& (sum(X.embed.2.norm[6,]<0.3)==1))
-      
-      
-      grid.resp[i,j]<-1
-      #	print("First Test Point")
-      #	print(X.embed.2.norm[5,])
-      if (stress < min.stress.1) {
-        min.stress.1<-stress
-        if (verbose)	print("Min stress found(real min)")
-        if (verbose) print(X.embed.2.norm)
-        min.config.1<-X.embed.2.norm
-        if (verbose) print(min.stress.1)
-        
-      }
-      close.to.init.1<-rbind(close.to.init.1,X.embed.2.norm[5,])
-      close.to.init.2<-rbind(close.to.init.2,X.embed.2.norm[6,])
-      
-      
-    } else{
-      grid.resp[i,j]<-0
-      #print("First Test Point")
-      if (verbose) print(X.embed.2.norm[5,])		
-      if (stress < min.stress.2){
-        min.stress.2<-stress
-        if (verbose) print("Min stress found(second min)")
-        if (verbose) print(X.embed.2.norm)
-        if (verbose) 	print(min.stress.2)
-        min.config.2<-X.embed.2.norm
-        
-      }
-      far.to.init.1<-rbind(far.to.init.1,X.embed.2.norm[5,])
-      far.to.init.2<-rbind(far.to.init.2,X.embed.2.norm[6,])
-      
-      #} else{
-      #	grid.resp[i,j] <- NA
-      }
-    
-    stress.at.loc[i,j]<- stress
-    
-    
     
   }
   
-}
-
-
-
-#plot(x=grid.seq.x,y=grid.seq.y, col=grid.resp)
-#x.coords = [x1 x2 x3 x4 ... x1 x2 x3 x4 ...
-x.coords <- rep(grid.seq.x,length(grid.seq.y))
-#y.coords = [y1 y1 y1 y1 ... y2 y2 y2 y2 ...
-y.coords <- rep(grid.seq.y,each=length(grid.seq.x))
-#grid.resp<-grid.resp[length(grid.seq.x)A:1,]
-if (run.in.linux) {X11()} else {windows()}
-plot(x.coords, y.coords,
-     #plot(unmatrix(mesh.grid.coords$x,byrow=FALSE),
-     #     unmatrix(mesh.grid.coords$y,byrow=FALSE),
-     col=ifelse(unmatrix(grid.resp,byrow=FALSE)==1,"red","black"))
-dev.off()
-print("For w.value")
-print(w)
-print("Min stress found(real min)")
-if (verbose) print(min.config.1)
-print(min.stress.1)
-print("Min stress found(second min)")
-if (verbose) print(min.config.2)
-print(min.stress.2)
-min.config.stress.1.w[w.i]<-min.stress.1
-min.config.stress.2.w[w.i]<-min.stress.2
-
-
-if(!is.vector(close.to.init.1)){
+  
+  
+  #plot(x=grid.seq.x,y=grid.seq.y, col=grid.resp)
+  #x.coords = [x1 x2 x3 x4 ... x1 x2 x3 x4 ...
+  x.coords <- rep(grid.seq.x,length(grid.seq.y))
+  #y.coords = [y1 y1 y1 y1 ... y2 y2 y2 y2 ...
+  y.coords <- rep(grid.seq.y,each=length(grid.seq.x))
+  #grid.resp<-grid.resp[length(grid.seq.x)A:1,]
   if (run.in.linux) {X11()} else {windows()}
-  
-  par(pch=1)
-  plot(x=close.to.init.1[,1],y=close.to.init.1[,2],col="red",
-       xlim=c(min(close.to.init.1[,1],close.to.init.2[,1]),max(close.to.init.1[,1],close.to.init.2[,1]))
-       ,ylim=c(min(close.to.init.1[,2],close.to.init.2[,2]),max(close.to.init.1[,2],close.to.init.2[,2])))
-  
-  par(pch=3)
-  points(x=close.to.init.2[,1],y=close.to.init.2[,2],col="blue")
-  title(paste("Final config Close to true config- w=",w,collapse=""))
-  legend("bottomright",legend=c(expression(X[5]),expression(X[6])),col=c("red","blue"),pch=rep(1,2))
-  
-  dev.print(paste(results.dir,"/","true-min-w",w,".png",collapse="",sep=""),device=png,width=600,height=600)
-  fname<-paste(results.dir,"/","true-min-w",w,".pdf",collapse="",sep="")
-  dev.copy2pdf(file=fname)
+  plot(x.coords, y.coords,
+       #plot(unmatrix(mesh.grid.coords$x,byrow=FALSE),
+       #     unmatrix(mesh.grid.coords$y,byrow=FALSE),
+       col=ifelse(unmatrix(grid.resp,byrow=FALSE)==1,"red","black"))
   dev.off()
-  
-  #select.x<- sort( sample.int(length(grid.seq.x) , 10))
-  select.x<-1:length(grid.seq.x) 
-  #select.y <- sort( sample.int(length(grid.seq.y) , 10))
-  select.y<-1:length(grid.seq.y) 
-  #The indexing (select.x,select.y) is mixed because mesh.grid function generates a matrix 
-  #whose columns are for x coordinates, while for final.coords, rows are for x coordinates
-  #arrows(x0 = unmatrix(mesh.grid.coords$x[select.y,select.x],byrow=FALSE),
-  #	 y0 = unmatrix(mesh.grid.coords$y[select.y,select.x],byrow=FALSE),
-  #	 x1 = unmatrix( final.coords.x[select.x,select.y],byrow=FALSE),
-  #       y1 = unmatrix( final.coords.y[select.x,select.y],byrow=FALSE) ,
-  #	length=0.1)
+  print("For w.value")
+  print(w)
+  print("Min stress found(real min)")
+  if (verbose) print(min.config.1)
+  print(min.stress.1)
+  print("Min stress found(second min)")
+  if (verbose) print(min.config.2)
+  print(min.stress.2)
+  min.config.stress.1.w[w.i]<-min.stress.1
+  min.config.stress.2.w[w.i]<-min.stress.2
   
   
-  #arrows(x0 = mesh.grid.coords$x[t(grid.resp==1)],
-  #	 y0 = mesh.grid.coords$y[t(grid.resp==1)],
-  #	 x1 =  final.coords.x[grid.resp==1] ,
-  #       y1 =  final.coords.y[grid.resp==1] ,
-  #	length=0.1)
+  if(!is.vector(close.to.init.1)){
+    if (run.in.linux) {X11()} else {windows()}
+    
+    par(pch=1)
+    plot(x=close.to.init.1[,1],y=close.to.init.1[,2],col="red",
+         xlim=c(min(close.to.init.1[,1],close.to.init.2[,1]),max(close.to.init.1[,1],close.to.init.2[,1]))
+         ,ylim=c(min(close.to.init.1[,2],close.to.init.2[,2]),max(close.to.init.1[,2],close.to.init.2[,2])))
+    
+    par(pch=3)
+    points(x=close.to.init.2[,1],y=close.to.init.2[,2],col="blue")
+    title(paste("Final config Close to true config- w=",w,collapse=""))
+    legend("bottomright",legend=c(expression(X[5]),expression(X[6])),col=c("red","blue"),pch=rep(1,2))
+    
+    dev.print(paste(results.dir,"/","true-min-w",w,".png",collapse="",sep=""),device=png,width=600,height=600)
+    fname<-paste(results.dir,"/","true-min-w",w,".pdf",collapse="",sep="")
+    dev.copy2pdf(file=fname)
+    dev.off()
+    
+    #select.x<- sort( sample.int(length(grid.seq.x) , 10))
+    select.x<-1:length(grid.seq.x) 
+    #select.y <- sort( sample.int(length(grid.seq.y) , 10))
+    select.y<-1:length(grid.seq.y) 
+    #The indexing (select.x,select.y) is mixed because mesh.grid function generates a matrix 
+    #whose columns are for x coordinates, while for final.coords, rows are for x coordinates
+    #arrows(x0 = unmatrix(mesh.grid.coords$x[select.y,select.x],byrow=FALSE),
+    #	 y0 = unmatrix(mesh.grid.coords$y[select.y,select.x],byrow=FALSE),
+    #	 x1 = unmatrix( final.coords.x[select.x,select.y],byrow=FALSE),
+    #       y1 = unmatrix( final.coords.y[select.x,select.y],byrow=FALSE) ,
+    #	length=0.1)
+    
+    
+    #arrows(x0 = mesh.grid.coords$x[t(grid.resp==1)],
+    #	 y0 = mesh.grid.coords$y[t(grid.resp==1)],
+    #	 x1 =  final.coords.x[grid.resp==1] ,
+    #       y1 =  final.coords.y[grid.resp==1] ,
+    #	length=0.1)
+    
+  }
   
-}
-
-if(!is.vector(far.to.init.1)){
-  if (run.in.linux) {X11()} else {windows()}
-  par(pch=1)
-  plot(x=far.to.init.1[,1],y=far.to.init.1[,2],col="red",
-       xlim=c(min(grid.seq.x),max(grid.seq.x))
-       ,ylim=c(min(grid.seq.y),max(grid.seq.y)))
-  par(pch=3)
-  points(x=far.to.init.2[,1],y=far.to.init.2[,2],col="blue")
-  title(paste("Final config Far to true config- w=",w,collapse=""))
-  legend("bottomright",legend=c(expression(X[5]),expression(X[6])),col=c("red","blue"),pch=rep(1,2))
+  if(!is.vector(far.to.init.1)){
+    if (run.in.linux) {X11()} else {windows()}
+    par(pch=1)
+    plot(x=far.to.init.1[,1],y=far.to.init.1[,2],col="red",
+         xlim=c(min(grid.seq.x),max(grid.seq.x))
+         ,ylim=c(min(grid.seq.y),max(grid.seq.y)))
+    par(pch=3)
+    points(x=far.to.init.2[,1],y=far.to.init.2[,2],col="blue")
+    title(paste("Final config Far to true config- w=",w,collapse=""))
+    legend("bottomright",legend=c(expression(X[5]),expression(X[6])),col=c("red","blue"),pch=rep(1,2))
+    
+    dev.print(paste(results.dir,"/","other-min-w",w,".png",collapse="",sep=""),device=png, width=600,height=600)
+    fname<-paste(results.dir,"/","other-min-w",w,".pdf",collapse="",sep="")
+    dev.copy2pdf(file=fname)
+    #arrows(x0 = mesh.grid.coords$x[t(grid.resp==0)],
+    #	 y0 = mesh.grid.coords$y[t(grid.resp==0),]
+    #	 x1 =  final.coords.x.6[grid.resp==0] ,
+    #       y1 =  final.coords.y.6[grid.resp==0] ,
+    #	length=0.1)
+  }
   
-  dev.print(paste(results.dir,"/","other-min-w",w,".png",collapse="",sep=""),device=png, width=600,height=600)
-  fname<-paste(results.dir,"/","other-min-w",w,".pdf",collapse="",sep="")
-  dev.copy2pdf(file=fname)
-  #arrows(x0 = mesh.grid.coords$x[t(grid.resp==0)],
-  #	 y0 = mesh.grid.coords$y[t(grid.resp==0),]
-  #	 x1 =  final.coords.x.6[grid.resp==0] ,
-  #       y1 =  final.coords.y.6[grid.resp==0] ,
-  #	length=0.1)
-}
-
-print("Number of final config close to initial config")
-print(dim(close.to.init.1)[1])
-final.close.to.init.w[w.i] <- dim(close.to.init.1)[1]
-
-print("Number of final config far to initial config")
-print(dim(far.to.init.1)[1])
-min.config.stress.1.w[w.i]<- min.stress.1
-min.config.stress.2.w[w.i]<- min.stress.2
-
-if (plot.in.3d){
-plot3d(x.coords, y.coords,
-       #plot3d(unmatrix(mesh.grid.coords$x,byrow=FALSE),
-       #	 unmatrix(mesh.grid.coords$y,byrow=FALSE),
-       stress.at.loc,col=ifelse(unmatrix(sign.hessian.at.pt[w.i,,],byrow=FALSE)==1,"red","black"))
-surface3d(grid.seq.x,grid.seq.y,stress.at.loc)
-}
+  print("Number of final config close to initial config")
+  print(dim(close.to.init.1)[1])
+  final.close.to.init.w[w.i] <- dim(close.to.init.1)[1]
+  
+  print("Number of final config far to initial config")
+  print(dim(far.to.init.1)[1])
+  min.config.stress.1.w[w.i]<- min.stress.1
+  min.config.stress.2.w[w.i]<- min.stress.2
+  
+  if (plot.in.3d){
+    open3d()
+    col.matrix=sign.hessian.at.pt[w.i,,]
+    col.matrix[sign.hessian.at.pt[w.i,,]==1]="orange"
+    col.matrix[sign.hessian.at.pt[w.i,,]==2]="red"
+    col.matrix[sign.hessian.at.pt[w.i,,]==0]="black"
+    col.matrix[sign.hessian.at.pt[w.i,,]==-1]="blue"
+    col.matrix[sign.hessian.at.pt[w.i,,]==-2]="purple"
+    plot3d(x.coords, y.coords,
+           #plot3d(unmatrix(mesh.grid.coords$x,byrow=FALSE),
+           #	 unmatrix(mesh.grid.coords$y,byrow=FALSE),
+           stress.at.loc,col=unmatrix(col.matrix),byrow=FALSE)
+    
+    surface3d(grid.seq.x,grid.seq.y,stress.at.loc)
+  }
 }
 
 min.config.stress.w.table<-rbind(min.config.stress.1.w,min.config.stress.2.w)
 
 colnames(min.config.stress.w.table) <- w.vals
 row.names(min.config.stress.w.table) <- c("Local min for real config.","Alternative local min")
-if (plot.in.3d){ rgl.close()}
-graphics.off()
+#if (plot.in.3d){ rgl.close()}
+#graphics.off()
 
 
 
