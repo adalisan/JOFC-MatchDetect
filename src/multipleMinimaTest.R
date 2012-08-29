@@ -19,6 +19,73 @@ raw.stress.at <-function(config){
   sum(as.dist(W)*((dist(config)-d.X)^2))
 }
 
+hessian.mat <- function (X.embed.2.norm,n) {
+  hess.mat.size<-4*n^2
+  hess.mat<-matrix(0,2*n,2*n)
+  for (i.r in 1:n){
+    for (i.d in 1:2){
+      hess.idx.r<-(2*(i.r-1)+i.d)
+      X.embed.2.norm.minus <- X.embed.2.norm.plus<-X.embed.2.norm
+      X.embed.2.norm.plus[i.r,i.d] <- X.embed.2.norm.plus[i.r,i.d] + epsilon
+      X.embed.2.norm.minus[i.r,i.d] <- X.embed.2.norm.minus[i.r,i.d] - epsilon        
+      dir.deriv[w.i,i,j,]<-(raw.stress.at(X.embed.2.norm.plus)- raw.stress.at(X.embed.2.norm.minus))/(2*epsilon)
+      for (j.r in i.r:n){
+        for (j.d in 1:2){
+          hess.idx.c<-(2*(j.r-1)+j.d)
+          X.embed.2.norm.back.forw<-X.embed.2.norm.forw.forw <- X.embed.2.norm.forw.back <-  X.embed.2.norm.back.back <-X.embed.2.norm
+          X.embed.2.norm.forw.forw[i.r,i.d] <- X.embed.2.norm.forw.forw[i.r,i.d] + epsilon
+          X.embed.2.norm.forw.forw[j.r,j.d] <- X.embed.2.norm.forw.forw[j.r,j.d] + epsilon
+          
+          X.embed.2.norm.forw.back[i.r,i.d] <- X.embed.2.norm.forw.back[i.r,i.d] + epsilon
+          X.embed.2.norm.forw.back[j.r,j.d] <- X.embed.2.norm.forw.back[j.r,j.d] - epsilon
+          
+          X.embed.2.norm.back.back[i.r,i.d] <- X.embed.2.norm.back.back[i.r,i.d] - epsilon
+          X.embed.2.norm.back.back[j.r,j.d] <- X.embed.2.norm.back.back[j.r,j.d] - epsilon
+          
+          X.embed.2.norm.back.forw[i.r,i.d] <- X.embed.2.norm.back.forw[i.r,i.d] - epsilon
+          X.embed.2.norm.back.forw[j.r,j.d] <- X.embed.2.norm.back.forw[j.r,j.d] + epsilon
+          
+          # Approximate entry of hessian matrix by finite difference
+          hess.mat[hess.idx.r,hess.idx.c]<- (raw.stress.at(X.embed.2.norm.forw.forw) - raw.stress.at(X.embed.2.norm.forw.back)
+                                             - raw.stress.at(X.embed.2.norm.back.forw) + raw.stress.at(X.embed.2.norm.back.back))/(4*epsilon*epsilon)
+        }
+      }
+      
+    }
+  }
+  return(hess.mat)
+}
+
+stress.plot3d <- function (time,sign.hessian.at.pt,x.coords,y.coords,
+                           stress.at.loc,grid.seq.x,grid.seq.y,w.i) {
+
+  open3d(windowRect=c(0,0,480,480))
+  col.matrix=sign.hessian.at.pt[w.i,,]
+  col.matrix[sign.hessian.at.pt[w.i,,]==1]="orange"
+  col.matrix[sign.hessian.at.pt[w.i,,]==2]="red"
+  col.matrix[sign.hessian.at.pt[w.i,,]==0]="black"
+  col.matrix[sign.hessian.at.pt[w.i,,]==-1]="blue"
+  col.matrix[sign.hessian.at.pt[w.i,,]==-2]="purple"
+  plot3d(x.coords, y.coords,
+         #plot3d(unmatrix(mesh.grid.coords$x,byrow=FALSE),
+         #   unmatrix(mesh.grid.coords$y,byrow=FALSE),
+         stress.at.loc,col=unmatrix(col.matrix),byrow=FALSE)
+  
+  surface3d(grid.seq.x,grid.seq.y,stress.at.loc)
+  
+  
+}
+
+
+
+
+
+
+#
+# Create point configuration
+#
+
+
 n<-7
 X<-matrix(0,n,2)
 X[,1]<-c(0,1,1,0,0,0,0.5)#1.01)
@@ -32,8 +99,9 @@ d.X<- dist(X)
 epsilon <-1E-3
 w <- 0.99
 
-
-
+#
+# Perturb Dissimilarity matrix
+#
 i <- 4
 j <- 5
 
@@ -64,9 +132,15 @@ ind<-(n*(i-1) - i*(i-1)/2 + j-i)
 if (verbose) print(d.X)
 
 init.config<-X
-w.vals<-c(0.1,0.45,0.5,0.55,0.99)
+
+w.vals<-c(0.1,seq(0.2,0.4,0.1),seq(0.41,0.54,0.01),seq(0.55,0.7,0.05),seq(0.75,0.85,0.01),seq(0.90,0.95,0.05),0.99)
+w.vals.sp<-w.vals[c(1,13,14,15,21,26:31,35,36)]
 grid.seq.x<-seq(-0.5,1.5,0.1)
 grid.seq.y<-seq(-0.2,1.6,0.1)
+
+#
+# Define empty arrays for results
+#
 final.close.to.init.w<-rep(0, length(w.vals))
 
 dir.deriv<-array(0,dim=c(length(w.vals),length(grid.seq.x),length(grid.seq.y),2*n))
@@ -76,11 +150,23 @@ sign.hessian.at.pt<-array(0,dim=c(length(w.vals),length(grid.seq.x),length(grid.
 min.config.stress.1.w<- rep(0, length(w.vals))
 min.config.stress.2.w<- rep(0, length(w.vals))
 
+# close.to.init.X5.for.w <-array(0,dim=c(length(w.vals),length(grid.seq.x*grid.seq.y),2))
+# close.to.init.X6.for.w <-array(0,dim=c(length(w.vals),length(grid.seq.x*grid.seq.y),2))
+# far.to.init.X5.for.w <-array(0,dim=c(length(w.vals),length(grid.seq.x*grid.seq.y),2))
+# far.to.init.X6.for.w <-array(0,dim=c(length(w.vals),length(grid.seq.x*grid.seq.y),2))
+
+close.to.init.X5.for.w <- list()
+close.to.init.X6.for.w <- list()
+far.to.init.X5.for.w   <- list()
+far.to.init.X6.for.w   <- list()
+
+
+
+
 for (w.i in 1:length(w.vals)){
+  
+  #Set up weight vector
   w <- w.vals[w.i]
-  
-  
-  
   W <- matrix(1-w,n,n)
   W[5,2] <- W[2,5]<- w
   W[6,4] <- W[4,6]<- w
@@ -185,49 +271,18 @@ for (w.i in 1:length(w.vals)){
       row.names(X.embed.2.in)<-NULL
       
       X.embed.2.norm<- rbind(X.embed.2.in[1:4,] ,X.embed.2.oos,X.embed.2.in[5:(n-2),])		
-      hess.mat.size<-4*n^2
-      hess.mat<-matrix(0,2*n,2*n)
-      for (i.r in 1:n){
-        for (i.d in 1:2){
-          hess.idx.r<-(2*(i.r-1)+i.d)
-          X.embed.2.norm.minus <- X.embed.2.norm.plus<-X.embed.2.norm
-          X.embed.2.norm.plus[i.r,i.d] <- X.embed.2.norm.plus[i.r,i.d] + epsilon
-          X.embed.2.norm.minus[i.r,i.d] <- X.embed.2.norm.minus[i.r,i.d] - epsilon        
-          dir.deriv[w.i,i,j,]<-(raw.stress.at(X.embed.2.norm.plus)- raw.stress.at(X.embed.2.norm.minus))/(2*epsilon)
-          for (j.r in i.r:n){
-            for (j.d in 1:2){
-              hess.idx.c<-(2*(j.r-1)+j.d)
-              X.embed.2.norm.back.forw<-X.embed.2.norm.forw.forw <- X.embed.2.norm.forw.back <-  X.embed.2.norm.back.back <-X.embed.2.norm
-              X.embed.2.norm.forw.forw[i.r,i.d] <- X.embed.2.norm.forw.forw[i.r,i.d] + epsilon
-              X.embed.2.norm.forw.forw[j.r,j.d] <- X.embed.2.norm.forw.forw[j.r,j.d] + epsilon
-              
-              X.embed.2.norm.forw.back[i.r,i.d] <- X.embed.2.norm.forw.back[i.r,i.d] + epsilon
-              X.embed.2.norm.forw.back[j.r,j.d] <- X.embed.2.norm.forw.back[j.r,j.d] - epsilon
-              
-              X.embed.2.norm.back.back[i.r,i.d] <- X.embed.2.norm.back.back[i.r,i.d] - epsilon
-              X.embed.2.norm.back.back[j.r,j.d] <- X.embed.2.norm.back.back[j.r,j.d] - epsilon
-              
-              X.embed.2.norm.back.forw[i.r,i.d] <- X.embed.2.norm.back.forw[i.r,i.d] - epsilon
-              X.embed.2.norm.back.forw[j.r,j.d] <- X.embed.2.norm.back.forw[j.r,j.d] + epsilon
-              
-              # Approximate entry of hessian matrix by finite difference
-              hess.mat[hess.idx.r,hess.idx.c]<- (raw.stress.at(X.embed.2.norm.forw.forw) - raw.stress.at(X.embed.2.norm.forw.back)
-                                                 - raw.stress.at(X.embed.2.norm.back.forw) + raw.stress.at(X.embed.2.norm.back.back))/(4*epsilon*epsilon)
-            }
-          }
-          
-        }
-      }
       
-      hess.mat[hess.mat==0]<-t(hess.mat)[hess.mat==0]
+       hess.mat<- hessian.mat(X.embed.2.norm,n)
+        hess.mat[hess.mat==0]<-t(hess.mat)[hess.mat==0]
+        
+        hessian.at.pt[[w.i,i,j]]<- as.list(hess.mat)
+        
+        hess.mat<-hess.mat[9:12,9:12]
+        hess.eig<- eigen(hess.mat,symmetric=TRUE,only.values=TRUE)
+        e.vals<- hess.eig$values
+        low.than.thres<- abs(e.vals)<1E-5
+        e.vals[low.than.thres] <-  0 #sign(e.vals[low.than.thres])*1E-5 
       
-      hessian.at.pt[[w.i,i,j]]<- as.list(hess.mat)
-      
-      hess.mat<-hess.mat[9:12,9:12]
-      hess.eig<- eigen(hess.mat,symmetric=TRUE,only.values=TRUE)
-      e.vals<- hess.eig$values
-      low.than.thres<- abs(e.vals)<1E-5
-      e.vals[low.than.thres] <-  0 #sign(e.vals[low.than.thres])*1E-5 
       if (sum(e.vals<0)==0){
         if (sum((e.vals==0)>0)){
           sign.hessian.at.pt[w.i,i,j] <- 2
@@ -312,12 +367,14 @@ for (w.i in 1:length(w.vals)){
   #y.coords = [y1 y1 y1 y1 ... y2 y2 y2 y2 ...
   y.coords <- rep(grid.seq.y,each=length(grid.seq.x))
   #grid.resp<-grid.resp[length(grid.seq.x)A:1,]
+  
+  if (w %in% w.vals.sp){
   if (run.in.linux) {X11()} else {windows()}
   plot(x.coords, y.coords,
        #plot(unmatrix(mesh.grid.coords$x,byrow=FALSE),
        #     unmatrix(mesh.grid.coords$y,byrow=FALSE),
        col=ifelse(unmatrix(grid.resp,byrow=FALSE)==1,"red","black"))
-  dev.off()
+  }
   print("For w.value")
   print(w)
   print("Min stress found(real min)")
@@ -354,18 +411,6 @@ for (w.i in 1:length(w.vals)){
     select.y<-1:length(grid.seq.y) 
     #The indexing (select.x,select.y) is mixed because mesh.grid function generates a matrix 
     #whose columns are for x coordinates, while for final.coords, rows are for x coordinates
-    #arrows(x0 = unmatrix(mesh.grid.coords$x[select.y,select.x],byrow=FALSE),
-    #	 y0 = unmatrix(mesh.grid.coords$y[select.y,select.x],byrow=FALSE),
-    #	 x1 = unmatrix( final.coords.x[select.x,select.y],byrow=FALSE),
-    #       y1 = unmatrix( final.coords.y[select.x,select.y],byrow=FALSE) ,
-    #	length=0.1)
-    
-    
-    #arrows(x0 = mesh.grid.coords$x[t(grid.resp==1)],
-    #	 y0 = mesh.grid.coords$y[t(grid.resp==1)],
-    #	 x1 =  final.coords.x[grid.resp==1] ,
-    #       y1 =  final.coords.y[grid.resp==1] ,
-    #	length=0.1)
     
   }
   
@@ -383,11 +428,7 @@ for (w.i in 1:length(w.vals)){
     dev.print(paste(results.dir,"/","other-min-w",w,".png",collapse="",sep=""),device=png, width=600,height=600)
     fname<-paste(results.dir,"/","other-min-w",w,".pdf",collapse="",sep="")
     dev.copy2pdf(file=fname)
-    #arrows(x0 = mesh.grid.coords$x[t(grid.resp==0)],
-    #	 y0 = mesh.grid.coords$y[t(grid.resp==0),]
-    #	 x1 =  final.coords.x.6[grid.resp==0] ,
-    #       y1 =  final.coords.y.6[grid.resp==0] ,
-    #	length=0.1)
+
   }
   
   print("Number of final config close to initial config")
@@ -400,20 +441,21 @@ for (w.i in 1:length(w.vals)){
   min.config.stress.2.w[w.i]<- min.stress.2
   
   if (plot.in.3d){
-    open3d()
-    col.matrix=sign.hessian.at.pt[w.i,,]
-    col.matrix[sign.hessian.at.pt[w.i,,]==1]="orange"
-    col.matrix[sign.hessian.at.pt[w.i,,]==2]="red"
-    col.matrix[sign.hessian.at.pt[w.i,,]==0]="black"
-    col.matrix[sign.hessian.at.pt[w.i,,]==-1]="blue"
-    col.matrix[sign.hessian.at.pt[w.i,,]==-2]="purple"
-    plot3d(x.coords, y.coords,
-           #plot3d(unmatrix(mesh.grid.coords$x,byrow=FALSE),
-           #	 unmatrix(mesh.grid.coords$y,byrow=FALSE),
-           stress.at.loc,col=unmatrix(col.matrix),byrow=FALSE)
     
-    surface3d(grid.seq.x,grid.seq.y,stress.at.loc)
+    if (!w%in%w.vals.sp) rgl.close()
+    
   }
+  
+
+  far.to.init.X5.for.w<- c(far.to.init.X5.for.w, list(far.to.init.1))
+  far.to.init.X6.for.w<- c(far.to.init.X6.for.w, list(far.to.init.2))
+  close.to.init.X5.for.w <- c(close.to.init.X5.for.w, list(close.to.init.1))
+  close.to.init.X6.for.w <- c(close.to.init.X6.for.w, list(close.to.init.2)) 
+  print("length(far.to.init.X5.for.w)")
+  print(length(far.to.init.X5.for.w))
+  
+  
+  #plotObj = ggplot(...) + geom_point() + xlim(...) + ylim(...)
 }
 
 min.config.stress.w.table<-rbind(min.config.stress.1.w,min.config.stress.2.w)
@@ -423,6 +465,61 @@ row.names(min.config.stress.w.table) <- c("Local min for real config.","Alternat
 #if (plot.in.3d){ rgl.close()}
 #graphics.off()
 
+animate.config.w <- function () {
+  
+  oopt = ani.options(interval = 1, nmax = length(w.vals))
+  ## use a loop to create images one by one
+  for (w.i in 1:length(w.vals)) {
+    par(pch=1)
+    if (nrow(far.to.init.X5.for.w[[w.i]])>0)
+    plot(x=far.to.init.X5.for.w[[w.i]][,1],y=far.to.init.X5.for.w[[w.i]][,2],col="red",
+         xlim=c(min(grid.seq.x),max(grid.seq.x))
+         ,ylim=c(min(grid.seq.y),max(grid.seq.y)),xlab="x",ylab="y")
+    else{
+      
+      plot.new()
+     plot.window(xlim=c(min(grid.seq.x),max(grid.seq.x))
+                  ,ylim=c(min(grid.seq.y),max(grid.seq.y)))
+    
+     axis(1)
+     axis(2)
+    
+     title(xlab="x",ylab="y")
+     
+     box()
+    }
+     
+    
+    par(pch=3)
+    if (nrow(close.to.init.X5.for.w[[w.i]])>0)
+    points(x=close.to.init.X5.for.w[[w.i]][,1],y=close.to.init.X5.for.w[[w.i]][,2],col="red",
+           xlim=c(min(grid.seq.x),max(grid.seq.x))
+           ,ylim=c(min(grid.seq.y),max(grid.seq.y)),xlab="x",ylab="y")
+    par(pch=1)
+    if (nrow(far.to.init.X6.for.w[[w.i]])>0)
+    points(x=far.to.init.X6.for.w[[w.i]][,1],y=far.to.init.X6.for.w[[w.i]][,2],col="blue",
+           xlim=c(min(grid.seq.x),max(grid.seq.x))
+           ,ylim=c(min(grid.seq.y),max(grid.seq.y)),xlab="x",ylab="y")
+    par(pch=3)
+    if (nrow(close.to.init.X6.for.w[[w.i]])>0)
+    points(x=close.to.init.X6.for.w[[w.i]][,1],y=close.to.init.X6.for.w[[w.i]][,2],col="blue",
+           xlim=c(min(grid.seq.x),max(grid.seq.x))
+           ,ylim=c(min(grid.seq.y),max(grid.seq.y)),xlab="x",ylab="y")
+    title(eval(expression(w.vals[w.i])))
+    
+    ani.pause() ## pause for a while ('interval')
+  }
+  ## restore the options
+  ani.options(oopt)
 
+}
 
+saveGIF(animate.config.w(),"config_w.gif")
+
+for (w.i in w.vals){
+movie3d(stress.plot3d,duration=40,dev = rgl.cur(),sign.hessian.at.pt=sign.hessian.at.pt,
+        x.coords=x.coords,y.coords=y.coords,
+        stress.at.loc=stress.at.loc,
+        grid.seq.x=grid.seq.x,grid.seq.y=grid.seq.y,w.i=w.i)
+}
 
