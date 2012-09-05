@@ -8,6 +8,7 @@ verbose <- FALSE
 run.in.linux<-FALSE
 results.dir<-"./graphs"
 plot.in.3d<-TRUE
+ani.options(outdir=file.path(getwd(),"graphs"))
 
 meshgrid <- function(a,b) {
   list(
@@ -57,8 +58,10 @@ hessian.mat <- function (X.embed.2.norm,n) {
 }
 
 stress.plot3d <- function (time,sign.hessian.at.pt,x.coords,y.coords,
-                           stress.at.loc,grid.seq.x,grid.seq.y,w.i) {
+                           stress.at.loc,grid.seq.x,grid.seq.y,w.vals) {
+  w.i <- floor(time/1.5)+1
 
+  
   open3d(windowRect=c(0,0,480,480))
   col.matrix=sign.hessian.at.pt[w.i,,]
   col.matrix[sign.hessian.at.pt[w.i,,]==1]="orange"
@@ -72,8 +75,9 @@ stress.plot3d <- function (time,sign.hessian.at.pt,x.coords,y.coords,
          stress.at.loc,col=unmatrix(col.matrix),byrow=FALSE)
   
   surface3d(grid.seq.x,grid.seq.y,stress.at.loc)
+  title3d(eval(expression(w.vals[w.i])))
   
-  
+ return(spin3d(axis = c(0, 0, 1), rpm = 5))
 }
 
 
@@ -516,10 +520,10 @@ animate.config.w <- function () {
 
 saveGIF(animate.config.w(),"config_w.gif")
 
-for (w.i in w.vals){
-movie3d(stress.plot3d,duration=40,dev = rgl.cur(),sign.hessian.at.pt=sign.hessian.at.pt,
+rgl.open()
+play3d(stress.plot3d,duration=40,dev = rgl.cur(),sign.hessian.at.pt=sign.hessian.at.pt,
         x.coords=x.coords,y.coords=y.coords,
         stress.at.loc=stress.at.loc,
-        grid.seq.x=grid.seq.x,grid.seq.y=grid.seq.y,w.i=w.i)
-}
+        grid.seq.x=grid.seq.x,grid.seq.y=grid.seq.y,w.vals=w.vals)
+
 
