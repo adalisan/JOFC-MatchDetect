@@ -1,3 +1,4 @@
+
 run.experiment.JOFC<-function(G,Gp,n_vals,num_iter,embed.dim,diss_measure="default"){
   
   library(optmatch)
@@ -40,47 +41,27 @@ run.experiment.JOFC<-function(G,Gp,n_vals,num_iter,embed.dim,diss_measure="defau
       corr.matches[n_v_i,it] = NumofTruePairing.1
     }
   }
+  save(file.path("logs",
+                 paste("JOFC_graph",Sys.time(),runif(n=1,max=100))),
+       list=c(corr.matches))
   return(corr.matches)
 }
 
-bitflip_exp<-function (nmc,pert,n,n_vals,embed.dim=6)
-{
-	npert<-length(pert)
-	corr.match.avg<-array(0,dim=c(length(n_vals),nmc,npert))
-	
-	seed<-123
-set.seed(seed)
-for(imc in 1:nmc)
-{
-	G<-ER(n,0.5)
-	for(ipert in 1:npert)
-	{
-		Y.emb<-NULL
-		Gp<-bitflip(G ,pert[ipert],pert[ipert])
-		corr.matches<-run.experiment.JOFC(G,Gp,n_vals,num_iter=15,embed.dim,diss_measure="default")
-		corr.match.avg[,imc,ipert] <- rowMeans(corr.matches)
-	}
-	
-}
-
-return(corr.match.avg)
-}
-		
 bitflip_MC_rep <- function (pert,n,n_vals,embed.dim,diss_measure){
   corr.match.array.mc<-array(0,dim=c(length(n_vals),npert))
-  G<-ER(n,0.5)
+ 
   for(ipert in 1:npert)
   {
+    G<-ER(n,0.5)
     Y.emb<-NULL
     Gp<-bitflip(G ,pert[ipert],pert[ipert])
-    corr.matches<-run.experiment.JOFC(G,Gp,n_vals,num_iter=1,embed.dim=embed.dim,diss_measure=diss_measure)
+    corr.matches<-run.experiment.JOFC(G,Gp,n_vals,num_iter=1, embed.dim=embed.dim,diss_measure=diss_measure)
     corr.match.array.mc[,ipert] <- corr.matches
   }
   return (corr.match.array.mc)
 }
 
-
-bitflip_exp_par<-function (nmc,pert,n,n_vals,embed.dim=6)
+bitflip_exp<-function (nmc,pert,n,n_vals,embed.dim=6)
 {
   npert<-length(pert)
   corr.match.array<-array(0,dim=c(length(n_vals),nmc,npert))
@@ -106,13 +87,13 @@ bitflip_exp_par<-function (nmc,pert,n,n_vals,embed.dim=6)
       corr.match.avg[i,j] <- mean(corr.match.array[i,,j])
     }
   
-  windows()
-  plot(n_vals, drop(corr.match.avg[,1]) ,xlab="Hard seeds",
+  #windows()
+  plot(n_vals, as.vector(corr.match.avg[,1]) ,xlab="Hard seeds",
        ylab="Fraction of  correct matches",ylim=c(0,1),col=colors.vec[1],type="l")
   
   for(ipert in 2:npert)
   {
-    lines(n_vals,drop(corr.match.avg[,ipert]) ,xlab="Hard seeds",ylab="Fraction of  correct matches",ylim=c(0,1),col=colors.vec[ipert])
+    lines(n_vals, as.vector(corr.match.avg[,ipert]) ,xlab="Hard seeds",ylab="Fraction of  correct matches",ylim=c(0,1),col=colors.vec[ipert])
   }  
   
   return(corr.match.avg)

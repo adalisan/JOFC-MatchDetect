@@ -649,20 +649,20 @@ To prove differentiability of $\beta_{\alpha}\left( w\right)$ , we refer to Theo
 
  
 \subsection{Continuity of $\beta(\cdot)$} 
- Consider $\beta_{\alpha}(\cdot)$ as a function of $w$. We can write it as $Pr\left[T_a(\cdot)>c_{\alpha}(\cdot)\right]$ where $c_{\alpha}(\cdot)$ is the critical value for level $\alpha$. To prove the continuity of $\beta_{\alpha}(\cdot)$
+ Consider $\beta_{\alpha}(\cdot)$ as a function of $w$. We can write it as $P\left[T_a(\cdot)>c_{\alpha}(\cdot)\right]$ where $c_{\alpha}(\cdot)$ is the critical value for level $\alpha$. Instead of proving the continuity of $\beta_{\alpha}(\cdot)$
  %stochastic process whose sample path is  a function of $w$ where the randomness comes from $\Delta_{m}$, $\Delta_{u}$ and %$\mathcal{T}$ . 
- we will make use of the area under the curve measure  as a surrogate: $$AUC(w)=P\left[T_a(w)>T_0(w)\right]$$ where $T_a(\cdot)$ and $T_0(\cdot)$ can also be regarded as  stochastic processes whose sample paths are continuous functions of $w$ except finite number of points in $(0,1)$. By  assuming stochastic continuity of $T_a(w)$ and $T_0(w)$ in the interval $(0,1)$, ie assuming the probability of a jump discontinuity of $T_0(w)$ at a particular $w_0$ is 0, we will prove the continuity of $AUC(w)$.
+ we will make use of the area under the curve measure as a surrogate: $$AUC(w)=P\left[T_a(w)>T_0(w)\right]$$ where $T_a(\cdot)$ and $T_0(\cdot)$ can also be regarded as  stochastic processes whose sample paths are continuous functions of $w$ except at a finite number of points in $(0,1)$. By  assuming stochastic continuity of $T_a(w)$ and $T_0(w)$ in the interval $(0,1)$, ie assuming the probability of a jump discontinuity of $T_0(w)$ at a particular $w_0$ is 0, we will prove the continuity of $AUC(w)$.
 
 
 \begin{thm}
-Let $T(\cdot)$ be  a stochastic process indexed by $w$ in the interval (0,1). Assume  the process is continuous in probability  (stochastic continuity)   everywhere in the interval , ie.
-$$ \forall a>0 \quad  \lim_{\delta \rightarrow 0} Pr\left[\|T(w+\delta)-T(w) \|>a \right] \rightarrow 0$$ 
+Let $T(\cdot)$ be  a stochastic process indexed by $w$ in the interval (0,1). Assume  the process is continuous in probability  (stochastic continuity)   everywhere in the interval  i.e.
+$$ \forall a>0 \quad  \lim_{\delta \rightarrow 0} Pr\left[\|T(w+\delta)-T(w) \|>a \right] \rightarrow 0 \quad(*)$$ 
 
  $\forall w\in (0,1)$.
 
 Then,
 
-for any $w>0, \epsilon>0$, there exist $\delta_{\epsilon}$ $$\| Pr\left[T(w+\delta_{\epsilon})>0 \right]- Pr\left[T(w)>0 \right]\|<\epsilon .$$
+for any $w>0, \epsilon>0$, there exist $\delta_{\epsilon}$ $$\| Pr\left[T(w+\delta_{\epsilon})>0 \right]- Pr\left[T(w)>0 \right]\|<\epsilon .  $$
 
 and 
 
@@ -670,27 +670,28 @@ $Pr \left[ T(w)>0\right]$ is continuous with respect to $w$.
 \end{thm}
 
 \begin{proof}
-We know there exists a $\delta$ for any given $\epsilon>0$. For any such $\delta$, consider the difference of the probabilities of the two events  $T(w)>0$ and $T(w+\delta)>0$ for any $w$.
+We know there exists a $\delta$ for any given $\epsilon>0$ satisfying (*). For any such $\delta$, consider the difference of the probabilities of the two events  $T(w)>0$ and $T(w+\delta)>0$ for any $w$.
 \begin{eqnarray*}
-\| Pr\left[T(w+\delta)>0 \right]- Pr\left[T(w)>0 \right]\| & = 
-& \| Pr\left[T(w+\delta)>0   \cap T(w) \leq 0 \right]- Pr\left[T(w+\delta)\leq 0  \cap T(w) > 0\right]\| \\
+\| Pr\left[T(w+\delta)>0 \right]- Pr\left[T(w)>0 \right]\| & = & \| Pr\left[T(w+\delta)>0   \cap T(w) \leq 0 \right] + Pr\left[T(w+\delta)>0   \cap T(w) > 0 \right] - \\
+& & (Pr\left[T(w+\delta)> 0   \cap T(w) > 0 \right]+ Pr\left[T(w+\delta)\leq 0  \cap T(w) > 0\right]\| \\
+& = & \| Pr\left[T(w+\delta)>0   \cap T(w) \leq 0 \right]- Pr\left[T(w+\delta)\leq 0  \cap T(w) > 0\right]\| \\
 &= &\| Pr\left[T(w+\delta) - T(w)  > 0 \right]-  Pr\left[ T(w)- T(w+\delta)  > 0   \right]\|\\
-& <= & \| Pr\left[\{T(w+\delta) - T(w)  > 0\} \vee \{T(w)- T(w+\delta)  > 0 \}  \right]\|\\
+& \leq & \| Pr\left[\{T(w+\delta) - T(w)  > 0\} \vee \{T(w)- T(w+\delta)  > 0 \}  \right]\|\\
 & = & Pr\left[\|T(w+\delta) - T(w)\| >0 \right] \\
 & < & \epsilon
 \end{eqnarray*} 
-
+.
 \end{proof}
 
 \begin{cor}{
-. Then $AUC(w)=P\left[T_a(w)-T_0(w) >0 \right]$ is continuous with respect to $w$.}
+ $AUC(w)=P\left[T_a(w)-T_0(w) >0 \right]$ is continuous with respect to $w$.}
 \end{cor}
 \begin{proof}
  $Pr\left[T(w)>0 \right]$  as a function of $w$ is continuous with respect to $w$.  Let $T(w)=T_a(w)-T_0(w)$.
 \end{proof}
 
 
- The main assumption we used is the stochastic continuity of $T_0(w)$ and $T_a(w)$ . If  a jump discontinuity at $w$ under the probability distribution that governs the data has measure  zero, then this assumption holds. In the constructed example in \ref{subsubsec:Discontinuity}, we assume a certain symmetry in the realized configuration, which gave us a discontinuity in the embedding configuration (and therefore the test statistic) at a particular point of $w$.  Any change in this symmetry should give a discontinuity at a different $w$.
+ The main assumption we used is the stochastic continuity of $T_0(w)$ and $T_a(w)$ . This is equivalent to  a jump discontinuity at $w$ under the probability distribution that governs the data has measure  zero. Under a continuous distribuition  In the constructed example in \ref{subsubsec:Discontinuity}, we assume a certain symmetry in the realized configuration, which gave us a discontinuity in the embedding configuration (and therefore the test statistic) at a particular point of $w$.  Any change in this symmetry should give a discontinuity at a different $w$.
 
 
 \begin{comment}
