@@ -9,9 +9,6 @@
 #setwd("./DataFusion_Priebe/")
 
 
-
-
-
 if (!run.for.Sweave){
 	source("./src/runningParams.R")
 } else {
@@ -28,10 +25,11 @@ if (par.compute){
 			registerDoMC(2)
 			
 		}
-		else {require(doSMP)	
+		else {
+			require(doSMP)	
 			require(foreach)
 			#	setMKLthreads(1)
-			workers<-startWorkers(4,FORCE=TRUE)
+			workers<-startWorkers(7,FORCE=TRUE)
 			registerDoSMP(workers)
 		}
 	}
@@ -101,7 +99,7 @@ Comm.List.D<-list()
 
 if (gauss.sim){
 	sim.res.g<-list()
-sim.res.g.list<-list()
+	sim.res.g.list<-list()
 }
 if (dirichlet.sim){
 	sim.res.d<-list()
