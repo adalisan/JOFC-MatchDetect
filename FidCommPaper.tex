@@ -557,7 +557,7 @@ $$
 where the  $(s,t)^{th}$ entry of $D(\cdot)$   ($d_{st}(\cdot)$ in equation \eqref{raw-stress})  is the Euclidean distance between the $s^{th}$ and $t^{th}$ rows of its argument.
 \end{itemize}
 
-Either way, we define the disssimilarity matrices $\Delta_{m} \left(\left[
+Either way, we define the dissimilarity matrices $\Delta_{m} \left(\left[
 \begin{array}{c}
 \mathcal{T} \\
 X_{1m} \\
@@ -691,7 +691,7 @@ We know there exists a $\delta$ for any given $\epsilon>0$ satisfying (*). For a
 \end{proof}
 
 
- The main assumption we used is the stochastic continuity of $T_0(w)$ and $T_a(w)$ . This is equivalent to  a jump discontinuity at $w$ under the probability distribution that governs the data has measure  zero. Under a continuous distribuition  In the constructed example in \ref{subsubsec:Discontinuity}, we assume a certain symmetry in the realized configuration, which gave us a discontinuity in the embedding configuration (and therefore the test statistic) at a particular point of $w$.  Any change in this symmetry should give a discontinuity at a different $w$.
+The main assumption we used is the stochastic continuity of $T_0(w)$ and $T_a(w)$ . This is equivalent to  a jump discontinuity at $w$ under the probability distribution that governs the data has measure  zero. Under a continuous distribuition  In the constructed example in \ref{subsubsec:Discontinuity}, we assume a certain symmetry in the realized configuration, which gave us a discontinuity in the embedding configuration (and therefore the test statistic) at a particular point of $w$.  Any change in this symmetry should give a discontinuity at a different $w$.
 
 
 \begin{comment}
@@ -707,6 +707,7 @@ First, note that  $\beta(w)$ is continuous with respect to $w$ and locally conve
 
 Note that it is possible to have multiple local minima in the embedding step(see example in \cite{TrossetLocalMin}). We will construct an example  where $w$ controls which of the local minima is the global minimum among the configurations of $\hat{X}_{.}$. 
 
+%Global Minimum Configuration determined by $w$ .
 
 Consider five in-sample points in $\mathbb{R}^2$ with locations $X_1=(0,0)$, $X_2=(1,0)$, $X_3=(1,1)$
  and $X_4=(1,0)$, $X_5=(.5,.5)$ and two out-of-sample  points with coordinates $X_6=(1,0)$ and $X_7=(0,1)$.
@@ -1002,6 +1003,220 @@ For the noisy version of the Gaussian setting at allowable type I error 0.05 for
 
 Setting p and q to 5 and 10, respectively, for $n=150$ and $m=150$, the average of the power values for $nmc=150$ Monte Carlo replicates are computed at  different $\alpha$s and are plotted in Figure \ref{fig:MVN-c001-power-w} against $\alpha$ for the Gaussian setting.  Qualititatively similar plots for the Dirichlet setting  exist.  The plot in Figure \ref{fig:MVN-c001-power-w} shows that for different values of  $w$, we have varying power curves, and some $w$ values outperform others in terms of power. In Figure \ref{fig:MVN-c001-beta-w},  $\beta(w)$ is plotted against $w$ for fixed values of $\alpha$. It is  interesting that the optimal value of $w$ seems to be in the range of $(0.85,1)$ for all settings, which suggests commensurability might be more critical for our hypothesis testing task. 
 
+\begin{comment}
+
+
+
+The same pair of plots are included for various values of parameters $p$,$q$ ,$r$ and $c$.
+
+Speculation on the effects of parameters in Gaussian/ Dirichlet settings
+
+ Another avenue for investigation is  how $w^{*}$ depends on the parameters of the distributions of $\mathbf{F}_m$ and  $\mathbf{F}_u$ . 
+ Let us first investigate the effect of parameters on the empirical distribution of the test statistic, under null and alternative.
+ For our Multivariate Normal and Dirichlet models, consider the signal and noise dimensions $p$ and $q$ respectively.
+  An increase in $p$ leads to the inflation of the test statistic under alternative  \ref{fig-stats-p},
+<<null-alt,  echo=FALSE,fig=FALSE,results=hide,cache=TRUE >>=
+source("./src/Null.Alt.Stat.for.JOFC.R")
+oos.stats<-compute.stats.for.params(params.list,"p_r")
+
+oos.diss.all.params.0 <- oos.stats$stats.0
+oos.diss.all.params.A <- oos.stats$stats.A
+
+colors.vec<-c("red","blue","green","black","gold4",
+		"azure","darkgrey","purple")
+
+par(lwd=2)
+@
+it also effects the distribution of the test statistic under null. As $p$ increases, the probability of getting a new dimension in the matched vectors
+ in which the matched pairs are highly correlated increases.  
+
+
+<<fig-stats-p, echo=FALSE,fig=TRUE,results=hide,cache=FALSE>>=
+  fix.i <-1
+
+   par(lty=1)
+   first.est<- density(oos.diss.all.params.0[1,fix.i,])
+  plot(first.est, col= colors.vec[1],
+		  lty=1,type='l',ylim=c(0,0.2),main="")
+  for (j in 2:5){
+    lines(density(oos.diss.all.params.0[1+(j-1)*4,fix.i,],bw=first.est$bw), col= colors.vec[j])
+  }
+
+  par(lty=3)
+  first.est.a<-density(oos.diss.all.params.A[1,fix.i,])
+  lines(first.est.a, col= colors.vec[1],lty=3,ylim=c(0,0.2))
+  for (j in 2:5){
+    lines(density(oos.diss.all.params.A[1+(j-1)*4,fix.i,],bw=first.est.a$bw), col= colors.vec[j])
+  }
+  legend.txt<- p.vals[1+(0:4)*5]
+  title("Null and alternative test statistics for different p values ")
+  legend("bottomright",legend=legend.txt,col=colors.vec[1:5],lty=rep(1,5))
+@
+ So any $w$ value that takes advantage of this situation and  are small enough to preserve fidelity, yet large enough to not lose significantly from commensurability will have increases in power to become $w^*$. 
+
+
+
+
+Consider  an increase in $r$, this will cause the test statistic under null to be stochastically smaller,
+ leading to a smaller critical value. So , a increase in priority of fidelity,
+  which corresponds to smaller $w$ might lead to the inflation of the test statistic under alternative, and therefore an increase in power.\ref{fig-stats-r}  
+
+
+
+<<fig-stats-r, echo=FALSE,fig=TRUE, results=hide, cache=FALSE >>=
+	
+par(lty=1)
+first.est<- density(oos.diss.all.params.0[1,fix.i,])
+	plot(first.est, col= colors.vec[1],
+		  lty=1,type='l', ylim=c(0,0.4),main="")
+ 	for (j in 2:4){
+		lines(density(oos.diss.all.params.0[j,fix.i,],bw=first.est$bw), col= colors.vec[j])
+  	}
+	
+	par(lty=3)
+	first.est.a<-density(oos.diss.all.params.A[1,fix.i,])
+	lines(first.est.a, col= colors.vec[1])
+	for (j in 2:4){
+		lines(density(oos.diss.all.params.A[j,fix.i,],bw=first.est.a$bw), col= colors.vec[j])
+  	}
+	title("Null and alternative test statistics for different r values ")
+	legend.txt<- r.vals[1:4]
+	legend("bottomright",legend=legend.txt,col=colors.vec[1:4],lty=rep(1,4))
+@
+
+Consider increases in $c$, which will increase the dissimilarity  both between matched and between unmatched vectors. 
+
+
+<<stats-c-sim, echo=FALSE,fig=FALSE,results=hide,cache=TRUE >>=
+source("./src/Null.Alt.Stat.for.JOFC.R")
+
+debug.mode<-FALSE
+if(debug.mode){
+	n.vals<-c(50)
+	nmc<-3
+	s<-1
+}
+
+
+params$w.vals<-c(0.75)	
+p.vals<-rep(5,5)
+r.vals<-rep(50,5)
+q.vals<-rep(5,5)
+c.vals<- c(0,0.01,0.1,0.2,0.5)
+vary.param<-"c"
+
+param.index.count<-length(c.vals)
+params.list <- rep(list(params),param.index.count)
+
+
+
+for (i in (1:length(c.vals))){
+	params.list[[i]]$r <- r.vals[i]
+	params.list[[i]]$p <- p.vals[i]
+	params.list[[i]]$q <- q.vals[i]
+	params.list[[i]]$c <- c.vals[i]
+}
+
+debug.mode <- FALSE
+oos.stats.c<-compute.stats.for.params(params.list,"c")
+oos.diss.all.params.c.0 <- oos.stats.c$stats.0
+oos.diss.all.params.c.A <- oos.stats.c$stats.A
+sfStop()
+@
+
+<<fig-stats-c, echo=FALSE,fig=TRUE,results=hide,cache=FALSE >>=
+
+fix.i<-1
+first.est<- density(oos.diss.all.params.c.0[1,fix.i,])
+	par(lty=1)
+  plot(first.est, col= colors.vec[1],
+		  lty=1,type='l',ylim=c(0,0.4),main="")
+ for (j in 2:length(c.vals)) {
+  lines(density(oos.diss.all.params.c.0[j,fix.i,],bw=first.est$bw), col= colors.vec[j])
+	}
+   par(lty=3)
+   first.est.a<-density(oos.diss.all.params.c.A[1,fix.i,])
+  lines(first.est.a, col= colors.vec[1])
+  for (j in 2:length(c.vals)) {
+  lines(density(oos.diss.all.params.c.A[j,fix.i,],bw=first.est.a$bw), col= colors.vec[j])
+  }
+  
+  
+  title("Null and alternative test statistics for different c values ")
+  legend.txt<- c.vals
+  legend("bottomright",legend=legend.txt,col=colors.vec[1:5],lty=rep(1,5))
+@
+
+
+
+
+Consider increases in $q$,  the test statistic under both null and alternative is inflated\ref{fig-stats-q}. 
+
+<<stats-q-sim, echo=FALSE,fig=FALSE,results=hide,cache=TRUE >>=
+source("./src/Null.Alt.Stat.for.JOFC.R")
+
+debug.mode<-FALSE
+if(debug.mode){
+	n.vals<-c(50)
+	nmc<-3
+	s<-1
+}
+
+
+params$w.vals<-c(0.75)	
+param.index.count<-4
+params.list <- rep(list(params),param.index.count)
+p.vals<-rep(5,4)
+r.vals<-rep(50,4)
+q.vals<-c(5,10,25,40)
+vary.param<-"q"
+
+
+
+for (i in (1:length(q.vals))){
+	params.list[[i]]$r <- r.vals[i]
+	params.list[[i]]$p <- p.vals[i]
+	params.list[[i]]$q <- q.vals[i]
+}
+
+debug.mode <- FALSE
+oos.stats.q<-compute.stats.for.params(params.list,"q")
+oos.diss.all.params.q.0 <- oos.stats.q$stats.0
+oos.diss.all.params.q.A <- oos.stats.q$stats.A
+sfStop()
+@
+
+<<fig-stats-q, echo=FALSE,fig=TRUE,results=hide,cache=FALSE >>=
+
+fix.i<-1
+first.est<- density(oos.diss.all.params.q.0[1,fix.i,])
+	par(lty=1)
+  plot(first.est, col= colors.vec[1],
+		  lty=1,type='l',ylim=c(0,0.4),main="")
+ for (j in 2:length(q.vals)) {
+  lines(density(oos.diss.all.params.q.0[j,fix.i,],bw=first.est$bw), col= colors.vec[j])
+	}
+   par(lty=3)
+   first.est.a<-density(oos.diss.all.params.q.A[1,fix.i,])
+  lines(first.est.a, col= colors.vec[1])
+  for (j in 2:length(q.vals)) {
+  lines(density(oos.diss.all.params.q.A[j,fix.i,],bw=first.est.a$bw), col= colors.vec[j])
+  }
+  
+  
+  title("Null and alternative test statistics for different q values ")
+  legend.txt<- q.vals
+  legend("bottomright",legend=legend.txt,col=colors.vec[1:4],lty=rep(1,4))
+@
+ If commensurability can be preserved in the face of the increase in $q$, the power of the test may be preserved. However a very large increase in $w$ is not guarenteed to increase the preservation of commensurability, since the extra dimensions are noise, trying to   make the differences between coordinates  small in those dimensions will not  help in power, in fact may be disruptive since,
+  more fidelity may be lost in the effort to bring the pair of points together.
+
+
+
+
+
+\end{comment}
+
 
 \section{The general case of more than two conditions}
 
@@ -1157,10 +1372,13 @@ The dissimilarity type that has the best improvement in performance is JOFC with
 
 This graph shows the effect of the weight parameter of stress $w$ on the probability of true matches.
 
+\includegraphics{FidCommPaper-graph-plot-4}
 
 
 This graph shows the effect of the diffusion distance parameter $T$ on the probability of true matches for dissimilarities based on diffusion distance.
 
+
+\includegraphics{FidCommPaper-graph-plot-5}
 
 
 
