@@ -30,7 +30,16 @@ if (par.compute){
 	}
 }
 
-source("./lib/gaussian_simulation_sim_fn.R")
+model="MVN"
+num.cpus<-3
+
+gaussian_simulation_jofc_tradeoff
+gaussian_simulation_jofc_tradeoff_par
+gaussian_simulation_jofc_tradeoff_sf
+dirichlet_simulation_jofc_tradeoff
+dirichlet_simulation_jofc_tradeoff_par
+dirichlet_simulation_jofc_tradeoff_sf
+
 
 if ((model=="MVN") && par.compute)              call.func<-gaussian_simulation_jofc_tradeoff_par
 if ((model=="MVN") && !par.compute)          call.func<-gaussian_simulation_jofc_tradeoff
@@ -56,6 +65,7 @@ rm(p)
 rm(q)
 
 params$compare.pom.cca<-TRUE
+
 begin.time.g <-Sys.time()
 args.for.func.call<-with(params,list(p=p, r=r, q=q, c.val=c.val,d=d,
 		
@@ -88,8 +98,12 @@ if (!par.compute.sf)
 #  Running simulation function 
 ############################################
 sim.res <- do.call(call.func,args=args.for.func.call)
+end.time.g<-Sys.time()
+run.time.g <- end.time.g-begin.time.g
 
-save.image(file=paste(date,".Rdata"))
+print(run.time.g)
+
+save.image(file=paste(date(),".Rdata"))
 
 
 draw.plots<-function(sim.res,model,params){
@@ -123,12 +137,12 @@ if (compare.pom.cca) {
 			conf.int=FALSE,add=TRUE,ylim=1)
 	lty.i.vec <- c(lty.i.vec,i)	
 	if (cca.reg){
-		i<- 1+((num.w.vals.plotted+2)%%10)
+		i<- 1+((w.val.len+2)%%10)
 		par(lty=i) 
-		plot.ROC.with.CI(sim.res.g$power.cmp$cca.reg,plot.title="",plot.col = colors.vec[w.val.len+3],
-				conf.int=FALSE,add=TRUE,linewd=line.width,ylim=1)
+		plot.ROC.with.CI(sim.res$power.cmp$reg.cca,plot.title="",plot.col = colors.vec[w.val.len+3],
+				conf.int=FALSE,add=TRUE,ylim=1)
 		lty.i.vec <- c(lty.i.vec,i)	
-		lwd.i.vec <- c(lwd.i.vec,line.width)
+		#lwd.i.vec <- c(lwd.i.vec,line.width)
 	}
 	
 	
@@ -140,7 +154,7 @@ if (compute.bound) {
 	lty.i.vec <- c(lty.i.vec,i)
 }
 
-legend.txt <- w.vals
+legend.txt <- params$w.vals
 if (compare.pom.cca)
 	legend.txt <-c(legend.txt ,"pom","cca")
 if (compute.bound) legend.txt <-c(legend.txt ,"bound")

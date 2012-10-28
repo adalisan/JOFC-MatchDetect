@@ -19,7 +19,7 @@ compute.bound<-FALSE
 gauss.sim <-T
 dirichlet.sim <- F
 run.mcnemars.test <- F
-cca.reg <- F
+cca.reg <- T
 power.comparison.test<- F
 add.plot.title<- F
 
@@ -101,7 +101,8 @@ params<-list(
 		rival.w = 0.999,
 		power.comparison.test = F,
 		hardest.alt=TRUE,
-		compute.bound=FALSE
+		compute.bound=FALSE,
+		cca.reg=cca.reg
 )
 
 
