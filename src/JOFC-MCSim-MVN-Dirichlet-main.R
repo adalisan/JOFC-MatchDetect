@@ -17,7 +17,7 @@ if (par.compute){
 		if( run.in.linux) {
 			require(doMC)
 			require(foreach)
-			registerDoMC(2)
+			registerDoMC(parallel::detectCores())
 			
 		}
 		else {
@@ -31,7 +31,7 @@ if (par.compute){
 }
 
 model="MVN"
-num.cpus<-3
+num.cpus<-5
 
 gaussian_simulation_jofc_tradeoff
 gaussian_simulation_jofc_tradeoff_par
@@ -108,11 +108,14 @@ save.image(file=paste(date(),".Rdata"))
 
 draw.plots<-function(sim.res,model,params){
 
+
+plot.title<-"Power Curves for Match Testing: JOFC vs Others"
 #
 # Plotting of ROC curves
 #
 sim.res.pow<-sim.res$power
 w.val.len <-length(params$w.vals)
+source("./src/color-setting.R")
 
 lty.i.vec<-c()
 for (i in 1:w.val.len){
