@@ -574,7 +574,7 @@ X_{2u}
 \end {array}
 \right]\right)$ as two matrix-valued random variables $\Delta_{m}:\Omega \rightarrow \mathbf{M}_{n\times n} $,$\Delta_{u}:\Omega \rightarrow \mathbf{M}_{n\times n} $  for the probability space $(\Omega,\mathcal{B},\mu)$.
 
- The criterion function for the embedding is $\sigma_W(\cdot) =f_w(D({\cdot}),\Delta)$. The embedding for the unmatched pair ${\hat{X}_{1u},\hat{X}_{2u}}$  is 
+ The criterion function for the embedding is $\sigma_W(\cdot) =f_w(D({\cdot}),\Delta)$. All of the random variables following the embedding is dependent on $w$, for the sake of simplicity, it will not be shown in the notation. The embedding for the unmatched pair ${\hat{X}_{1u},\hat{X}_{2u}}$  is 
  \[
 {\hat{X}_{1u},\hat{X}_{2u}}
 =\argmin_{\acute{X}_{1u}, \acute{X}_{2u}}\left[\min_{\mathbf{\acute{T}}}
@@ -612,14 +612,16 @@ D\left(
 \right]$.
  Assuming these minima exist and are unique, the mappings $\hat{X}_{1m}:\omega\rightarrow \mathbf{R}^{d'}$,  $\hat{X}_{2m}:\omega\rightarrow \mathbf{R}^{d'}$ , $\hat{X}_{1u}:\omega\rightarrow \mathbf{R}^{d'}$, 
 $\hat{X}_{2u}:\omega\rightarrow \mathbf{R}^{d'}$ are  measurable maps,  $\hat{X}_{1m}$ , $\hat{X}_{2m}$ , $\hat{X}_{1u}$, $\hat{X}_{2u}$ are random vectors. 
-Define $F_Y$ as the   cumulative distribution function of  $Y$ where $Y$ can be  any function of $\hat{X}_m$ or $\hat{X}_u$.
 
+Consider the test statistic $\tau=d(\hat{X}_{1.},\hat{X}_{2.})$. Under null hypothesis of matchedness, the distribution of the statistic is governed by the distribution of $\hat{X}_{.m}$, under the alternative it is governed by  $\hat{X}_{.u}$.
+
+Denote by $F_Y$ the   cumulative distribution function of  $Y$ where $Y$ can be  any function of $\hat{X}_m$ or $\hat{X}_u$. 
 
 
 
  Then $$\beta_{\alpha}\left( w\right)=1-F_{d(\hat{X}_{1u},\hat{X}_{2u})}(F_{d(\hat{X}_{1m},\hat{X}_{2m})}^{-1}(1-\alpha)).$$
 
- Finally, define $$w^{*}=argmax_w{\beta_{\alpha}\left( w\right)}. $$
+ Note that all random variables are dependent on $w$. Finally, define $$w^{*}=argmax_w{\beta_{\alpha}\left( w\right)}. $$
 
 
 Even for  given $\mathbf{F}_u,\mathbf{F}_m$,   $w^*$ must be defined with respect to the value of allowable type I error rate $\alpha$.  For two different $\alpha$ values, it is quite possible that $\beta_{\alpha_1}(w_1)>\beta_{\alpha_1}(w_2)$  and $\beta_{\alpha_2}(w_1)<\beta_{\alpha_2}(w_2)$. This can be observed in results in Section \ref{sec:Simulation Results}.  
@@ -648,9 +650,10 @@ To prove differentiability of $\beta_{\alpha}\left( w\right)$ , we refer to Theo
 
  
 \subsection{Continuity of $\beta(\cdot)$} 
- Consider $\beta_{\alpha}(\cdot)$ as a function of $w$. We can write it as $P\left[T_a(\cdot)>c_{\alpha}(\cdot)\right]$ where $c_{\alpha}(\cdot)$ is the critical value for level $\alpha$. Instead of proving the continuity of $\beta_{\alpha}(\cdot)$
- %stochastic process whose sample path is  a function of $w$ where the randomness comes from $\Delta_{m}$, $\Delta_{u}$ and %$\mathcal{T}$ . 
- we will make use of the area under the curve measure as a surrogate: $$AUC(w)=P\left[T_a(w)>T_0(w)\right]$$ where $T_a(\cdot)$ and $T_0(\cdot)$ can also be regarded as  stochastic processes whose sample paths are continuous functions of $w$ except at a finite number of points in $(0,1)$. By  assuming stochastic continuity of $T_a(w)$ and $T_0(w)$ in the interval $(0,1)$, ie assuming the probability of a jump discontinuity of $T_0(w)$ at a particular $w_0$ is 0, we will prove the continuity of $AUC(w)$.
+ Let $T_0(w)$ and $T_a(w)$ denote the value of the test statistic under null and alternative distributions  for the embedding with $w$ .  %stochastic process whose sample path is  a function of $w$ where the randomness comes from $\Delta_{m}$, $\Delta_{u}$ and %$\mathcal{T}$ . 
+Consider $\beta_{\alpha}(\cdot)$ as a function of $w$. We can write it as $P\left[T_a(\cdot)>c_{\alpha}(\cdot)\right]$ where $c_{\alpha}(\cdot)$ is the critical value for level $\alpha$. Instead of  $\beta_{\alpha}(\cdot)$
+
+  the area under the curve measure will be shown to be continuous as a surrogate: $$AUC(w)=P\left[T_a(w)>T_0(w)\right]$$ where $T_a(\cdot)$ and $T_0(\cdot)$ can also be regarded as  stochastic processes whose sample paths are continuous functions of $w$ except at a finite number of points in $(0,1)$. By  assuming stochastic continuity of $T_a(w)$ and $T_0(w)$ in the interval $(0,1)$, ie assuming the probability of a jump discontinuity of $T_0(w)$ at a particular $w_0$ is 0, we will prove the continuity of $AUC(w)$.
 
 
 \begin{thm}
@@ -698,7 +701,6 @@ For the theorem to hold, a uniform bound on the derivatives with respect to $w$.
 One of the important questions to be explored is   the uniqueness of  $w^*$.   The first step in answering this question is to determine whether $\beta(w)$ is multimodal. In the two settings we described,   $\beta(w)$ seems to have one maxima that is $\in (0,1)$.
 \end{comment}
  
-\subsection{Continuity of $\beta(w)$} 
 \begin{comment}
 First, note that  $\beta(w)$ is continuous with respect to $w$ and locally convex  with respect to embedding coordinates $\hat{X}_{.}$
 \end{comment}
@@ -815,16 +817,56 @@ Local min for real config. & 2.80 & 1.77 & 1.62 & 1.47 & 0.04 \\
 Other than such carefully constructed examples, we expect $w$ to have no effect on the ordering of the local minima according to their stress values.
 Therefore,  the argmin among these local minima is independent of $w$. The minimum configuration is then a continuous function of $w$. 
 By the continuity of the distance function with respect to configurations, the test statistic is continuous with respect to $w$. One can conclude $\beta(w) $ is a continuous function of $w$. 
+%It is possible this is not the global minimum in $\mathbb{R}^d$  
+
+%Does the discontinuity in configurations mean discontinuity  in the $\beta(w)$ function
+%It is possible this is not the global minimum in $\mathbb{R}^d$  
+ 
+\begin{comment}
+
+\includegraphics{FidCommPaper-fig-stats-p}
+
+
+
+ , so any $w$ value that takes advantage of this situation and captures fidelity will limit the growth of the test statistic under alternative. So such $w$ values that are small enough to preserve fidelity, yet large enough to not lose significantly from commensurability will have increases in power to become $w^*$. 
+
 
  
+
+Consider  an increase in $r$, this will cause the test statistic under null to be stochastically smaller,
+ leading to a smaller critical value. So , a increase in priority of fidelity,
+  which corresponds to smaller $w$ might lead to the increase in the test statistic under alternative, and therefore an increase in power.\ref{fig-stats-r}  
+
+
+
+\includegraphics{FidCommPaper-fig-stats-r}
+
+Consider increases in $c$, which will increase the dissimilarity  both between matched and between unmatched vectors. 
+
+
+
+\includegraphics{FidCommPaper-fig-stats-c}
+
+
+
+
+Consider increases in $q$,  the test statistic under both null and alternative is inflated\ref{fig-stats-q}. 
+
+
+\includegraphics{FidCommPaper-fig-stats-q}
+ If commensurability can be preserved in the face of the increase in $q$, the power of the test may be preserved. However a very large increase in $w$ is not guarenteed to increase the preservation of commensurability, since the extra dimensions are noise, trying to   make the differences between coordinates  small in those dimensions will not  help in power, in fact may be disruptive since,
+  more fidelity may be lost in the effort to bring the pair of points together.
+
+\end{comment}
+
 
 
 
 \section{Simulation Results\label{sec:Simulation Results}}
 To compare the  different approaches, training data of matched sets of measurements were generated according to the Dirichlet and Gaussian settings. Dissimilarity representations were computed from pairwise Euclidean distances of these measurements. A set of matched pairs and unmatched pairs of measurements were also generated for testing with the same distributions. Following the out-of-sample embedding of the dissimilarities test pairs (computed via by one of the three P$\circ $M, CCA and JOFC approaches)  test statistics  for matched and unmatched pairs were used to compute power values at a set of fixed type I error rate $\alpha$ values.
 
- Additionally, to take robustness of methods into consideration, ``noisy" measurements were created from the original measurements by concatenating randomly generated independent noise vectors (subsection \ref{noise}).   This setting will be referred to as the ``noisy case". The original setting, with $c=0$,  will be referred as the ``noiseless case".
-If the magnitude of noise (controlled by the parameter $c$ in equation \eqref{eq:noise-expr}) is small enough, PCA and MDS will not be affected significantly, but if the number of noisy dimensions (controlled by the parameter $q$ in the distribution of $E_{ik}$ as defined in equation \eqref{eq:noise-expr}) is large enough, CCA  will be affected due to spurious correlation between noisy dimensions.
+ Additionally, to take robustness of methods into consideration, ``noisy" measurements were created from the original measurements by concatenating randomly generated independent noise vectors (subsection \ref{noise}).   This setting will be referred to as the ``noisy case". The magnitude of noise is controlled by the parameter $c$ in equation \eqref{eq:noise-expr}). The original setting, with $c=0$,  will be referred as the ``noiseless case".
+If the magnitude of noise is small enough, and the embedding dimension is not larger than signal dimension, the embeddings provided by PCA and MDS will not be affected significantly. However  if the number of noisy dimensions (controlled by the parameter $q$ in the distribution of $E_{ik}$ as defined in equation \eqref{eq:noise-expr}) is large enough, embeddings via  CCA  will be affected due to spurious correlation between noisy dimensions.
 
 Given the setting ("Gaussian","Dirichlet"),   the steps for each Monte Carlo replicate are as follows:
 \begin{itemize}
@@ -847,28 +889,7 @@ Given the setting ("Gaussian","Dirichlet"),   the steps for each Monte Carlo rep
 \end{itemize}
 
 
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
-\begin{verbatim}
-## Loading project configuration
-## Error: You are missing a configuration file: config/global.dcf
-## Warning message: cannot open file './src/runningParams.R': No such file or directory
-## Error: cannot open the connection
-\end{verbatim}
-\end{kframe}
-\end{knitrout}
 
-
-
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
-\begin{verbatim}
-## Warning message: cannot open file './src/GaussianSimFidCommTradeoffMain.R': No such file or directory
-## Error: cannot open the connection
-## Error: could not find function "sfStop"
-\end{verbatim}
-\end{kframe}
-\end{knitrout}
 
 
 
@@ -909,7 +930,7 @@ Given the setting ("Gaussian","Dirichlet"),   the steps for each Monte Carlo rep
 \label{fig:MVN-c001-power-w}
 \end{figure}
 
-Setting p and q to 5 and 10, respectively, for $n=150$ and $m=150$, the average of the power values for $nmc=150$ Monte Carlo replicates are computed at  different $\alpha$s and are plotted in Figure \ref{fig:MVN-c001-ROC} against $\alpha$ for the Gaussian setting.  Qualititatively similar plots for the Dirichlet setting  exist.  The plot in Figure \ref{fig:MVN-c001-ROC} shows that for different values of  $w$, we have varying power curves, and some $w$ values outperform others in terms of power. In Figure \ref{fig:MVN-c001-beta-w},  $\beta(w)$ is plotted against $w$ for fixed values of $\alpha$. It is  interesting that the optimal value of $w$ seems to be in the range of $(0.85,1)$ for all settings, which suggests commensurability might be more critical for our hypothesis testing task. 
+Setting p and q to 5 and 10, respectively, for $n=150$ and $m=150$, the average of the power values for $nmc=150$ Monte Carlo replicates are computed at  different $\alpha$s and are plotted in Figure \ref{fig:MVN-c001-power-w} against $\alpha$ for the Gaussian setting.  Qualititatively similar plots for the Dirichlet setting  are not included for brevity.  The plot in Figure \ref{fig:MVN-c001-power-w} shows that for different values of  $w$, $\beta$-$\alpha$ curves vary significantly.  The conclusion is that the match detection tests with JOFC embedding using specific $w$ values have better performance than other $w$ values in terms of power.  In Figure \ref{fig:MVN-c001-beta-w},  $\beta(w)$ is plotted against $w$ for fixed values of $\alpha$. It is  interesting that the optimal value of $w$ seems to be in the range of $(0.85,1)$ for all settings, which suggests a significant emphasis on commensurability might be  critical for our hypothesis testing task. 
 
 
 
@@ -948,8 +969,11 @@ Note that in Figure \ref{fig:MVN-c001-beta-w} for $\alpha=0.05$, $\beta_{\alpha=
 
 Note that  for all of the settings, the estimate of the optimal $w^{*}$ has  higher power than $w$=0.5 (the unweighted case).
 To test the statistical significance of this observation, we wish to test the null hypothesis that  $H_{0}: \beta_{\alpha}({\hat{w}^*})\leq\beta_{\alpha}({w=0.5})$ against the alternative $H_{A}=\beta_{\alpha}({\hat{w}^*})>\beta_{\alpha}({w=0.5})$.  The least favorable null hypothesis is that  $H_{0}: \beta_{\alpha}({\hat{w}^*})=\beta_{\alpha}({w=0.5})$.
+Using previous notation,  the test statistic will be denoted by $T_a(w)$ under the alternative hypothesis and $T_0(w)$ under the null hypothesis.
 
-For a fixed $\alpha$ value, one can compute two critical values  using the test statistic values for the two $w$ values that are being compared. Using these critical  values, we can  determine the decision made by each test for each pair of embedded points, $(\tilde{y}_i^{(1)},\tilde{y}_i^{(2)}),\hspace{7pt}i=1,\ldots,m$. To compare the  two statistical tests with different $w$ values, one can prepare a $2\times 2$ contingency-table of correct decisions and incorrect decisions made by each statistical test (or equivalently true and false classifications made by two classifiers). Denote decision outcome as $c_1$ for the first statistical test and $c_2$ for the second statistical test. If $c_1=True$ and $c_2=False$ for an instance,  the first test made the correct decision and the second test made the incorrect decision with regard to the null and alternative hypotheses.
+McNemar's test will be used to compare the two predictors (referred to as $C_1$ and $C_2$ with $w$=0.5 and $w$=$w^*$ at a fixed $\alpha$ value.
+
+For a fixed $\alpha$ value, one can compute two critical values $c(0.5)=max_l \{  P(T_0(0.5)>c)<\alpha\}$,  $c(w^*)=max_l \{  P(T_0(w_2)>c)<\alpha\}$. Using these critical  values, we can  determine the decision made by each test for each pair of embedded points, $(\tilde{y}_i^{(1)},\tilde{y}_i^{(2)}),\hspace{7pt}i=1,\ldots,m$. To compare the  two statistical tests with  $w=0.5$ and $w$=$w^*$  , one can prepare a $2\times 2$ contingency-table of correct decisions and incorrect decisions made by each statistical test (or equivalently true and false classifications made by two classifiers). Denote decision outcome as $g_1$ for the first statistical test and $g_2$ for the second statistical test. If $g_1=True$ and $g_2=False$ for an instance,  the first test made the correct decision and the second test made the incorrect decision with regard to the null and alternative hypotheses.
 % McNemar's test was used to compare the two contingency tables for fixed $\alpha$. McNemar's test is a statistical test for %comparing two binary classifiers based on a 2-by-2 table of the counts of misclassifications of each. That is,
 Consider the contingency table for a Monte Carlo replicate given by $$G^{(l)}= \begin{array}{|c|c|}
       \hline
@@ -957,21 +981,22 @@ Consider the contingency table for a Monte Carlo replicate given by $$G^{(l)}= \
       \hline
        e_{FT}^{(l)} & e_{TT}^{(l)}\\
       \hline
-      \end{array}      $$  where $l$ is the index of the MC replicate, $e_{c_1c_2}^{(l)}$ is equal to the number of instances at which the true hypothesis were identified  correctly ($c_1=True$) or incorrectly ($c_1=False$) by the first test, and correctly ($c_2=True$) or incorrectly ($c_2=False$) by the second test in that MC replicate.
+      \end{array}      $$  where $l$ is the index of the MC replicate, $e_{g_1g_2}^{(l)}$ is equal to the number of instances at which the true hypothesis were identified  correctly ($g_1=True$) or incorrectly ($g_1=False$) by the first test, and correctly ($g_2=True$) or incorrectly ($g_2=False$) by the second test in that MC replicate.
 
-Under the null  hypothesis, $Pr[\left(c_1c_2\right)=(TF)]=Pr[\left(c_1c_2\right)=(FT)]$, so $\sum_l{I \{e_{TF}^{(l)}>e_{FT}^{(l)}\}}$ will be distributed according to  the binomial distribution, $\mathcal{B}(nmc,0.5)$. ($I\{\cdot\}$ is the indicator function.) 
+Under the null  hypothesis that the two predictors have the same power at $\alpha$ ,
+ $Pr[\left(g_1g_2\right)=(TF)]=Pr[\left(g_1g_2\right)=(FT)]$, so $\sum_l{I \{e_{TF}^{(l)}>e_{FT}^{(l)}\}}$ will be distributed according to  the binomial distribution, $\mathcal{B}(nmc,0.5)$. ($I\{\cdot\}$ is the indicator function.) 
 
 % For each Monte Carlo replicate, the p-value of McNemar's test was computed separately.
 
 \begin{comment}
 \begin{figure}
 \begin{tabular}{p{4.7cm}p{4.7cm}}
-$e_{00}$:Misclassified by \newline Both C1 and C2 & $e_{10}$:Correctly Classified by C1,\newline Misclassified by C2\\
+$e_{00}$:Misclassified by \newline Both $C_1$ and $C_2$ & $e_{10}$:Correctly Classified by $C_1$,\newline Misclassified by $C_2$\\
 & \\
-$e_{01}$:Correctly Classified by C1, \newline Misclassified by C2 & $e_{11}$:Correctly Classified by \newline Both C1 and C2
+$e_{01}$:Correctly Classified by $C_1$, \newline Misclassified by $C_2$ & $e_{11}$:Correctly Classified by \newline Both $C_1$ and $C_2$
 \end{tabular}. 
 
-\caption{Contingency Table for McNemar's test for comparing two classifiers, C1 and C2}
+\caption{Contingency Table for McNemar's test for comparing two classifiers, $C_1$ and $C_2$}
 \label{fig:cont-table}
 \end{figure}
 \end{comment}
@@ -982,9 +1007,6 @@ For the noisy version of the Gaussian setting at allowable type I error 0.05 for
 
 
 
-
-
-Setting p and q to 5 and 10, respectively, for $n=150$ and $m=150$, the average of the power values for $nmc=150$ Monte Carlo replicates are computed at  different $\alpha$s and are plotted in Figure \ref{fig:MVN-c001-ROC} against $\alpha$ for the Gaussian setting.  Qualititatively similar plots for the Dirichlet setting  exist.  The plot in Figure \ref{fig:MVN-c001-ROC} shows that for different values of  $w$, we have varying power curves, and some $w$ values outperform others in terms of power. In Figure \ref{fig:MVN-c001-beta-w},  $\beta(w)$ is plotted against $w$ for fixed values of $\alpha$. It is  interesting that the optimal value of $w$ seems to be in the range of $(0.85,1)$ for all settings, which suggests commensurability might be more critical for our hypothesis testing task. 
 
 
 \begin{comment}
@@ -1237,37 +1259,12 @@ The alternative was chosen as $ H_{A1}$ and SUMCOR was chosen as the generalizat
 
  
 
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
-\begin{verbatim}
-## Warning message: cannot open file './src/runningParams.R': No such file or directory
-## Error: cannot open the connection
-\end{verbatim}
-\end{kframe}
-\end{knitrout}
-
-
-
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
-\begin{verbatim}
-## Warning message: cannot open file './logs/debug.trymsg.txt': No such file or directory
-## Error: cannot open the connection
-## Warning message: cannot open file './src/GaussianSimFidCommTradeoffMain_Kcond.R': No such file or directory
-## Error: cannot open the connection
-## Error: could not find function "sfStop"
-\end{verbatim}
-\end{kframe}
-\end{knitrout}
-
-
-
 
 
 \begin{figure}
 \includegraphics[scale=0.95]{OOSMVN-power-w-c0-01-3-cond.pdf}
 \caption{Power ($\beta$) vs Type I error ($\alpha$) plot for different $w$ values for the Gaussian setting (noisy case)}
-\label{fig:MVN-c001-ROC-Kcond}
+\label{fig:MVN-c001-power-w-Kcond}
 \end{figure}
 
 \section{Experiments on Wiki Data}
@@ -1295,19 +1292,7 @@ Target dimensionality d is determined by the Zhu and Ghodsi  automatic dimension
 method \cite{ZhuGhodsi}, resulting in d = 6 for this data set.
 
 
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
-\begin{verbatim}
-## Error: object 'N' not found
-## Error: object 'TE' not found
-## Error: object 'TF' not found
-## Error: could not find function "sfInit"
-## Error: object 'N' not found
-## Error: object 'JOFC.wiki.res' not found
-## Error: could not find function "sfStop"
-\end{verbatim}
-\end{kframe}
-\end{knitrout}
+
 
 
 \begin{knitrout}
@@ -1321,102 +1306,8 @@ For the simulations presented up to now, the embedding dimension $d$ was set to 
 However we require  more care in selection of this parameter, since it plays such a big role in performance in general learning settings. Specifically, we want to consider the effect of this parameter on Fidelity and Commensurability.
 First consider the distribution of the test statistic for different values of the embedding dimension in the Gaussian setting.
 
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
-\begin{verbatim}
-## Loading project configuration
-## Error: You are missing a configuration file: config/global.dcf
-## Warning message: cannot open file './src/Null.Alt.Stat.for.JOFC.R': No such file or directory
-## Error: cannot open the connection
-## Error: object 'params' not found
-## Error: object 'params' not found
-## Error: object 'params.list' not found
-## Error: could not find function "compute.stats.for.params"
-## Error: object 'oos.stats.d' not found
-## Error: object 'oos.stats.d' not found
-## Error: could not find function "sfStop"
-\end{verbatim}
-\end{kframe}
-\end{knitrout}
-
-
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
-\begin{verbatim}
-## Error: object 'oos.diss.all.params.d.0' not found
-## Error: error in evaluating the argument 'x' in selecting a method for function 'plot': Error: object 'first.est' not found
-## 
-## Error: object 'oos.diss.all.params.d.0' not found
-## Error: object 'oos.diss.all.params.d.A' not found
-## Error: object 'first.est.a' not found
-## Error: object 'oos.diss.all.params.d.A' not found
-## Error: plot.new has not been called yet
-## Error: plot.new has not been called yet
-\end{verbatim}
-\end{kframe}
-\end{knitrout}
 
 The plot here shows the effect of $d$ on Fidelity and Commensurability errors.
-
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
-\begin{verbatim}
-## Warning message: cannot open file './src/runningParams.R': No such file or directory
-## Error: cannot open the connection
-## Error: object 'params' not found
-## Warning message: cannot open file './src/GaussianSimFidCommTradeoffMain.R': No such file or directory
-## Error: cannot open the connection
-\end{verbatim}
-\end{kframe}
-\end{knitrout}
-
-
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
-\begin{verbatim}
-## Error: object 'n.vals' not found
-## Error: object 'params' not found
-## Error: object 'params' not found
-## Error: object 'params.df' not found
-## Warning message: cannot open file './logs/debug-fidcomm.txt': No such file or directory
-## Error: cannot open the connection
-## Error: object 'Fid1' not found
-## [1] "Fid1" "Fid2" "Comm"
-## Error: object 'Fid1' not found
-## Error: object 'run.in.linux' not found
-## Error: object 'Fid1' not found
-## Error: object 'Fid2' not found
-## Error: object 'Comm' not found
-## Error: object 'c.val' not found
-## Error: object 'run.in.linux' not found
-## Error: object 'run.in.linux' not found
-## Error: object 'run.in.linux' not found
-\end{verbatim}
-\end{kframe}
-\end{knitrout}
-
-
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
-\begin{verbatim}
-## Error: object 'params.df' not found
-## Error: object 'params' not found
-## Error: error in evaluating the argument 'y' in selecting a method for function 'plot': Error: object 'avg.Fid1.alt.G' not found
-## 
-\end{verbatim}
-\end{kframe}
-\end{knitrout}
-
-
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
-\begin{verbatim}
-## Error: error in evaluating the argument 'y' in selecting a method for function 'plot': Error: object 'avg.FCratios.List.G' not found
-## 
-\end{verbatim}
-\end{kframe}
-\end{knitrout}
-
 
 
 \begin{comment}
@@ -1430,29 +1321,11 @@ The plot here shows the effect of $d$ on Fidelity and Commensurability errors.
 
 The following plot of ROC curves\cite{d-ROC} shows the effect of $d$ parameter on the performance of different methods for the Gaussian setting. 
 
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
-\begin{verbatim}
-## Error: object 'params' not found
-## Error: object 'params' not found
-## Error: object 'params.df' not found
-## Error: object 'power.vals.g' not found
-## Error: plot.new has not been called yet
-\end{verbatim}
-\end{kframe}
-\end{knitrout}
 
 
 This plot shows the histogram of the estimates of $ w^{*} $ (each estimate comes from a single MC replicate)  
 for different $ d $ values.
 
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
-\begin{verbatim}
-## Error: object 'best.w.g.list.param.i' not found
-\end{verbatim}
-\end{kframe}
-\end{knitrout}
 
 
 
@@ -1517,19 +1390,9 @@ In our experiments we will use three different dissimilarities between vertices 
   The probability of flipping an entry of the adjacency matrix is the perturbation parameter $p_{pert}$ which is the variable on the x-axis. 
   The performance measure is the proportion of true matches to the number of matches. Note that 
   under chance the expected number of true matches is 1, as shown with the dashed line. In the simulation, $r=20$ and $s=5$. $p_{pert}$ varies from $0$ to $1$ in increments of $0.1$. 
-  
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
-\begin{verbatim}
-## Error: could not find function "graph.adjacency"
-## Error: could not find function "shortest.paths"
-## Error: could not find function "graph.adjacency"
-\end{verbatim}
-\end{kframe}
-\end{knitrout}
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\includegraphics{graphs/FidCommPapergraph-plot-1} 
-\end{knitrout}
+\begin{figure}
+  \includegraphics[scale=0.65]{FidCommPapergraph-plot-1.pdf}
+\end{figure}
 
 
 In the plot above, JOFC approach applied to  dissimilarities based on weighted and unweighted graphs is compared with classical MDS on dissimilarities of weighted graphs.
@@ -1539,46 +1402,6 @@ Note that JOFC for unweighted and weighted graphs  have better performance compa
 Another feature of the plot is the U-shape of the curve for diffusion-distance based dissimilarities. This invariancy with respect to complement of the graph should be investigated further.
 
   
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
-\begin{verbatim}
-## Error: could not find function "graph.adjacency"
-## Error: could not find function "shortest.paths"
-## Error: could not find function "graph.adjacency"
-\end{verbatim}
-\end{kframe}
-\end{knitrout}
-
-
-This graph shows the effect of embedding dimension $d$ on the probability of true matches.
-
-%<<graph-plot-2, echo=FALSE,fig=TRUE,results=hide,cache=FALSE >>=
-%
-%colors.vec<-c( "red","blue","orange","green","purple")
-%
-%colors.vec<-colors.vec[1:length(d.dim.vec)]
-%plot(pert,apply(nc.jofc.diff.d[,,1],1,mean)/(n-m),xlab="perturbation parameter",ylab="Fraction of  correct matches",ylim=c(0,1),col=colors.vec[1])
-%for (d.i in 2:length(d.dim.vec)){
-%	points(pert,apply(nc.jofc.diff.d[,,d.i],1,mean)/(n-m),xlab="perturbation parameter",ylab="Fraction of  correct matches",ylim=c(0,1),pch=1,col=colors.vec[d.i])
-%}
-%for (d.i in 1:length(d.dim.vec)){
-%	points(pert,apply(nc.cmds.d[,,d.i],1,mean)/(n-m),xlab="perturbation parameter",ylab="Fraction of  correct matches",ylim=c(0,1),pch=2,col=colors.vec[d.i])
-%}
-%for (d.i in 1:length(d.dim.vec)){
-%	points(pert,apply(nc.jofc.weighted.d[,,d.i],1,mean)/(n-m),xlab="perturbation parameter",ylab="Fraction of  correct matches",ylim=c(0,1),pch=3,col=colors.vec[d.i])
-%}
-%for (d.i in 1:length(d.dim.vec)){
-%	points(pert,apply(nc.jofc.unweighted.d[,,d.i],1,mean)/(n-m),xlab="perturbation parameter",ylab="Fraction of  correct matches",ylim=c(0,1),pch=4,col=colors.vec[d.i])
-%}
-%legend.txt<- c("diff dist","CMDS","weighted.graph","unweighted.graph")
-%legend.txt <- c(legend.txt,d.dim.vec)
-%legend(x="topright",legend=legend.txt, 
-%		col =c(rep(1,4),colors.vec),pch=c(1:4,rep(1,length(d.dim.vec))))
-%title("1-1 Matching Performance of JOFC embedding followed by Hung. algo.")
-%abline(h=1/(n-m),lty=2) ### chance?  apparently not!?
-%abline(v=1/2,lty=2) ### chance?  gotta be!?
-%@
-
 
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\includegraphics{graphs/FidCommPapergraph-plot-3} 
@@ -1593,16 +1416,6 @@ The dissimilarity type that has the best improvement in performance is JOFC with
 
 
 
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
-\begin{verbatim}
-## Error: could not find function "graph.adjacency"
-## Error: could not find function "shortest.paths"
-## Error: could not find function "graph.adjacency"
-\end{verbatim}
-\end{kframe}
-\end{knitrout}
-
 This graph shows the effect of the weight parameter of stress $w$ on the probability of true matches.
 
 \begin{knitrout}
@@ -1612,23 +1425,6 @@ This graph shows the effect of the weight parameter of stress $w$ on the probabi
 
 
 This graph shows the effect of the diffusion distance parameter $T$ on the probability of true matches for dissimilarities based on diffusion distance.
-
-
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
-\begin{verbatim}
-## Error: could not find function "graph.adjacency"
-## Error: could not find function "shortest.paths"
-## Error: could not find function "graph.adjacency"
-\end{verbatim}
-\end{kframe}
-\end{knitrout}
-
-
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\includegraphics{graphs/FidCommPapergraph-plot-5} 
-\end{knitrout}
-
 
 
 

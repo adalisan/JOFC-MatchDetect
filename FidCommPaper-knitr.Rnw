@@ -590,7 +590,7 @@ X_{2u}
 \end {array}
 \right]\right)$ as two matrix-valued random variables $\Delta_{m}:\Omega \rightarrow \mathbf{M}_{n\times n} $,$\Delta_{u}:\Omega \rightarrow \mathbf{M}_{n\times n} $  for the probability space $(\Omega,\mathcal{B},\mu)$.
 
- The criterion function for the embedding is $\sigma_W(\cdot) =f_w(D({\cdot}),\Delta)$. The embedding for the unmatched pair ${\hat{X}_{1u},\hat{X}_{2u}}$  is 
+ The criterion function for the embedding is $\sigma_W(\cdot) =f_w(D({\cdot}),\Delta)$. All of the random variables following the embedding is dependent on $w$, for the sake of simplicity, it will not be shown in the notation. The embedding for the unmatched pair ${\hat{X}_{1u},\hat{X}_{2u}}$  is 
  \[
 {\hat{X}_{1u},\hat{X}_{2u}}
 =\argmin_{\acute{X}_{1u}, \acute{X}_{2u}}\left[\min_{\mathbf{\acute{T}}}
@@ -628,14 +628,16 @@ D\left(
 \right]$.
  Assuming these minima exist and are unique, the mappings $\hat{X}_{1m}:\omega\rightarrow \mathbf{R}^{d'}$,  $\hat{X}_{2m}:\omega\rightarrow \mathbf{R}^{d'}$ , $\hat{X}_{1u}:\omega\rightarrow \mathbf{R}^{d'}$, 
 $\hat{X}_{2u}:\omega\rightarrow \mathbf{R}^{d'}$ are  measurable maps,  $\hat{X}_{1m}$ , $\hat{X}_{2m}$ , $\hat{X}_{1u}$, $\hat{X}_{2u}$ are random vectors. 
-Define $F_Y$ as the   cumulative distribution function of  $Y$ where $Y$ can be  any function of $\hat{X}_m$ or $\hat{X}_u$.
+
+Consider the test statistic $\tau=d(\hat{X}_{1.},\hat{X}_{2.})$. Under null hypothesis of matchedness, the distribution of the statistic is governed by the distribution of $\hat{X}_{.m}$, under the alternative it is governed by  $\hat{X}_{.u}$.
+
+Denote by $F_Y$ the   cumulative distribution function of  $Y$ where $Y$ can be  any function of $\hat{X}_m$ or $\hat{X}_u$. 
 
 
 
+ Then $$\beta_{\alpha}\left( w\right)=1-F_{d(\hat{X}_{1u},\hat{X}_{2u})}(F_{d(\hat{X}_{1m},\hat{X}_{2m})}^{-1}(1-\alpha)).$$ 
 
- Then $$\beta_{\alpha}\left( w\right)=1-F_{d(\hat{X}_{1u},\hat{X}_{2u})}(F_{d(\hat{X}_{1m},\hat{X}_{2m})}^{-1}(1-\alpha)).$$
-
- Finally, define $$w^{*}=argmax_w{\beta_{\alpha}\left( w\right)}. $$
+ Note that all random variables are dependent on $w$. Finally, define $$w^{*}=argmax_w{\beta_{\alpha}\left( w\right)}. $$
 
 
 Even for  given $\mathbf{F}_u,\mathbf{F}_m$,   $w^*$ must be defined with respect to the value of allowable type I error rate $\alpha$.  For two different $\alpha$ values, it is quite possible that $\beta_{\alpha_1}(w_1)>\beta_{\alpha_1}(w_2)$  and $\beta_{\alpha_2}(w_1)<\beta_{\alpha_2}(w_2)$. This can be observed in results in Section \ref{sec:Simulation Results}.  
@@ -664,7 +666,7 @@ To prove differentiability of $\beta_{\alpha}\left( w\right)$ , we refer to Theo
 
  
 \subsection{Continuity of $\beta(w)$} 
- Consider $\beta(w)$ as a stochastic process whose sample path is  a function of $w$ where the randomness comes from $\Delta_{m}$, $\Delta_{u}$ and $\mathcal{T}$ .  As a surrogate, we will make use of the area under the curve measure: $AUC(w)=P\left[T_a(w)>T_0(w)\right]$ where $T_a(w)$ and $T_0(w)$ can also be regarded as  stochastic processes whose sample paths are continuous functions of $w$ except finite number of points in $(0,1)$. By  assuming stochastic continuity of $T_a(w)$ and $T_0(w)$ in the interval $(0,1)$, ie assuming the probability of a jump discontinuity of $T_0(w)$ at a particular $w_0$ is 0, we will prove the continuity of $AUC(w)$.
+   Consider $\beta(w)$ as a stochastic process whose sample path is  a function of $w$ where the randomness comes from $\Delta_{m}$, $\Delta_{u}$ and $\mathcal{T}$.  As a surrogate to $\beta(w)$, the area under the curve measure will be shown to be continuous: $AUC(w)=P\left[T_a(w)>T_0(w)\right]$ where $T_a(w)$ and $T_0(w)$ can also be regarded as  stochastic processes whose sample paths are continuous functions of $w$ except finite number of points in $(0,1)$. By  assuming stochastic continuity of $T_a(w)$ and $T_0(w)$ in the interval $(0,1)$, ie assuming the probability of a jump discontinuity of $T_0(w)$ at a particular $w_0$ is 0, we will prove the continuity of $AUC(w)$.
 
 Let $T(w)$ be  a stochastic process indexed by $w$ in continuous interval (0,1). Assume  the process is continuous in probability (stochastic continuity), ie.
 $$ \forall a  \lim_{\delta \rightarrow 0} Pr\left[\|T(w+\delta)-T(w) \|>a \right] \rightarrow 0$$
@@ -689,7 +691,6 @@ For the theorem to hold, a uniform bound on the derivatives with respect to $w$.
 One of the important questions to be explored is   the uniqueness of  $w^*$.   The first step in answering this question is to determine whether $\beta(w)$ is multimodal. In the two settings we described,   $\beta(w)$ seems to have one maxima that is $\in (0,1)$.
 \end{comment}
  
-\subsection{Continuity of $\beta(w)$} 
 \begin{comment}
 First, note that  $\beta(w)$ is continuous with respect to $w$ and locally convex  with respect to embedding coordinates $\hat{X}_{.}$
 \end{comment}
@@ -698,7 +699,7 @@ First, note that  $\beta(w)$ is continuous with respect to $w$ and locally conve
 
 Note that it is possible to have multiple local minima in the embedding step(see example in \cite{TrossetLocalMin}). We will construct an example  where $w$ controls which of the local minima is the global minimum among the configurations of $\hat{X}_{.}$.
  
-Global Minimum Configuration determined by $w$ .
+%Global Minimum Configuration determined by $w$ .
 
 Consider five in-sample points in $\mathbb{R}^2$ with locations $X_1=(0,0)$, $X_2=(1,0)$, $X_3=(1,1)$
  and $X_4=(1,0)$, $X_5=(.5,.5)$ and two out-of-sample  points with coordinates $X_6=(1,0)$ and $X_7=(0,1)$.
@@ -711,7 +712,8 @@ Consider five in-sample points in $\mathbb{R}^2$ with locations $X_1=(0,0)$, $X_
   our dissimilarity matrix is $$D'_{ij}=\begin{cases}
   D_ij-1.4 & \textrm{if  $(i,j) \in \{(4,6),(6,4),(2,7),(7,2)   \}$ }\\
   D_ij  & \textrm{ otherwise}\\
-  \end{cases}.$$ Qualitatively, the three points $X_1$, $X_7$ and $X_3$ form a barrier which   the OOS points need to cross  to reach their matched counterparts.
+  \end{cases}.$$ 
+Qualitatively, the three points $X_1$, $X_7$ and $X_3$ form a barrier which   the OOS points need to cross  to reach their matched counterparts.
    
    Based on the initial configuration, the  embedding coordinates of $\hat{X}_6$ might be closer
     to $X_4$ compared to $X_2$. This is due to a local minimum in the configuration space.  If $\hat{X}_6$ starts from the initial configuration where it's located on the $X_4$ side of the y=x line at the start of optimization, 
@@ -817,8 +819,8 @@ By the continuity of the distance function with respect to configurations, the t
 \section{Simulation Results\label{sec:Simulation Results}}
 To compare the  different approaches, training data of matched sets of measurements were generated according to the Dirichlet and Gaussian settings. Dissimilarity representations were generated from pairwise distances of measurements. A set of matched pairs of measurements and unmatched pairs of measurements were also generated for testing. The test statistics (computed via P$\circ $M, CCA and JOFC approaches) for matched and unmatched pairs were used to compute power values at a set of fixed type I error rate $\alpha$ values.
 
- Additionally, to take robustness of methods into consideration, ``noisy" measurements were created from the original measurements by concatenating randomly generated independent noise vectors (subsection \ref{noise}).   This setting will be referred to as the ``noisy case". The original setting, with $c=0$,  will be referred as the ``noiseless case".
-If the magnitude of noise (controlled by the parameter $c$ in equation \eqref{eq:noise-expr}) is small enough, PCA and MDS will not be affected significantly, but if the number of noisy dimensions (controlled by the parameter $q$ in the distribution of $E_{ik}$ as defined in equation \eqref{eq:noise-expr}) is large enough, CCA  will be affected due to spurious correlation between noisy dimensions.
+ Additionally, to take robustness of methods into consideration, ``noisy" measurements were created from the original measurements by concatenating randomly generated independent noise vectors (subsection \ref{noise}).   This setting will be referred to as the ``noisy case". The magnitude of noise is controlled by the parameter $c$ in equation \eqref{eq:noise-expr}). The original setting, with $c=0$,  will be referred as the ``noiseless case".
+If the magnitude of noise is small enough, and the embedding dimension is not larger than signal dimension, the embeddings provided by PCA and MDS will not be affected significantly. However  if the number of noisy dimensions (controlled by the parameter $q$ in the distribution of $E_{ik}$ as defined in equation \eqref{eq:noise-expr}) is large enough, embeddings via CCA  will be affected due to spurious correlation between noisy dimensions.
 
 Given the setting ("Gaussian","Dirichlet"),   the steps for each Monte Carlo replicate are as follows:
 \begin{itemize}
@@ -925,7 +927,7 @@ sfStop()
 \label{fig:MVN-c001-power-w}
 \end{figure}
 
-Setting p and q to 5 and 10, respectively, for $n=150$ and $m=150$, the average of the power values for $nmc=150$ Monte Carlo replicates are computed at  different $\alpha$s and are plotted in Figure \ref{fig:MVN-c001-ROC} against $\alpha$ for the Gaussian setting.  Qualititatively similar plots for the Dirichlet setting  exist.  The plot in Figure \ref{fig:MVN-c001-ROC} shows that for different values of  $w$, we have varying power curves, and some $w$ values outperform others in terms of power. In Figure \ref{fig:MVN-c001-beta-w},  $\beta(w)$ is plotted against $w$ for fixed values of $\alpha$. It is  interesting that the optimal value of $w$ seems to be in the range of $(0.85,1)$ for all settings, which suggests commensurability might be more critical for our hypothesis testing task. 
+Setting p and q to 5 and 10, respectively, for $n=150$ and $m=150$, the average of the power values for $nmc=150$ Monte Carlo replicates are computed at  different $\alpha$s and are plotted in Figure \ref{fig:MVN-c001-ROC} against $\alpha$ for the Gaussian setting.  Qualititatively similar plots for the Dirichlet setting  are not included for brevity.  The plot in Figure \ref{fig:MVN-c001-ROC} shows that for different values of  $w$, $\beta$-$\alpha$ curves vary significantly.  The match detection tests with JOFC embedding with specific $w$ values have better perform others in terms of power. In Figure \ref{fig:MVN-c001-beta-w},  $\beta(w)$ is plotted against $w$ for fixed values of $\alpha$. It is  interesting that the optimal value of $w$ seems to be in the range of $(0.85,1)$ for all settings, which suggests  a significant emphasis on commensurability might be  critical for our hypothesis testing task. 
 
 
 
@@ -964,8 +966,10 @@ Note that in Figure \ref{fig:MVN-c001-beta-w} for $\alpha=0.05$, $\beta_{\alpha=
 
 Note that  for all of the settings, the estimate of the optimal $w^{*}$ has  higher power than $w$=0.5 (the unweighted case).
 To test the statistical significance of this observation, we wish to test the null hypothesis that  $H_{0}: \beta_{\alpha}({\hat{w}^*})\leq\beta_{\alpha}({w=0.5})$ against the alternative $H_{A}=\beta_{\alpha}({\hat{w}^*})>\beta_{\alpha}({w=0.5})$.  The least favorable null hypothesis is that  $H_{0}: \beta_{\alpha}({\hat{w}^*})=\beta_{\alpha}({w=0.5})$.
+Using previous notation,  the test statistic will be denoted by $T_a(w)$ under the alternative hypothesis and $T_0(w)$ under the null hypothesis.
 
-For a fixed $\alpha$ value, one can compute two critical values  using the test statistic values for the two $w$ values that are being compared. Using these critical  values, we can  determine the decision made by each test for each pair of embedded points, $(\tilde{y}_i^{(1)},\tilde{y}_i^{(2)}),\hspace{7pt}i=1,\ldots,m$. To compare the  two statistical tests with different $w$ values, one can prepare a $2\times 2$ contingency-table of correct decisions and incorrect decisions made by each statistical test (or equivalently true and false classifications made by two classifiers). Denote decision outcome as $c_1$ for the first statistical test and $c_2$ for the second statistical test. If $c_1=True$ and $c_2=False$ for an instance,  the first test made the correct decision and the second test made the incorrect decision with regard to the null and alternative hypotheses.
+McNemar's test will be used to compare the two predictors with $w$=0.5 and $w$=w^* at a fixed $\alpha$ value.
+For a fixed $\alpha$ value, one can compute two critical values $c(w_1)=max_l \{  P(T_0(w_1)>c)<\alpha\}$,  $c(w_2)=max_l \{  P(T_0(w_2)>c)<\alpha\}$ using the test statistic values for the two $w$ values that are being compared. Using these critical  values, we can  determine the decision made by each test for each pair of embedded points, $(\tilde{y}_i^{(1)},\tilde{y}_i^{(2)}),\hspace{7pt}i=1,\ldots,m$. To compare the  two statistical tests with different $w$ values, one can prepare a $2\times 2$ contingency-table of correct decisions and incorrect decisions made by each statistical test (or equivalently true and false classifications made by two classifiers). Denote decision outcome as $c_1$ for the first statistical test and $c_2$ for the second statistical test. If $c_1=True$ and $c_2=False$ for an instance,  the first test made the correct decision and the second test made the incorrect decision with regard to the null and alternative hypotheses.
 % McNemar's test was used to compare the two contingency tables for fixed $\alpha$. McNemar's test is a statistical test for %comparing two binary classifiers based on a 2-by-2 table of the counts of misclassifications of each. That is,
 Consider the contingency table for a Monte Carlo replicate given by $$G^{(l)}= \begin{array}{|c|c|}
       \hline
@@ -975,7 +979,8 @@ Consider the contingency table for a Monte Carlo replicate given by $$G^{(l)}= \
       \hline
       \end{array}      $$  where $l$ is the index of the MC replicate, $e_{c_1c_2}^{(l)}$ is equal to the number of instances at which the true hypothesis were identified  correctly ($c_1=True$) or incorrectly ($c_1=False$) by the first test, and correctly ($c_2=True$) or incorrectly ($c_2=False$) by the second test in that MC replicate.
 
-Under the null  hypothesis, $Pr[\left(c_1c_2\right)=(TF)]=Pr[\left(c_1c_2\right)=(FT)]$, so $\sum_l{I \{e_{TF}^{(l)}>e_{FT}^{(l)}\}}$ will be distributed according to  the binomial distribution, $\mathcal{B}(nmc,0.5)$. ($I\{\cdot\}$ is the indicator function.) 
+Under the null  hypothesis,
+ $Pr[\left(c_1c_2\right)=(TF)]=Pr[\left(c_1c_2\right)=(FT)]$, so $\sum_l{I \{e_{TF}^{(l)}>e_{FT}^{(l)}\}}$ will be distributed according to  the binomial distribution, $\mathcal{B}(nmc,0.5)$. ($I\{\cdot\}$ is the indicator function.) 
 
 % For each Monte Carlo replicate, the p-value of McNemar's test was computed separately.
 
@@ -998,9 +1003,6 @@ For the noisy version of the Gaussian setting at allowable type I error 0.05 for
 
 
 
-
-
-Setting p and q to 5 and 10, respectively, for $n=150$ and $m=150$, the average of the power values for $nmc=150$ Monte Carlo replicates are computed at  different $\alpha$s and are plotted in Figure \ref{fig:MVN-c001-ROC} against $\alpha$ for the Gaussian setting.  Qualititatively similar plots for the Dirichlet setting  exist.  The plot in Figure \ref{fig:MVN-c001-ROC} shows that for different values of  $w$, we have varying power curves, and some $w$ values outperform others in terms of power. In Figure \ref{fig:MVN-c001-beta-w},  $\beta(w)$ is plotted against $w$ for fixed values of $\alpha$. It is  interesting that the optimal value of $w$ seems to be in the range of $(0.85,1)$ for all settings, which suggests commensurability might be more critical for our hypothesis testing task. 
 
 
 \begin{comment}

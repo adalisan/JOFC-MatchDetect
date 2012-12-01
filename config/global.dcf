@@ -1,8 +1,9 @@
-data_loading: on
-munging: on
+data_loading: off
+munging: off
 logging: on
 load_libraries: on
 libraries: MASS,MCMCpack,exact2x2,abind,log4r,mclust,VGAM,moments,gdata,klaR,smacof,snowfall,dmt,igraph,xtable,ggplot2,animation
 as_factors: on
 data_tables: off
 run_sims_in_parallel: on
+cache_loading: off

@@ -3,6 +3,9 @@
 # Author: Sancar
 ###############################################################################
 
+debug.mode<-F
+run.for.Sweave<-F
+
 
 if (!run.for.Sweave){
 	source("./src/runningParams.R")
@@ -14,19 +17,30 @@ if (par.compute){
 	if (par.compute.sf){
 		
 	} else{
-		if( run.in.linux) {
-			require(doMC)
-			require(foreach)
-			registerDoMC(parallel::detectCores())
-			
-		}
-		else {
-			require(doSMP)	
-			require(foreach)
-			#	setMKLthreads(1)
-			workers<-startWorkers(4,FORCE=TRUE)
-			registerDoSMP(workers)
-		}
+    
+	  
+	  num.cores<-parallel::detectCores()
+	  iter_per_core <- ceiling(num_iter/num.cores)
+	  require(foreach)
+	  
+	  
+	  if (.Platform$OS.type != "windows" && require("multicore")) {
+	    require(doMC)
+	    registerDoMC(parallel::detectCores())
+	  } else if (FALSE &&                     # doSMP is buggy
+	    require("doSMP")) {
+	    workers <- startWorkers(num.cores,FORCE=TRUE) # My computer has 4 cores
+	    on.exit(stopWorkers(w), add = TRUE)
+	    registerDoSMP(w)
+	  } else if (require("doSNOW")) {
+	    cl <- snow::makeCluster(num.cores, type = "SOCK")
+	    on.exit(snow::stopCluster(cl), add = TRUE)
+	    registerDoSNOW(cl)
+	  } else {
+	    registerDoSEQ()
+	  }
+    
+	
 	}
 }
 
@@ -94,6 +108,13 @@ args.for.func.call<-with(params,list(p=p, r=r, q=q, c.val=c.val,d=d,
 if (!par.compute.sf)
 	args.for.func.call<- c(args.for.func.call,list(pprime1= real.dim, pprime2= real.dim))
 
+
+
+
+
+bootstrap.res <- with(params, do.call(test.bootstrapped.JOFC,args=c(list(model="gaussian"),args.for.func.call)))
+
+
 ############################################
 #  Running simulation function 
 ############################################
@@ -108,7 +129,6 @@ save.image(file=paste(date(),".Rdata"))
 
 draw.plots<-function(sim.res,model,params){
 
-
 plot.title<-"Power Curves for Match Testing: JOFC vs Others"
 #
 # Plotting of ROC curves
@@ -116,7 +136,8 @@ plot.title<-"Power Curves for Match Testing: JOFC vs Others"
 sim.res.pow<-sim.res$power
 w.val.len <-length(params$w.vals)
 source("./src/color-setting.R")
-
+colors.vec[10]<-"black"
+linewd<-3
 lty.i.vec<-c()
 for (i in 1:w.val.len){
 	lty.i <- 1+((i-1)%%10)
@@ -124,7 +145,7 @@ for (i in 1:w.val.len){
 	lty.i.vec <- c(lty.i.vec,lty.i)
 	par(lty=lty.i)
 	plot.ROC.with.CI(sim.res.pow[i,,],plot.title="",plot.col = colors.vec[i],
-			conf.int=FALSE,add=(i>1),ylim=1)
+			conf.int=FALSE,add=(i>1),ylim=1,linewd=linewd)
 	
 }
 
@@ -132,18 +153,18 @@ if (compare.pom.cca) {
 	i<- 1+((w.val.len)%%10)
 	par(lty=i)
 	plot.ROC.with.CI(sim.res$power.cmp$pom,plot.title="",plot.col = colors.vec[w.val.len+1],
-			conf.int=FALSE,add=TRUE,ylim=1)
+			conf.int=FALSE,add=TRUE,ylim=1,linewd=linewd)
 	lty.i.vec <- c(lty.i.vec,i)			
-	i<- 1+((w.val.len+1)%%10)
+	i<- 1+((w.val.len)%%10)
 	par(lty=i)
 	plot.ROC.with.CI(sim.res$power.cmp$cca,plot.title="",plot.col = colors.vec[w.val.len+2],
-			conf.int=FALSE,add=TRUE,ylim=1)
+			conf.int=FALSE,add=TRUE,ylim=1,linewd=linewd)
 	lty.i.vec <- c(lty.i.vec,i)	
 	if (cca.reg){
 		i<- 1+((w.val.len+2)%%10)
 		par(lty=i) 
 		plot.ROC.with.CI(sim.res$power.cmp$reg.cca,plot.title="",plot.col = colors.vec[w.val.len+3],
-				conf.int=FALSE,add=TRUE,ylim=1)
+				conf.int=FALSE,add=TRUE,ylim=1,linewd=linewd)
 		lty.i.vec <- c(lty.i.vec,i)	
 		#lwd.i.vec <- c(lwd.i.vec,line.width)
 	}
@@ -166,7 +187,7 @@ if (cca.reg)
 if (compute.bound) {legend.txt <-c(legend.txt ,"bound")}
 
 legend("bottomright",legend=legend.txt,
-		col=colors.vec,lty=lty.i.vec)
+		col=colors.vec,lty=lty.i.vec,lwd=linewd)
 title(plot.title)
 par(lty=1)
 fname<- file.path('graphs',paste(c(model,"-FC-Tradeoff-",ifelse(oos,"OOS","noOOS"),"c",c.val),collapse=""))
@@ -258,13 +279,6 @@ dev.off()
 
 
 }
-
-
-
-
-
-
-
 
 
 
