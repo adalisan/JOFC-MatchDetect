@@ -140,7 +140,7 @@ Baltimore, MD 21218-2682}
 
 \begin{document}
 \maketitle
-\abstract{For matched data from disparate sources (objects observed under different conditions), optimality of information fusion must be defined with respect to the inference task at hand. Defining the task as matched/unmatched hypothesis testing for dissimilarity observations, the forthcoming Manifold Matching paper by Priebe et al.~\cite{JOFC} presents an embedding method based on joint optimization of fidelity (preservation of within-condition dissimilarities between observations of an object) and commensurability (preservation of between-condition dissimilarities between observations) . We investigate the tradeoff between fidelity and commensurability by varying weights in weighted embedding of an omnibus dissimilarity matrix. Optimal (defined with respect to the power of the test) weights for the optimization correspond to an optimal compromise between fidelity and commensurability. The two extremes of this tradeoff are commensurability optimization prioritized over fidelity optimization and vice versa. Results indicate optimal weights are different than equal weights for commensurability and fidelity and our weighted embedding scheme provides significant improvements in test power.
+\abstract{For matched data from disparate sources (objects observed under different conditions), optimality of information fusion must be defined with respect to the inference task at hand. Defining the task as matched/unmatched hypothesis testing for dissimilarity observations, the forthcoming Manifold Matching paper by Priebe et al.~\cite{JOFC} presents an embedding method based on joint optimization of fidelity (preservation of within-condition dissimilarities between observations of an object) and commensurability (preservation of between-condition dissimilarities between observations) . The tradeoff between fidelity and commensurability is investigated by varying weights in weighted embedding of an omnibus dissimilarity matrix. Optimal (defined with respect to the power of the test) weights for the optimization correspond to an optimal compromise between fidelity and commensurability. The two extremes of this tradeoff are commensurability optimization prioritized over fidelity optimization and vice versa. Results indicate optimal weights are different than equal weights for commensurability and fidelity and the proposed weighted embedding scheme provides significant improvements in test power.
 }
 
 
@@ -152,25 +152,27 @@ Baltimore, MD 21218-2682}
  The typical multiple sensor setting is visualized in ~\ref{fig:fig1}.
 
 \begin{figure}
-\includegraphics[scale=0.35]{gen-model-orig-proj.pdf}
+\begin{center}
+\includegraphics[scale=0.25]{gen-model-orig-proj.pdf}
 \caption{Multiple Sensor setting}
 \label{fig:fig1}
+\end{center}
 \end{figure}
 
 
-We assume some objects lie in some "object`` space $\Xi$, and each sensor has another "view`` of the objects. The measurements recorded by the $i^{th}$ sensor lie in some "measurement space`` $\Xi_i$. The usual approach in pattern recognition is to use feature extractors on the spaces to get a feature representation in Euclidean space and use classical pattern recognition tools to carry out the exploitation task. The alternative approach is to acquire dissimilarities between the group of objects, and use the dissimilarities to either find an embedding in a low-dimensional Euclidean space where classic statistical tools are available for inference or use dissimilarity-based versions of pattern recognition tools~\cite{duin2005dissimilarity}. We will follow the embedding approach in a  low-dimensional Euclidean space where small number of dimensions allow us to avoid "curse of dimensionality``. We will require the embeddings of dissimilarities from  different conditions to be "commensurate`` so that sensor measurements can be compared or jointly used in inference. This is accomplished by maps $\rho_k,k=1,\ldots,K$ from measurement spaces $\Xi_k$ to a low-dimensional commensurate space $\mathcal{X}$ visualized in~\ref{fig:fig1}. Learning these maps from data is  an important portion of our approach.
+It is assumed some objects lie in some "object`` space $\Xi$, and each sensor has another "view`` of the objects. The measurements recorded by the $i^{th}$ sensor lie in some "measurement space`` $\Xi_i$. The usual approach in pattern recognition is to use feature extractors on the spaces to get a feature representation in Euclidean space and use classical pattern recognition tools to carry out the exploitation task. The alternative approach is to acquire dissimilarities between the group of objects, and use the dissimilarities to either find an embedding in a low-dimensional Euclidean space where classic statistical tools are available for inference or use dissimilarity-based versions of pattern recognition tools~\cite{duin2005dissimilarity}. The embedding approach in a  low-dimensional Euclidean space will be used where the small number of embedding dimension allow us to avoid "curse of dimensionality``. Also, the embeddings of dissimilarities from  different conditions will be required to be "commensurate`` so that sensor measurements can be compared or jointly used in inference. This is accomplished by maps $\rho_k,k=1,\ldots,K$ from measurement spaces $\Xi_k$ to a low-dimensional commensurate space $\mathcal{X}$ visualized in~\ref{fig:fig1}. Learning these maps from data is  an important portion of the proposed  approach.
 
 There are quite  a few real life cases, where the data is acquired or available exclusively in dissimilarity representation instead of feature representation~\cite{CMDS,borg+groenen:1997,duin2005dissimilarity}.
- Multidimensional scaling is the processing step used to find the feature representation equivalent of this kind of data, so that  statistial machine learning methods can be applied to the data. A specific variant of MDS will be used to get an embedding in  Euclidean Space. Multidimensional scaling computes a configuration of points that has interpoint distances as close as possible to the dissimilarities in dissimilarity representation. Different criterion functions can be used to measure how close the distances are  to the given dissimilarities, the optimization of which leads to different embedded configurations. Among these, we seek configurations that have  the merit of  as close as possible to (in some sense) optimal in terms of the exploitation task we are interested in. In this paper, hypothesis testing is our exploitation task, and  by "optimal'' we mean the one that leads to the  test with  the highest power. Consider the weighted raw-stress function:
+ Multidimensional scaling is the processing step used to find the feature representation equivalent of this kind of data, so that  statistial machine learning methods can be applied to the data. A specific variant of MDS will be used to get an embedding in  Euclidean Space. Multidimensional scaling computes a configuration of points that has interpoint distances as close as possible to the dissimilarities in dissimilarity representation. Different criterion functions can be used to measure how close the distances are  to the given dissimilarities, the optimization of which leads to different embedded configurations. Among these, configurations  that are  as close as possible to (in some sense) optimal for the exploitation task that is of interest are preferred. In this paper, hypothesis testing is the exploitation task being considered, and   the "optimal'' embedding  refers to  that leads to the  test with  the highest power. Consider the weighted raw-stress function:
 \begin{equation}
 \sigma_{W}(X)=\sum_{1\leq s\leq n;1\leq t\leq n} {w_{st}(d_{st}(X)-\delta_{st})^2  }\label{raw-stress}
 \end{equation}
- for an  $n \times p$ configuration matrix ($n$ points in $p$ dimensions)  $X$  where $d_{st}(X)$ is the Euclidean distance between $s^{th}$ and $t^{th}$ rows of $X$ and $w_{st}$ is the weight for $st^{th}$  squared difference.  We will refer to the $n \times n$  matrix representation of the weights and Euclidean distance as $W$ and $D(X)$, respectively. This   criterion function which will be minimized for embedding configurations is appropriate for our purpose of finding a tradeoff between two different criteria (namely the preservation of fidelity and commensurability).
+ for an  $n \times p$ configuration matrix ($n$ points in $p$ dimensions)  $X$  where $d_{st}(X)$ is the Euclidean distance between $s^{th}$ and $t^{th}$ rows of $X$ and $w_{st}$ is the weight for $st^{th}$  squared difference.  $n \times n$  matrix representation of the weights and Euclidean distance will be denoted by $W$ and $D(X)$  , respectively. This   criterion function which will be minimized for embedding configurations is appropriate for the purpose of finding a tradeoff between two different criteria (namely the preservation of fidelity and commensurability).
 
 
 
 
-Let us state the dissimilarity-representation version of a hypothesis testing problem:\\
+The dissimilarity-representation version of a hypothesis testing problem is stated as follows:\\
 $n$ different objects/instances are measured/judged under $K$ different conditions with (possibly notional) measurements $x_{ik}$ indexed by object and condition. Each of the measurements $x_{ik}$ lies in  the corresponding space $\Xi_k$. 
 \[  \begin{array}{cccc}
         & \Xi_1 & \cdots & \Xi_K\\
@@ -181,7 +183,7 @@ $n$ different objects/instances are measured/judged under $K$ different conditio
         Object ~ n & \bm{x}_{n1} & \sim \cdots \sim & \bm{x}_{nK}
       \end{array}      
 \]
-To each pair of measurements $x_{ik},x_{jk}$ in the same space, we can assign a dissimilarity value $\delta_{ijk}=\delta\{x_{ik},x_{jk}\}$, possibly dependent on the space $\Xi_k$. We assume the dissimilarities to be non-negative and  symmetric, and 0 for $\delta\{x_{ik},x_{ik}\}$  It is these  dissimilarities we utilize to do inference on the following exploitation task:
+To each pair of measurements $x_{ik},x_{jk}$ in the same space, a dissimilarity value $\delta_{ijk}=\delta\{x_{ik},x_{jk}\}$, can be assigned,  possibly dependent on the space $\Xi_k$. The dissimilarities are assumed to be non-negative and  symmetric, and 0 for $\delta\{x_{ik},x_{ik}\}$  It is these  dissimilarities we utilize to do inference on the following exploitation task:
 
  Given dissimilarities between  $K$ new measurements/observations($\bm{y}_{k};;k=1,\ldots,K$) and the previous 
 $n$ objects under $K$ conditions, we wish to test  $K$ measurements $\bm{y}_1,\ldots,\bm{y}_k,\ldots,\bm{y}_K ,\hspace{3pt} \bm{y}_k\in\Xi_k$,  that ``these measurements are from the same  object"  versus the alternative hypothesis that ``they are not  from the same  object"~\cite{JOFC}:
@@ -193,19 +195,19 @@ $n$ objects under $K$ conditions, we wish to test  $K$ measurements $\bm{y}_1,\l
  H_A: \exists i, j , 1\leq i < j \leq K :\bm{y}_{i} \nsim \bm{y}_{j}  
 \end{array}
 \]
-We can restate the null hypothesis as the case where the dissimilarities are ``matched" and the alternative as the case where they are not ``matched".
+ The null hypothesis can be restated as the case where the dissimilarities are ``matched" and the alternative as the case where they are not ``matched".
 
 Dissimilarities are in the form  of $n \times n$  dissimilarity matrices $\{\Delta_k;k=1,\ldots,K\}$ with entries $\{\delta_{ijk} ;  i=1,\ldots,n;\hspace{5pt} j=1,\ldots,n\}$  and a  vector (of length $nK$) of dissimilarities  $\mathbf{\Delta}^{new}=\{ \delta_{ik}^{new}; i=1,\ldots, n;\hspace{5pt} k=1,\ldots,K\}  $  where $\delta_{ik}^{new} $ is the dissimilarity  between  $x_{ik}$ and $y_k$
 
- Since dissimilarities are  measured between pairs of objects under the same condition,
- we have separate dissimilarity matrices , each consisting of dissimilarities between pairs of  measurements for a separate condition.
+ Since dissimilarities are  measured between pairs of objects under the same condition, they will be the entries in  
+ separate dissimilarity matrices , each matrix consisting of dissimilarities between pairs of  measurements for a separate condition.
  Due to the fact that data sources are ``disparate", it is not immediately obvious how  a dissimilarity between an object in one condition and another object in another condition  can be computed, or even defined.  In general, these between-condition between-object  similarities are not available. 
 
-We will assume the number of conditions,K=2 for the  simplicity of presentation. However, our approach is trivially generalizable  to K>2 and we will present our results for a setting where K=3.
+Throughout this paper , it will be assumed,  the number of conditions, $K$, is equal to $2$ for the  simplicity of presentation. However, the proposed JOFC approach is  generalizable  to $K>2$ and  simulation results for a data setting where $K=3$ will be presented.
 
 \section{``Matched" and ``Conditions" in data}
 
-What we mean by ``conditions" and ``matched" is dependent on the context of the  problem. Conditions could be different modalities of data, e.g., one condition could be  an image of an object, while the other condition could be a text description of the object. ``Matched", in general, means observations of the same object, or realizations of a common concept. Some specific examples include:
+ ``conditions" and ``matched" refer to concepts dependent on the context of the  problem. Conditions could be different modalities of data, e.g., one condition could be  an image of an object, while the other condition could be a text description of the object. ``Matched", in general, means observations of the same object, or realizations of a common concept. Some specific examples include:
 
   \begin{itemize}
     \item
@@ -217,17 +219,17 @@ The condition of a text document can be the language it is in and ``matched'' co
     \hspace*{0.1 in}-- indoor lighting vs outdoor lighting\\
     \hspace*{0.1 in}-- two cameras of different quality\\
     \hspace*{0.1 in}-- passport photos and airport surveillance photos.
-    \item We might be talking about objects in a single space with multiple dissimilarities, where dissimilarities are measured for different purposes, or judged by different people.
+    \item   objects in a single space with multiple dissimilarities each of which is considered a ``separate" condition, where dissimilarities may be judged by different people, or measured using separate sensors.
   \end{itemize}
 
 \section{Two  models for generating data}
-Here we propose two data models that illustrate our idea of matchedness.
+Here  two data models are proposed that illustrate the idea of matchedness.
 \subsection{Gaussian setting\label{subsec:GaussianSet}}
 	Let    $\Xi_1 = \mathbb{R}^{p}$ and $\Xi_2 = \mathbb{R}^{p}$.
   Let $\bm{\alpha}_i \sim^{iid} MVNormal(\bm{0},I_p)$ represent $n$ ``objects".  Let $X_{ik} \sim^{iid} MVNormal(\bm{\alpha_i},\Sigma)$ represent $K=2$ matched measurements (each under a different condition).
   $\Sigma$ is a positive-definite $p\times p$ matrix such that  $\max(\Lambda(\Sigma))=\frac{1}{r} $ where $\Sigma=U\Lambda(\Sigma)U'$  is the eigenvalue decomposition of $\Sigma$. See Figure~\ref{fig:Fig1}.
 
-The parameter $r$ controls the variability between ``matched" measurements. If $r$ is large, we expect the distance between matched measurements
+The parameter $r$ controls the variability between ``matched" measurements. If $r$ is large, it is expected that the distance between matched measurements
 $X_{i1}$ and $X_{i2}$ to be stochastically smaller than $X_{i1}$ and $X_{i'2}$ for $i \neq i'$ ; if r is small, then ``matched" is not informative in terms of similarity of measurements.
  Smaller $r$ will make the decision problem harder and will lead to higher rate of errors or tests with smaller power for fixed type I error rate $\alpha$.
   
@@ -254,7 +256,7 @@ Let $S^p=\{\bm{x}:\bm{x}\in\mathbb{R}^{(p+1)}, \sum_{l=1}^p{x_l}=1\}$ be the sta
   \end{figure}
 
 \subsection{Noise\label{noise}}
-Measurements $X_{ik}$ carry the signal that is relevant to our exploitation task. Noise dimensions can be introduced to  the measurements by concatenating a $q$-dimensional error vector whose magnitude is controlled by the parameter $c$. The noisy measurements will be  represented by the random vectors 
+Measurements $X_{ik}$ carry the signal that is relevant to the exploitation task. Noise dimensions can be introduced to  the measurements by concatenating a $q$-dimensional error vector whose magnitude is controlled by the parameter $c$. The noisy measurements will be  represented by the random vectors 
  \begin{equation}
 \breve{X}_{ik}=[(1-c)X_{ik}\hspace{5pt} cE_{ik}]\label{eq:noise-expr}
 \end{equation}
@@ -262,10 +264,10 @@ Measurements $X_{ik}$ carry the signal that is relevant to our exploitation task
   
 
 \section{Manifold Matching\label{sec:JOFC}}
-  Our approach can be summarized as  ``manifold matching", which is defined as simultaneous ``manifold learning" and ``manifold alignment" -- identifying embeddings of multiple disparate data sources into the same low-dimensional space where joint inference can be pursued. The inference task either requires the fusion of data from disparate sources( as in the test of matchedness) or gathers performance gains from the fusion. The assumption is that the data in each measurement space lie approximately in a low dimensional manifold. An effort is made to match the low-dimensional manifolds so that matched measurements from different conditions are as close as possible to each other.  The embeddings from the dissimilarities in the measurement spaces into the commensurate space are implicit mapping from the measurement space($\Xi_k$)  to the commensurate space( $\mathcal{X}$ in ~\ref{fig:fig1}). The learning problem involves estimating these maps(whether implicit as in the dissimilarity representation of multiple sensor measurements or explicit in the  feature representation setting)  from a training data of matched measurements.
+  The JOFC approach can be summarized as  ``manifold matching", which is defined as simultaneous ``manifold learning" and ``manifold alignment" -- identifying embeddings of multiple disparate data sources into the same low-dimensional space where joint inference can be pursued. The inference task either requires the fusion of data from disparate sources( as in the test of matchedness) or gathers performance gains from the fusion. The assumption is that the data in each measurement space lie approximately in a low dimensional manifold. An effort is made to match the low-dimensional manifolds so that matched measurements from different conditions are as close as possible to each other.  The embeddings from the dissimilarities in the measurement spaces into the commensurate space are implicit mapping from the measurement space($\Xi_k$)  to the commensurate space( $\mathcal{X}$ in ~\ref{fig:fig1}). The learning problem involves estimating these maps(whether implicit as in the dissimilarity representation of multiple sensor measurements or explicit in the  feature representation setting)  from a training data of matched measurements.
 
 
-We will assume  the commensurate space  $\mathcal{X}$  is  $\mathbb{R}^d$ where $d$ is pre-specified. The selection of $d$ -- model selection -- is  a task that requires much attention and is  beyond the scope of this article.
+It  will be assumed  the commensurate space  $\mathcal{X}$  is  $\mathbb{R}^d$ where $d$ is pre-specified. The selection of $d$ -- model selection -- is  a task that requires much attention and is  beyond the scope of this article.
 
 
 
@@ -278,9 +280,9 @@ M=  \left[ \begin{array}{cc}
         L^T  & \Delta_2 
      \end{array}  \right]     \label{omnibus} 
 \end{equation} where $L$ is a matrix of imputed entries. One way to impute $L$ is to set it to $\frac{\Delta_1+\Delta_2}{2}$. Another choice for imputation is introduced in \ref{sec:FidComm}: the diagonal of $L$ is set to 0, the rest of the entries are $NA$ and are ignored in the optimization of MDS criterion.  
-Using MDS to embed  this omnibus matrix into a  space  $\mathcal{X}$, we obtain $2n$ embedded observations $\{\tilde{y}_i^{(k)}; i=1,\ldots,n;k=1,2\}$ in a single space, with distances between the different observations consistent with the given dissimilarities. Now that the observations are commensurate, we can compute the test statistic \[
+Using MDS to embed  this omnibus matrix into a  space  $\mathcal{X}$,  $2n$ embedded observations $\{\tilde{y}_i^{(k)}; i=1,\ldots,n;k=1,2\}$ are obtained in a single space, with distances between the different observations consistent with the given dissimilarities. Now that the observations are commensurate, it is possible to  compute the test statistic \[
 \tau=d\left(\tilde{y}_i^{(1)},\tilde{y}_j^{(2)}\right)\label{teststat}
-\] for $i^{th}$ and $j^{th}$ observations under different conditions.  For ``large" values of $\tau$, we will reject the null hypothesis. We will refer to this approach as the Joint Optimization of Fidelity and Commensurability (JOFC) approach, for reasons that will be explained in Section \ref{sec:FidComm}. In this approach, the mappings   $\{ \rho_k,; k=1,\ldots,K\}$ in ~\ref{fig:fig1}  are not explicitly defined.
+\] for $i^{th}$ and $j^{th}$ observations under different conditions.  For ``large" values of $\tau$, we  the null hypothesis will be rejected. This approach will be referred to as the Joint Optimization of Fidelity and Commensurability (JOFC) approach, for reasons that will be explained in Section \ref{sec:FidComm}. In this approach, the mappings   $\{ \rho_k,; k=1,\ldots,K\}$ in ~\ref{fig:fig1}  are not explicitly defined.
 
 
 In any exploitation task that necessitates such an matching of manifolds or where the matching is expected to  improve performance, the omnibus embedding approach can be used  to embed the observations in a single space where they are commensurate. 
@@ -288,7 +290,7 @@ In any exploitation task that necessitates such an matching of manifolds or wher
 
 \subsection{Out-of-sample Extension}
 Manifold learning algorithms computes embeddings of training data on low-dimensional manifolds, however they may not always give a map as output  to  be used to compute embeddings of new points. Applying manifold learning algorithms to the combination  of training and test data  will give us such a map, but this would need to be repeated for any new test point, and embeddings of training dissimilarities would be  partially dependent on test data. The solution is to extend the embeddings of training dissimilarities by out-of-sample embedding the test dissimilarities. 
-In our hypothesis testing task, we are given dissimilarities   between a new pair of test observations and the previous $nK$ training observations. As embedding the original (in-sample) $nK \times nK$ dissimilarities between training observations doesn't result in a explicit map, we require out-of-sample embedding.  Out-of-sample extension for MDS will be used throughout this paper\cite{TrossetOOS}. 
+In the hypothesis testing task, the  dissimilarities   between a new pair of test observations and the previous $nK$ training observations are available as test data. As embedding the original (in-sample) $nK \times nK$ dissimilarities doesn't result in a explicit map for embedding test data, out-of-sample embedding will be used to embed the test dissimilarities.  Out-of-sample extension for MDS will be used throughout this paper\cite{TrossetOOS}. 
 
 % - given the embedded configuration $X$ of the 
 %training observations and the augmented dissimilarity matrix that includes dissimilarities between test observations and %the training observations, and dissimilarities in between the training observations, oos-embedding consists of embedding
@@ -302,25 +304,24 @@ Unless
 \item the dissimilarity matrix is the Euclidean distance matrix of the original observations, and, 
 \item the embedding dimension is greater or equal to the dimension of the original observations,
 \end{itemize}
-MDS with raw stress will not result in a perfect reconstruction  of the original observations. Note that we are not neccessarily interested in perfect reconstruction, but the best embedding for our exploitation task which is to test whether two sets of dissimilarities are ``matched". The following two criteria  are guidelines for what the manifold matching should accomplish andhelpful for optimizing the matching for the exploitation task we are to carry out.
+MDS with raw stress will not result in a perfect reconstruction  of the original observations. Note that the objective of the embedding is not \emph{perfect} reconstruction, but the best embedding for the exploitation task which is to test whether two sets of dissimilarities are ``matched". What is considered a good ``commensurate" representation will be dependent on how well the information in original dissimilarities that is relevant to the the match detection task is preserved. The following two criteria  embody the two kind of information  that is relevant to this task.
 
 
 \begin{itemize}
-\item Fidelity is how well the mapping to commensurate space preserves the original dissimilarities.
-Our within-condition {\em fidelity error} is given by
+\item Fidelity is how well the mapping to commensurate space preserves the original dissimilarities. The loss of \em{fidelity} can be measured with  within-condition {\em fidelity error} is given by
     \[
 \epsilon_{f_{k}} = \frac{1}{{{n}\choose{2}}} \sum_{1 \leq i < j \leq n} (d(\widetilde{\bm{x}}_{ik},\widetilde{\bm{x}}_{jk})-\delta_k(\bm{x}_{ik},\bm{x}_{jk}))^2
 \] 
 where ${\bm{x}}_{ik}$ is the original observation of the $i^{th}$ object for the $k^{th}$  condition and $\widetilde{\bm{x}}_{ik}$ is the embedded configuration of the $i^{th}$ object  for the $k^{th}$ condition;  $d(\cdot,\cdot)$ is the Euclidean distance function (for the embedding space) and $\delta_k(\cdot,\cdot)$ is the dissimilarity function defined for objects in the $k^{th}$ condition.
 
-\item Commensurability is how well the mapping to commensurate space preserves matchedness of matched observations. Between-condition {\em commensurability error} is given by
+\item Commensurability is how well the mapping to commensurate space preserves matchedness of matched observations. The loss of commensurability can be measured by the between-condition {\em commensurability error} is given by
     \[
 \epsilon_{c_{k_1k_2}} = \frac{1}{n} \sum_{1 \leq i \leq n;k_1 <k_2} (d(\widetilde{\bm{x}}_{ik_1},\widetilde{\bm{x}}_{ik_2})-{ \delta_{k_1k_2}}(\bm{x}_{ik_1},\bm{x}_{ik_2}))^2
 \label{comm-error}
 \]
  for conditions $k_1$ and $k_2$; $\delta_{{k_1}{k_2}}(\cdot,\cdot)$ is the (notional) dissimilarity function between measurements in  $k_1^{th}$ and $k_2^{th}$ conditions. Note that ,in general, there are $K$  within-condition fidelity error terms and $\frac{K \times (K-1)}{2}$  between-condition commensurability error terms.
 
-Although  the between-condition dissimilarities of the same object, ${ \delta_{k_1k_2}(\bm{x}_{ik_1},\bm{x}_{ik_2}})$, are not available,  it is not unreasonable in this setting  to set ${ \delta_{k_1k_2}}(\bm{x}_{ik_1},\bm{x}_{ik_2}) = 0$ for all $i,k_1,k_2$.  So we choose diagonal  entries of $L$ in  equation \eqref{omnibus} to be all zeroes. Setting these diagonal entries to zero forces matched points to be embedded close to each other. We ignore the possibility that this choice for between-condition dissimilarities might not be optimal, in order to concentrate on the main problem.
+Although  the between-condition dissimilarities of the same object, ${ \delta_{k_1k_2}(\bm{x}_{ik_1},\bm{x}_{ik_2}})$, are not available,  it is not unreasonable in this setting  to set ${ \delta_{k_1k_2}}(\bm{x}_{ik_1},\bm{x}_{ik_2}) = 0$ for all $i,k_1,k_2$.  So diagonal  entries of $L$ in  equation \eqref{omnibus} are  chosen to be all zeroes. Setting these diagonal entries to zero forces matched points to be embedded close to each other. (It is possible that this choice for between-condition dissimilarities might not be optimal. This issue will be ignored in order to focus on the main problem.)
 
 Then, the commensurability error  term becomes
   \[
@@ -336,7 +337,7 @@ $\delta_{k_1k_2}(\bm{x}_{ik_1},\bm{x}_{jk_2})$ is not  available. Although it is
 Note that the omnibus embedding approach tries to jointly optimize fidelity and commensurability , by minimization of some measure of discrepancy between the given dissimilarities (all of which are between-condition or within-condition dissimilarities) and the distances of the embedded configuration. This is most obvious in the  raw stress version of  MDS, since the individual terms can be separated according to whether they are contributing to  fidelity or  commensurability  error.
 
  Consider the weighted raw stress criterion $\sigma_{W}(\cdot)$ with a weighting matrix $W$, given in equation~\eqref{raw-stress}.
- The omnibus matrix $M$ we are considering is a partitioned matrix consisting of matrices from different conditions ($k={1,2}$), so we index the entries of the matrix  by 4-tuple ${i,j,k_1,k_2}$ which refers to the entry in the $i^{th}$ row and $j^{th}$ column of the submatrix in  the $k_1^{th}$  row partition and   $k_2^{th}$ column partition. For example, the entry ${M}_{2n,n}$ will have the indices $\{i,j,k_1,k_2\}=\{n,n,2,1\}$ in the new indexing scheme. $D(\cdot)$ and $W$, which are the same size as $M$, follow the same 4-tuple indexing. Then,
+ The omnibus matrix $M$  is a partitioned matrix consisting of matrices from different conditions ($k={1,2}$),  the entries of the matrix will be indexed by 4-tuple ${i,j,k_1,k_2}$ which refers to the entry in the $i^{th}$ row and $j^{th}$ column of the submatrix in  the $k_1^{th}$  row partition and   $k_2^{th}$ column partition. For example, the entry ${M}_{2n,n}$ will have the indices $\{i,j,k_1,k_2\}=\{n,n,2,1\}$ in the new indexing scheme. $D(\cdot)$ and $W$, which are the same size as $M$, follow the same 4-tuple indexing. Then,
  
 \begin{align}
 \sigma_W(\cdot)  &= & &\sum_{i,j,k_1,k_2} {w_{ij{k_1}{k_2}}(d_{ij{k_1}{k_2}}(\cdot)-M_{ijk_1k_2})^2 } \notag\\
@@ -354,9 +355,9 @@ Note that the omnibus embedding approach tries to jointly optimize fidelity and 
 \end{comment}
 
 
-Since we set ${ \delta_{k_1k_2}}(\bm{x}_{ik_1},\bm{x}_{ik_2}) = 0$, the corresponding entries of $M$ in the commensurability terms will be 0.
+Since ${ \delta_{k_1k_2}}(\bm{x}_{ik_1},\bm{x}_{ik_2}) $ are set to 0, the corresponding entries of $M$ in the commensurability terms will be 0.
 
-Since we choose to ignore  the separability error, we choose the weights for separability terms to be 0. This also means off-diagonal elements of $L$ in equation \eqref{omnibus} can be ignored. When separability terms are removed from equation \eqref{eq:FidCommSep}, the resulting equation  is a sum of fidelity and commensurability error terms:
+Since    the separability error is ignored,  the weights for separability terms are chosen to be 0. This also means off-diagonal elements of $L$ in equation \eqref{omnibus} can be ignored. When separability terms are removed from equation \eqref{eq:FidCommSep}, the resulting equation  is a sum of fidelity and commensurability error terms:
 
 
 \begin{align}
@@ -364,7 +365,7 @@ Since we choose to ignore  the separability error, we choose the weights for sep
 \hspace{3pt}&=&\underbrace{\sum_{i=j,k_1< k_2}  {w_{ij{k_1}{k_2}}(d_{ij{k_1}{k_2}}(\cdot))^2}}_{Commensurability}  \hspace{10pt}  &  +&\underbrace{\sum_{i< j,k_1=k_2}  {w_{ij{k_1}{k_2}}(d_{ij{k_1}{k_2}}(\cdot)-M_{ijk_1k_2})^2  }  } _{Fidelity}\notag\label{eq:FidCommSep}\hspace{10pt} .
 \end{align}
 
-This motivates  referring to our omnibus embedding approach as Joint Optimization of Fidelity and Commensurabilty (JOFC).
+This motivates  referring to the omnibus embedding approach as Joint Optimization of Fidelity and Commensurabilty (JOFC).
 
 Note that for purpose of minimization, setting all weights  ${w_{ij{k_1}{k_2}}}$ equal is equivalent to the unweighted raw stress $\sigma(X)$:
 \begin{equation}
@@ -378,7 +379,7 @@ Note that for purpose of minimization, setting all weights  ${w_{ij{k_1}{k_2}}}$
 \end{comment}
 
 \section{Alternative Methodologies}
-For the optimization of commensurability with fidelity as  secondary priority, an alternative method is Canonical Correlational Analysis (CCA)~\cite{Hardoon2004}, which aims to find linear subspaces of the Euclidean space  such that the projection of data points to those subspaces results in  vectors that are maximally correlated. CCA finds a basis for these subspaces iteratively: For each new component in the basis, CCA finds the pair of directions that maximizes correlation with the constraint that the projections along the new directions are  uncorrelated  with projections along previous components. The latter constraint results in  additional preservation of fidelity for each new direction. For the optimization of fidelity,  one can use Principal Components Analysis (PCA), which aims to find linear subspaces such that  projection of data points to those subspaces results in observation vectors that represent the original data as best as possible. To optimize commensurability as  secondary priority, one can use the projections computed by PCA to  compute a Procrustes transformation that will make the projections commensurate. Since the data is originally in a dissimilarity representation, we can directly embed in the low-dimensional space and use Procrustes Analysis to find a mapping between the two separate embeddings. The equivalence of PCA and Classical Multidimensional Scaling~\cite{CMDS} under certain conditions suggests that this approach is the right analog of Procrustes $\circ$ PCA to utilize when in a dissimilarity setting. 
+For the optimization of commensurability with fidelity as  secondary priority, an alternative method is Canonical Correlational Analysis (CCA)~\cite{Hardoon2004}, which aims to find linear subspaces of the Euclidean space  such that the projection of data points to those subspaces results in  vectors that are maximally correlated. CCA finds a basis for these subspaces iteratively: For each new component in the basis, CCA finds the pair of directions that maximizes correlation with the constraint that the projections along the new directions are  uncorrelated  with projections along previous components. The latter constraint results in  additional preservation of fidelity for each new direction. For the optimization of fidelity,  one can use Principal Components Analysis (PCA), which aims to find linear subspaces such that  projection of data points to those subspaces results in observation vectors that represent the original data as best as possible. To optimize commensurability as  secondary priority, one can use the projections computed by PCA to  compute a Procrustes transformation that will make the projections commensurate. Since the data is originally in a dissimilarity representation, it is possible to  directly embed in the low-dimensional space and use Procrustes Analysis to find a mapping between the two separate embeddings. The equivalence of PCA and Classical Multidimensional Scaling~\cite{CMDS} under certain conditions suggests that this approach is the right analog of Procrustes $\circ$ PCA to utilize when in a dissimilarity setting. 
 
  The omnibus embedding  approach is expected to be more powerful for the exploitation task than either of  the sequential optimizations, since the exploitation task (testing matchedness) requires both optimization of fidelity and commensurability.
 
@@ -388,14 +389,14 @@ Since separate  condition dissimilarities are available, a straightforward appro
 Estimation of $\rho$ is carried out using  Procrustes Analysis  on training data. Procrustes Analysis~\cite{Sibson} finds a orthonormal matrix $\mathbf{Q}^*$ that minimizes the sum of squared distances between the  target configuration $X_1$ and  the configuration $X_2$ transformed by $\mathbf{Q}^*$, i.e.,
  \[\mathbf{Q}^* = \argmin_{Q^TQ = I} \|X_1 - X_2Q\|_F\] 
  where $\|\cdot\|_F$ is the Frobenius norm on matrices. The map $\rho$ estimated by the linear map $\mathbf{Q}^*$   makes the separate MDS embeddings as commensurate as possible. Once such a mapping is computed, one can out-of-sample embed  new dissimilarities for each condition (separately)  and  use $\mathbf{Q}^*$ to make the embeddings commensurate.
-One can then compute the test statistic $\tau$ (the distance between commensurate embeddings) for  the hypothesis testing problem. We will refer to this approach as P$\circ$M - Procrustes $\circ$MDS.
+One can then compute the test statistic $\tau$ (the distance between commensurate embeddings) for  the hypothesis testing problem. This approach will be referred to  as P$\circ$M - Procrustes $\circ$MDS.
 
-Note that the Procrustes transformation $\mathbf{Q}^*$  is limited to  a linear transformation consisting of rotation and reflection and possibly also scaling components. The optimal mapping might  very well be   non-linear. If we allow  a larger class of mappings to be considered, we would have a smaller model bias for the mapping function, but we would be paying for it  in the form of larger variability. By only considering the class of linear transformations, we are able  to learn $\mathbf{Q}^{*}$ with our limited dataset.
+Note that the Procrustes transformation $\mathbf{Q}^*$  is limited to  a linear transformation consisting of rotation and reflection and possibly also scaling components. The optimal mapping might  very well be   non-linear. If a larger class of mappings is considered, this would result in a smaller model bias but also larger variability for the mapping function. By only considering the class of linear transformations, it is possible to learn $\mathbf{Q}^{*}$ with the limited sample size.
 
 
 \subsection{Canonical Correlational  Analysis on Multidimensional Scaling Embeddings} 
 
-Again MDS is used  to compute embedding configurations, $ X_1$ and $X_2$. We want to embed into the highest dimensional space  possible ($\mathbb{R}^{d'}$ where $d'=p+q$ for our Gaussian and Dirichlet settings)  to  preserve as many of the signal dimensions as possible (at the risk of possibly including  some noise dimensions). CCA~\cite{Hardoon2004}, then,  yields two mappings $\mathcal{U}_1$ and $\mathcal{U}_2$ that map these embeddings in $\mathbb{R}^{d'}$ to  the low-dimensional commensurate space ($\mathbb{R}^d$). 
+Again MDS is used  to compute embedding configurations, $ X_1$ and $X_2$. It is desirable to  embed into the highest dimensional space  possible ($\mathbb{R}^{d'}$ where $d'=p+q$ for the Gaussian and Dirichlet settings)  to  preserve as many of the signal dimensions as possible (at the risk of possibly including  some noise dimensions). CCA~\cite{Hardoon2004}, then,  yields two mappings $\mathcal{U}_1$ and $\mathcal{U}_2$ that map these embeddings in $\mathbb{R}^{d'}$ to  the low-dimensional commensurate space ($\mathbb{R}^d$). 
 
 \subsubsection*{Canonical Correlational Analysis}
 
@@ -414,12 +415,12 @@ $$
 Note that $s$, the dimension of $X$ and $Y$, is the embedding dimension $d'$  in the CCA approach. 
 
 
-As in P$ \circ $M, new dissimilarities are out-of-sample embedded and mapped to a commensurate  space by maps provided by CCA. We can now compute the test statistic  and reject the null hypothesis for ``large'' values of the test statistic $\tau$  as in Section \ref{subsec:PoM}.
+As in P$ \circ $M, new dissimilarities are out-of-sample embedded and mapped to a commensurate  space by maps provided by CCA. The test statistic   can now be computed and  the null hypothesis is rejected for ``large'' values of the test statistic $\tau$  as in Section \ref{subsec:PoM}.
 
 
 \subsection{Relation of $P\circ M$ and Joint Optimization of Fidelity and Commensurability} 
 
-Suppose we let $w_{ijk_1k_2}=w$ for commensurability terms and $w_{ijk_1k_2}=1-w$ for fidelity terms in equation \eqref{eq:FidCommSep}. For the resulting weight matrix $W$, define 
+Suppose the weights are chosen to be $w_{ijk_1k_2}=w$ for commensurability terms and $w_{ijk_1k_2}=1-w$ for fidelity terms in equation \eqref{eq:FidCommSep}. For the resulting weight matrix $W$, define 
 \begin{equation}
 f_w(D(\cdot),M) = \sigma_W(\cdot) \label{fid-comm-tradeoff-func}
 \end{equation}
@@ -465,31 +466,31 @@ and   the original dissimilarities are $D(X_1)$ and $D(X_2) $,
 
 
 \section{Related Work \label{sec:RelatedWork}}
-There have many efforts toward solving ``manifold alignment", which is a related  problem. ``Manifold alignment" seeks to find correspondences between observations from different ``conditions". The setting that is most similar to ours is the semi-supervised setting, where a set of correspondences are given and the task is to find correspondences between a new set of points in each condition. In contrast, our hypothesis testing task is to determine whether any given pair of points is ``matched" or not. The proposed solutions follow a common approach in that they look for a common commensurate or a latent space, such that the representations (possibly projections or embeddings) of the observations in the commensurate space match.
+There have many efforts toward solving ``manifold alignment", which is a related  problem. ``Manifold alignment" seeks to find correspondences between observations from different ``conditions". The setting that is most similar to ours is the semi-supervised setting, where a set of correspondences are given and the task is to find correspondences between a new set of points in each condition. In contrast, the hypothesis testing task discussed in this paper is to determine whether any given pair of points is ``matched" or not. The proposed solutions follow a common approach in that they look for a common commensurate or a latent space, such that the representations (possibly projections or embeddings) of the observations in the commensurate space match.
 
 Wang and Mahedavan~\cite{Wang2008} suggest an  approach that uses embedding followed by Procrustes Analysis to find a map to a commensurate space. Given a paired set of points, Procrustes Analysis~\cite{Sibson}, finds a transformation from one set of points to another in the same space that minimizes sum of squared distances, subject to some constraints on the transformation. In the case mentioned in \cite{Wang2008}, the paired set of points are corresponding low-dimensional embeddings of kernel matrices.   For the embedding step, they made the choice of using Laplacian Eigenmaps, though their algorithm allows for any appropriate embedding method.
 
- Zhai et al.~\cite{Zhai2010}  finds two projection matrices to minimize three terms in an energy function similar to our JOFC approach (see Section \ref{sec:JOFC}). One of the terms is the \emph{correspondence preserving term} which is the sum of the squared distances between corresponding points and is analogous to our commensurability error term. The other two terms are \emph{manifold regularization terms} and consist of the reconstruction error for a Locally Linear Embedding of the projected points. These terms, analogous to fidelity, make sure the projections in the lower dimension retain the structure of the original points. For fidelity error terms in our setting, this is done by preserving dissimilarities. For manifold regularization terms, this is done by preserving the local neighborhood of points, such that close points are not mapped apart.
+ Zhai et al.~\cite{Zhai2010}  finds two projection matrices to minimize three terms in an energy function similar to the  JOFC approach (see Section \ref{sec:JOFC}). One of the terms is the \emph{correspondence preserving term} which is the sum of the squared distances between corresponding points and is analogous to the commensurability error term in JOFC. The other two terms are \emph{manifold regularization terms} and consist of the reconstruction error for a Locally Linear Embedding of the projected points. These terms, analogous to fidelity, make sure the projections in the lower dimension retain the structure of the original points. For fidelity error terms in the JOFC setting, this is done by preserving dissimilarities. For manifold regularization terms, this is done by preserving the local neighborhood of points, such that close points are not mapped apart.
 Ham and Lee solve the problem in semi-supervised setting by a similar approach, by minimizing a cost function of three terms, two terms for fidelity of embedding, one term of commensurability.
 
 
 Another view to look at the data from different sources is to consider disparate data as different views to be reconciled. According to this view, for observations of $n$ objects under $K$ conditions, $n$ points are embedded instead of $nK$ points. Choi et al.\ \cite{Choi:2008:MIM:1619995.1620064} use the Markov random walk interpretation of multiple kernel matrices to combine into one kernel matrix.  Many other ``Multiple Kernel Learning"  methods exist in the literature~\cite{McFee:2011:LMS:1953048.1953063,Lin2009,Lanckriet2004}.
 
 Another approach is Three-way Multidimensional scaling\cite{3wayNMDS,borg+groenen:1997}.
- This approach assumes the  different ``conditions" of the data are linear transformations of a single configuration and aims to find this single configuration. For our setting, one would first embed the in-sample dissimilarities via the three-way MDS, which would give as the linear transformations that map from group configuration to individual configurations under each condition. This is followed by out-of-embedding the OOS dissimilarities, and use the inverse of the transformation matrices to find the out-of-sample embeddings with respect to the group configuration. Since the out-of-sample embeddings are commensurate, the test statistic can be computed as the distance between the OOS embeddings. 
+ This approach assumes the  different ``conditions" of the data are linear transformations of a single configuration and aims to find this single configuration. In the JOFC approach, one would first embed the in-sample dissimilarities via the three-way MDS, which would give as the linear transformations that map from group configuration to individual configurations under each condition. This is followed by out-of-embedding the OOS dissimilarities, and use the inverse of the transformation matrices to find the out-of-sample embeddings with respect to the group configuration. Since the out-of-sample embeddings are commensurate, the test statistic can be computed as the distance between the OOS embeddings. 
 
 %According to our ideas of tradeoff between fidelity and commensurability, this always maximizes commensurability without regard for fidelity and the constraint of the linear transformations between the group and condition configurations allows the approach to recoup some fidelity. 
 
 
 \section{Fidelity and Commensurability Tradeoff}
-The major question  addressed in this work is whether in the tradeoff between preservation of fidelity and preservation of  commensurability , there is an optimal point for our hypothesis testing task.  The weights in raw stress allow us to answer this question relatively easily. Since in equation \eqref{eq:FidCommSep},  each term indexed with $i$, $j$ is either a fidelity or a commensurability term, setting $w_{ij}$ to $w$ and $1-w$  for commensurability  and fidelity  terms respectively will allow us to control the importance of fidelity and commensurability terms in the optimization by varying $w$. 
+The major question  addressed in this work is whether in the tradeoff between preservation of fidelity and preservation of  commensurability , there is an optimal point for the match detection task.  The weights in raw stress allow us to answer this question relatively easily. Since in equation \eqref{eq:FidCommSep},  each term indexed with $i$, $j$ is either a fidelity or a commensurability term, setting $w_{ij}$ to $w$ and $1-w$  for commensurability  and fidelity  terms respectively will allow us to control the importance of fidelity and commensurability terms in the optimization by varying $w$. 
 \begin{align*}
 \sigma_W(X)&=  f_w(D(X),M) & &\\
 &=  \underbrace{\sum_{i=j,k_1\neq k_2}  {w(d_{ij{k_1}{k_2}}(X))^2}}_{Commensurability} & +\hspace{2em} & \underbrace{\sum_{i<j,k_1=k_2}  {(1-w)(d_{ij{k_1}{k_2}}(X)-M_{ijk_1k_2})^2  }  } _{Fidelity}\\
 &=  \left(w\right)\left(n\right) \epsilon_{c_{k_1=1,k_2=2}} & +\hspace{2em} & (1-w){{n}\choose{2}} ( \epsilon_{f_{k=1}}+\epsilon_{f_{k=2}} )
 \end{align*}
 
-Our expectation is that there is a $w^*$ that is optimal for the specific exploitation task (has the best power in hypothesis testing). In fact, our exploratory simulations confirm the power of the tests varies with varying $w$ and indicate the range where the optimal  $w^*$ lies.
+The expectation here is that there is a $w^*$ that is optimal for the specific exploitation task (has the best power in hypothesis testing). In fact,  exploratory simulations presented in this paper confirm the power of the tests varies with varying $w$ and indicate the range where the optimal  $w^*$ lies.
 
 
 
@@ -521,7 +522,7 @@ X_{2m}
 
 For the exploitation task at hand, it is assumed that either
 \begin{itemize}
-\item  we are given a sample of $\mathcal{T}$ ($\mathbf{T}_{mc}$) and a sample of $X_m$ and  $X_u$ 
+\item   a sample of $\mathcal{T}$ ($\mathbf{T}_{mc}$) and a sample of $X_m$ and  $X_u$ 
 $\left(\bm{x_m}=\left[
  \begin{array}{c}
 \bm{x}_{1m}\\
@@ -532,9 +533,9 @@ $\left(\bm{x_m}=\left[
  \bm{x}_{1u}\\
  \bm{x}_{2u} 
 \end{array}
-\right]\right)$ 
- and  we compute Euclidean distances between  $\bm{x}_{.m}$ and the rows in  $\mathbf{T}_{mc}$  and Euclidean distances between  $\bm{x}_{.u}$ and the rows in  $\mathbf{T}_{mc}$ to form  dissimilarity matrices $\Delta_m$ and $\Delta_u$, or
-\item we are given values of  dissimilarity matrix-valued function $D$ of  the sample of $X_m$, $X_u$ and $\mathbf{T}_{mc}$: $$
+\right]\right)$ are given
+ and  Euclidean distances are computed between  $\bm{x}_{.m}$ and the rows in  $\mathbf{T}_{mc}$  and Euclidean distances between  $\bm{x}_{.u}$ and the rows in  $\mathbf{T}_{mc}$ to form  dissimilarity matrices $\Delta_m$ and $\Delta_u$, or
+\item  values of  dissimilarity matrix-valued function $D$ of  the sample of $X_m$, $X_u$ and $\mathbf{T}_{mc}$: $$
 \mathbf{\Delta_m} = D \left( \left[
  \begin{array}{c}
 \mathbf{T}_{mc}  \\
@@ -553,11 +554,11 @@ $$
 \end{array}
 \right]
 \right)
-$$
+$$ are available,
 where the  $(s,t)^{th}$ entry of $D(\cdot)$   ($d_{st}(\cdot)$ in equation \eqref{raw-stress})  is the Euclidean distance between the $s^{th}$ and $t^{th}$ rows of its argument.
 \end{itemize}
 
-Either way, we define the dissimilarity matrices $\Delta_{m} \left(\left[
+Either way,  the dissimilarity matrices are defined to be $\Delta_{m} \left(\left[
 \begin{array}{c}
 \mathcal{T} \\
 X_{1m} \\
@@ -623,7 +624,7 @@ Define $F_Y$ as the   cumulative distribution function of  $Y$ where $Y$ can be 
 
 Even for  given $\mathbf{F}_u,\mathbf{F}_m$,   $w^*$ must be defined with respect to the value of allowable type I error rate $\alpha$.  For two different $\alpha$ values, it is quite possible that $\beta_{\alpha_1}(w_1)>\beta_{\alpha_1}(w_2)$  and $\beta_{\alpha_2}(w_1)<\beta_{\alpha_2}(w_2)$. This can be observed in results in Section \ref{sec:Simulation Results}.  
 Investigation of some  properties of $w^{*}$  is included in section  \ref{sec:Simulation Results} .
-We have defined $w^*$ to be the argmin of  the power function with respect to $w$ and some important questions about $w^*$ are  related to the nature of this function $\beta_{\alpha}\left( w\right)$.
+ $w^*$ is defined to be the argmin of  the power function with respect to $w$ and some important questions about $w^*$ are  related to the nature of this function $\beta_{\alpha}\left( w\right)$.
 
 Note that in a general setting, finding the exact value of $w^*$ is intractable. The estimate $\hat{w}^*$ will be based on noisy evaluations of $\beta(w^*)$.  A Monte Carlo simulation is run in   \ref{sec:Simulation Results} 
 to find the estimate of this function at various values of $w$.
@@ -717,7 +718,7 @@ Consider five in-sample points in $\mathbb{R}^2$ with locations $X_1=(0,0)$, $X_
   Suppose $X_6$ is matched with $X_2$ and $X_7$ is matched with $X_4$. 
   Denote the Euclidean distance matrix by $D$. 
   Suppose, due to noise, or due to dissimilarities not being Euclidean distances, 
-  our dissimilarity matrix is $$D'_{ij}=\begin{cases}
+  the dissimilarity matrix is $$D'_{ij}=\begin{cases}
   D_ij-1.4 & \textrm{if  $(i,j) \in \{(4,6),(6,4),(2,7),(7,2)   \}$ }\\
   D_ij  & \textrm{ otherwise}\\
   \end{cases}.$$ 
@@ -926,7 +927,7 @@ Given the setting ("Gaussian","Dirichlet"),   the steps for each Monte Carlo rep
 \label{fig:MVN-c001-power-w}
 \end{figure}
 
-Setting p and q to 5 and 10, respectively, for $n=150$ and $m=150$, the average of the power values for $nmc=150$ Monte Carlo replicates are computed at  different $\alpha$s and are plotted in Figure \ref{fig:MVN-c001-power-w} against $\alpha$ for the Gaussian setting.  Qualititatively similar plots for the Dirichlet setting  exist.  The plot in Figure \ref{fig:MVN-c001-power-w} shows that for different values of  $w$, we have varying power curves, and some $w$ values outperform others in terms of power. In Figure \ref{fig:MVN-c001-beta-w},  $\beta(w)$ is plotted against $w$ for fixed values of $\alpha$. It is  interesting that the optimal value of $w$ seems to be in the range of $(0.85,1)$ for all settings, which suggests commensurability might be more critical for our hypothesis testing task. 
+Setting p and q to 5 and 10, respectively, for $n=150$ and $m=150$, the average of the power values for $nmc=150$ Monte Carlo replicates are computed at  different $\alpha$s and are plotted in Figure \ref{fig:MVN-c001-power-w} against $\alpha$ for the Gaussian setting.  Qualititatively similar plots for the Dirichlet setting  exist.  The plot in Figure \ref{fig:MVN-c001-power-w} shows that for different values of  $w$, we have varying power curves, and some $w$ values outperform others in terms of power. In Figure \ref{fig:MVN-c001-beta-w},  $\beta(w)$ is plotted against $w$ for fixed values of $\alpha$. It is  interesting that the optimal value of $w$ seems to be in the range of $(0.85,1)$ for all settings, which suggests commensurability might be more critical for the match detection task. 
 
 
 
@@ -1221,12 +1222,12 @@ first.est<- density(oos.diss.all.params.q.0[1,fix.i,])
 \section{The general case of more than two conditions}
 
 
-As it was mentioned, all of the approaches are generalizable to $K>2$ conditions, though some ambiguities need to be resolved. For example,  the alternative hypothesis could be  defined as the event that at least one of the K new dissimilarities are pairwise unmatched ($ H_{A1}: \exists i, j , 1\leq i < j \leq K :\bm{y}_{i} \nsim \bm{y}_{j} $ ) or it could be defined as the case that absolutely none of the K dissimilarities are matched   ($H_{A2}: \forall i, j , 1\leq i < j \leq K :\bm{y}_{i} \nsim \bm{y}_{j}$ )  .
+As it was mentioned, all of the approaches are generalizable to $K>2$ conditions, though some ambiguities in the definition of hypotheses need to be resolved. The alternative hypothesis could be  either defined as the event that at least one of the K new dissimilarities are pairwise unmatched ($ H_{A1}: \exists i, j , 1\leq i < j \leq K :\bm{y}_{i} \nsim \bm{y}_{j} $ ) or it could be defined as the case that absolutely none of the K dissimilarities are matched   ($H_{A2}: \forall i, j , 1\leq i < j \leq K :\bm{y}_{i} \nsim \bm{y}_{j}$ )  .
 % and the sample from the alternative must be generated accordingly during Monte Carlo simulation. In the first case, an appropriate test statistic is then the maximum of the pairwise %distances between embeddings of each test K-tuple.
 
-For PoM, one can use Procrustes analysis  generalized to more than two configurations. Generalized Procrustes Analysis \cite{GPCA} is a well established method for finding a collection of linear transformations that minimizes the mismatch between the transformed configurations and a "mean`` shape computed from these configurations. 
+For PoM approach, one can use Procrustes analysis  generalized to more than two configurations. Generalized Procrustes Analysis \cite{GPCA} is a well established method for finding a collection of linear transformations that minimizes the mismatch between the transformed configurations and a "mean`` shape computed from these configurations. 
 
-For CCA, there are multiple generalizations available as the correlation between more than two configurations can be defined in multiple ways \cite{generalCCA}. Let $X_1,\ldots,X_K$ be random vectors. Consider the first set of canonical variates to be computed, $Z_1^{1},\ldots,Z_K^{1}$. Denote  the correlation matrix of  $Z_1^{1},\ldots,Z_K^{1}$ by $\Phi^{(1)}$.   The following three criteria  are proposed in \cite{generalCCA}.
+For CCA approach, there are multiple generalizations available as the correlation between more than two configurations can be defined in multiple ways \cite{generalCCA}. Let $X_1,\ldots,X_K$ be random vectors. Consider the first set of canonical variates to be computed, $Z_1^{1},\ldots,Z_K^{1}$. Denote  the correlation matrix of  $Z_1^{1},\ldots,Z_K^{1}$ by $\Phi^{(1)}$.   The following three criteria  are proposed in \cite{generalCCA}.
 \begin{itemize}
 \item SUMCOR. Maximize the sum of the elements of $\Phi^{(1)}$ : $\mathbf{1'}(\Phi^{(1)})\mathbf{1'}$
 \item MAXVAR. Maximize the largest eigenvalue of $\Phi^{(1)}$ : $\lambda^{(1)}_1$ 
@@ -1236,12 +1237,12 @@ One can think of all of these criteria as different norms on the correlation mat
 %For $H_{A1}$ MINVAR might be a good choice, since the exploitation task is to find evidence against the null and as favorable to the alternative as possible. 
 %MINVAR should be small whenever there exists \emph{at least} one unmatched measurement so under the alternative hypothesis. MAXVAR, in this case, wouldn't be necessarily small under alternative with respect to null.  MINVAR statistic should be stochastically smaller compared to null distribution. For $H_{A2}$ MAXVAR is appropriate, since under the alternative hypothesis, MAXVAR should be very small compared to under the null hypothesis. 
 %For $H_{A2}$ MAXVAR is appropriate, since under the alternative hypothesis, MAXVAR should be very small compared to under the null hypothesis. It is quite possible the other generalizations are appropriate for our task.
-An interesting question is whether any of these generalizations is more appropriate for $H_{A1}$ or $H_{A2}$.
+An interesting question that will not be addressed in this work is whether any of these generalizations is more appropriate for $H_{A1}$ or $H_{A2}$.
 
 A multivariate normal model with $K=3$ conditions were used to generate $K$-condition matched data. 
 The simulations in the previous section\ref{sec:Simulation Results} were repeated with this $K$-condition data. 
-The alternative was chosen as $ H_{A1}$ and SUMCOR was chosen as the generalization of CCA.
- $q$-dimensional noise vectors of magnitude $c$ were added to the matched measurements. 
+The alternative was chosen as $ H_{A1}$ and SUMCOR criterion was chosen as  generalized  CCA. The ``Noisy" case will be investigated, i.e. 
+ $q$-dimensional noise vectors of magnitude $c$ were added to the matched measurements, and ``signal" vectors were multiplied by $1-c$  
  The ROC curves for these simulations are shown in \ref{fig:MVN-c001-power-w-Kcond}.
 
 
@@ -1260,10 +1261,10 @@ To test the JOFC approach with real data, a collection of articles are collected
 Wikipedia is our real-life dataset. It is possible to utilize both textual content of the documents and the hyperlink graph structure. The textual content of the documents is summarized by the bag-of-words model. Dissimilarities between documents  in the same language are computed by the Lin-Pantel discounted mutual information \cite{LinPantel}
  and cosine dissimilarity $k(x_{ik}; x_{jk}) = 1 - (x_{ik} x_{jk})/(\|x_{ik}\|_2\|x_{ik}\|_2)$. 
  The dissimilarities based on the hyperlink graph of the collection of the articles are 
- for each pair of vertices $i$ and $j$, the number of vertices one must travel to go from $i$ to $j$.   
+ for each pair of vertices $i$ and $j$, the number of vertices one must travel to go from $i$ to $j$. Further details about this dataset is available in \cite{Zhiliang_disparate}   
 We will only consider dissimilarities based on the textual content in this example.
    
-Our exploitation task is still testing for matchedness of vertices between different conditions, in this case wiki articles from different languages.
+Our exploitation task is still testing for matchedness of vertices between different conditions, in this case wiki articles that are on the same topic  in different languages.
 For hypothesis testing,   randomly held out four documents - one matched pair and one unmatched pair
  -  are used to compute empirical type I error $\alpha$ and estimate of power based on the critical value computed
   from the distribution of the test statistic for the remaining 1380 matched pairs. 
@@ -1295,7 +1296,7 @@ The plot here shows the effect of $d$ on Fidelity and Commensurability errors.
 
 \section{Experiments on Graph Data}
 
-We wish to apply our approach to  the vertex matching problem in multiple graphs. These simulations will be for the same semi-supervised setting as mentioned in \ref{sec:RelatedWork}, where matchings between some vertices in different graphs are known 
+Another application of  the JOFC approach to  the vertex matching problem in multiple graphs. These simulations will be for the same semi-supervised setting as mentioned in \ref{sec:RelatedWork}, where matchings between some vertices in different graphs are known 
   and the task is to infer the correspondences between the remaining collection of vertices in the graphs.
 
 Suppose $A,B \in \mathcal{R}^{(r+s)\times (r+s)}$ are adjacency matrices for graphs 
@@ -1337,12 +1338,13 @@ In our experiments we will use three different dissimilarities between vertices 
  \item the shortest path on the  unweighted graph whose adjacency matrix is available
  \item the shortest path on a weighted version of the graph whose adjacency matrix is available
  \item diffusion distance between vertices on the (unweighted) graph.
+ \item DICE distance \cite{DICE,weightedDICE,} "????"
  \end{itemize}
  We will omit the results for weighted graph dissimilarities, since they seem to have the same performance as the weighted dissimilarities.
  
  Note that these dissimilarities can only be defined between vertices of the same graph. We impute the inter-condition dissimilarities   as described before\ref{omnibus}.
  
-  In the following simulation, $A$ is the adjacency matrix of an Erdos-Renyi graph, that is
+  To test JOFC approach, consider the following simulation: $A$ is the adjacency matrix of an Erdos-Renyi graph, that is
   $\left[A\right]_{ij} \sim Binomial(p)$ where $\left[A\right]_{ij}$ is $ij$-th entry of the adjacency matrix  $A$.
    and the adjacency matrix  $B$ is a entry-wise bit-flipped version of the adjacency matrix of $A$, that is
    In the following simulation, $A$ is the adjacency matrix of an Erdos-Renyi graph, that is
@@ -1352,7 +1354,7 @@ In our experiments we will use three different dissimilarities between vertices 
   
   The probability of flipping an entry of the adjacency matrix is the perturbation parameter $p_{pert}$ which is the variable on the x-axis. 
   The performance measure is the proportion of true matches to the number of matches. Note that 
-  under chance the expected number of true matches is 1, as shown with the dashed line. In the simulation, $r=20$ and $s=5$. $p_{pert}$ varies from $0$ to $1$ in increments of $0.1$. 
+  under chance, the expected number of true matches is 1, as shown with the dashed line. In the simulation, $r=20$ and $s=5$. $p_{pert}$ varies from $0$ to $1$ in increments of $0.1$. 
 \begin{figure}
   \includegraphics[scale=0.65]{FidCommPapergraph-plot-1.pdf}
 \end{figure}
@@ -1369,7 +1371,7 @@ An interesting trend in the graph is that shortest-path based dissimilarities ar
 The dissimilarity type that has the best improvement in performance is JOFC with shortest path distances in weighted graphs(unweighted graphs have similar performance)
 
 
-
+\begin{comment}
 This graph shows the effect of the weight parameter of stress $w$ on the probability of true matches.
 
 \includegraphics{FidCommPaper-graph-plot-4}
@@ -1380,12 +1382,12 @@ This graph shows the effect of the diffusion distance parameter $T$ on the proba
 
 \includegraphics{FidCommPaper-graph-plot-5}
 
-
+\end{comment}
 
 
 
 \section{Conclusion}
- We have investigated the tradeoff between Fidelity and Commensurability and the relation to the weighted raw stress criterion for MDS.
+ The tradeoff between Fidelity and Commensurability and the relation to the weighted raw stress criterion for MDS were both investigated with several simulations and experiments on real data.
   Two alternative approaches, P$\circ$M and CCA, were presented as extremes of the tradeoff  between Fidelity and Commensurability.
    For  hypothesis testing as the exploitation task, the three approaches were compared in terms of testing power.
     The results indicate that the joint optimization (JOFC) approach is superior to CCA and  P$\circ$M,
@@ -1394,8 +1396,8 @@ This graph shows the effect of the diffusion distance parameter $T$ on the proba
        which corresponds to an optimal weight $w^*$ of the weighted raw stress criterion in contrast to the unweighted raw stress 
         for omnibus matrix embedding. 
         The JOFC approach is quite versatile and can be applied to many problems where data of multiple modalities have to be made commensurate. 
-        We have applied JOFC to  test for matches between Wiki articles and pairs of vertices in random graph data.  Performance of JOFC shows that it 
-        it is appropriate for these settings.  
+        JOFC approach was also applied to  test for matches between Wiki articles and pairs of vertices in random graph data.  Performance of JOFC in these simulations and experiments shows that it 
+        it is an appropriate method for these settings.  
 
 
 
