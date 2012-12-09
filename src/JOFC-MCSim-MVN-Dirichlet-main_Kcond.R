@@ -81,14 +81,13 @@ rm(q)
 params$compare.pom.cca<-TRUE
 
 begin.time.g <-Sys.time()
-args.for.func.call<-with(params,list(p=p, r=r, q=q, c.val=c.val,d=d,
-		
+args.for.func.call<-with(params,list(p=p, r=r, q=q, c.val=c.val,d=d,K=K,
 		Wchoice     = "avg", 
 		pre.scaling = TRUE,
 		oos         = oos,
 		alpha       = NULL,
 		n = n, m = s, nmc = nmc,
-		
+		hardest.alt =hardest.alt,
 		old.gauss.model.param=old.gauss.model,
 		separability.entries.w=separability.entries.w,
 		compare.pom.cca=compare.pom.cca,
@@ -100,9 +99,14 @@ args.for.func.call<-with(params,list(p=p, r=r, q=q, c.val=c.val,d=d,
 		assume.matched.for.oos =assume.matched.for.oos,
 		w.vals=w.vals,
 		wt.equalize=wt.equalize,
-		verbose=verbose, 
 		power.comparison.test=power.comparison.test,
-		cca.reg=TRUE))
+		verbose=verbose,
+		cca.reg=TRUE)
+)
+sim.res <- do.call(call.func,args=args.for.func.call)
+
+
+
 
 
 if (!par.compute.sf)
