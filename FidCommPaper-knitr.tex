@@ -157,6 +157,7 @@ Baltimore, MD 21218-2682}
 \includegraphics[scale=0.25]{gen-model-orig-proj.pdf}
 \caption{Multiple Sensor setting}
 \label{fig:fig1}
+\end{center}
 \end{figure}
 
 
@@ -183,10 +184,10 @@ $n$ different objects/instances are measured/judged under $K$ different conditio
         Object ~ n & \bm{x}_{n1} & \sim \cdots \sim & \bm{x}_{nK}
       \end{array}      
 \]
-To each pair of measurements $x_{ik},x_{jk}$ in the same space, a dissimilarity value $\delta_{ijk}=\delta\{x_{ik},x_{jk}\}$, can be assigned,  possibly dependent on the space $\Xi_k$. The dissimilarities are assumed to be non-negative and  symmetric, and 0 for $\delta\{x_{ik},x_{ik}\}$  It is these  dissimilarities we utilize to do inference on the following exploitation task:
+To each pair of measurements $x_{ik},x_{jk}$ in the same space, a dissimilarity value $\delta_{ijk}=\delta\{x_{ik},x_{jk}\}$, can be assigned,  possibly dependent on the space $\Xi_k$. The dissimilarities are assumed to be non-negative and  symmetric, and 0 for $\delta\{x_{ik},x_{ik}\}$   . These  dissimilarities are exploited to do inference on the following hypothesis testing task:
 
- Given dissimilarities between  $K$ new measurements/observations($\bm{y}_{k};;k=1,\ldots,K$) and the previous 
-$n$ objects under $K$ conditions, we wish to test  $K$ measurements $\bm{y}_1,\ldots,\bm{y}_k,\ldots,\bm{y}_K ,\hspace{3pt} \bm{y}_k\in\Xi_k$,  that ``these measurements are from the same  object"  versus the alternative hypothesis that ``they are not  from the same  object"~\cite{JOFC}:
+ Given dissimilarities between  $K$ new measurements/observations($\bm{y}_{k};k=1,\ldots,K$) and the previous 
+$n$ objects under $K$ conditions,    test the null hypothesis  that ``these measurements are from the same  object"  against the alternative hypothesis that ``they are not  from the same  object"~\cite{JOFC}:
     \[
 \begin{array}{l}
 %\hspace{-2em}
@@ -282,7 +283,7 @@ M=  \left[ \begin{array}{cc}
 \end{equation} where $L$ is a matrix of imputed entries. One way to impute $L$ is to set it to $\frac{\Delta_1+\Delta_2}{2}$. Another choice for imputation is introduced in \ref{sec:FidComm}: the diagonal of $L$ is set to 0, the rest of the entries are $NA$ and are ignored in the optimization of MDS criterion.  
 Using MDS to embed  this omnibus matrix into a  space  $\mathcal{X}$,  $2n$ embedded observations $\{\tilde{y}_i^{(k)}; i=1,\ldots,n;k=1,2\}$ are obtained in a single space, with distances between the different observations consistent with the given dissimilarities. Now that the observations are commensurate, it is possible to  compute the test statistic \[
 \tau=d\left(\tilde{y}_i^{(1)},\tilde{y}_j^{(2)}\right)\label{teststat}
-\] for $i^{th}$ and $j^{th}$ observations under different conditions.  For ``large" values of $\tau$, we  the null hypothesis will be rejected. This approach will be referred to as the Joint Optimization of Fidelity and Commensurability (JOFC) approach, for reasons that will be explained in Section \ref{sec:FidComm}. In this approach, the mappings   $\{ \rho_k,; k=1,\ldots,K\}$ in ~\ref{fig:fig1}  are not explicitly defined.
+\] for $i^{th}$ and $j^{th}$ observations under different conditions.  For ``large" values of $\tau$, the null hypothesis will be rejected. This approach will be referred to as the Joint Optimization of Fidelity and Commensurability (JOFC) approach, for reasons that will be explained in Section \ref{sec:FidComm}. In this approach, the mappings   $\{ \rho_k,; k=1,\ldots,K\}$ in ~\ref{fig:fig1}  are not explicitly defined.
 
 
 In any exploitation task that necessitates such an matching of manifolds or where the matching is expected to  improve performance, the omnibus embedding approach can be used  to embed the observations in a single space where they are commensurate. 
@@ -630,7 +631,7 @@ Investigation of some  properties of $w^{*}$  is included in section  \ref{sec:S
 Note that in a general setting, finding the exact value of $w^*$ is intractable. The estimate $\hat{w}^*$ will be based on noisy evaluations of $\beta(w^*)$.  A Monte Carlo simulation is run in   \ref{sec:Simulation Results} 
 to find the estimate of this function at various values of $w$.
 \begin{comment}
-A closed-form expression for this function will be hard to find  even in the most simple of cases. So consider the estimate from the Monte Carlo simulation $\beta^{(m)}_{\alpha}(w)$ for the estimate computed from $2m$ testing pairs, m matched pairs and m unmatched pairs. We will consider an arbitrary element $\omega$ of sample space $\Omega$. By law of large numbers, $\beta^{(m)}_{\alpha}\rightarrow\beta_{\alpha}(w)$ pointwise.  We will omit $w$ from the expressions of the functions. Suppose the test statistic values  are $T_0^{i}$, $T_A^{i}$ $i=1,\ldots,m$  respectively for matched and unmatched test pairs. Note that $\beta^{(m)}_{\alpha}$ can be written as $\sum_{j=1}^m I(T_A^{j}>T_0^{(i)})$ where $T_0^{(i)}$ is the $i=\lceil {m*(1-\alpha)} \rceil^{th}$ order statistic of $T_0^{i},i=1,\ldots,m$. Replacing the indicator function with the unit step function
+A closed-form expression for this function will be hard to find  even in the most simple of cases. So consider the estimate from the Monte Carlo simulation $\beta^{(m)}_{\alpha}(w)$ for the estimate computed from $2m$ testing pairs, m matched pairs and m unmatched pairs. In addition, consider an arbitrary element $\omega$ of sample space $\Omega$. By law of large numbers, $\beta^{(m)}_{\alpha}\rightarrow\beta_{\alpha}(w)$ pointwise.  We will omit $w$ from the expressions of the functions. Suppose the test statistic values  are $T_0^{i}$, $T_A^{i}$ $i=1,\ldots,m$  respectively for matched and unmatched test pairs. Note that $\beta^{(m)}_{\alpha}$ can be written as $\sum_{j=1}^m I(T_A^{j}>T_0^{(i)})$ where $T_0^{(i)}$ is the $i=\lceil {m*(1-\alpha)} \rceil^{th}$ order statistic of $T_0^{i},i=1,\ldots,m$. Replacing the indicator function with the unit step function
 \[
 \beta^{(m)}_{\alpha}=\sum_{j=1}^m u(T_A^{j}-T_0^{(i)})
 \]
@@ -651,9 +652,9 @@ To prove differentiability of $\beta_{\alpha}\left( w\right)$ , we refer to Theo
  
 \subsection{Continuity of $\beta(\cdot)$} 
  Let $T_0(w)$ and $T_a(w)$ denote the value of the test statistic under null and alternative distributions  for the embedding with $w$ .  %stochastic process whose sample path is  a function of $w$ where the randomness comes from $\Delta_{m}$, $\Delta_{u}$ and %$\mathcal{T}$ . 
-Consider $\beta_{\alpha}(\cdot)$ as a function of $w$. We can write it as $P\left[T_a(\cdot)>c_{\alpha}(\cdot)\right]$ where $c_{\alpha}(\cdot)$ is the critical value for level $\alpha$. Instead of  $\beta_{\alpha}(\cdot)$
+Consider $\beta_{\alpha}(\cdot)$ as a function of $w$, which can be written as $P\left[T_a(\cdot)>c_{\alpha}(\cdot)\right]$ where $c_{\alpha}(\cdot)$ is the critical value for level $\alpha$. Instead of  $\beta_{\alpha}(\cdot)$
 
-  the area under the curve measure will be shown to be continuous as a surrogate: $$AUC(w)=P\left[T_a(w)>T_0(w)\right]$$ where $T_a(\cdot)$ and $T_0(\cdot)$ can also be regarded as  stochastic processes whose sample paths are continuous functions of $w$ except at a finite number of points in $(0,1)$. By  assuming stochastic continuity of $T_a(w)$ and $T_0(w)$ in the interval $(0,1)$, ie assuming the probability of a jump discontinuity of $T_0(w)$ at a particular $w_0$ is 0, we will prove the continuity of $AUC(w)$.
+  the area under the curve measure will be shown to be continuous as a surrogate: $$AUC(w)=P\left[T_a(w)>T_0(w)\right]$$ where $T_a(\cdot)$ and $T_0(\cdot)$ can also be regarded as  stochastic processes whose sample paths are continuous functions of $w$ except at a finite number of points in $(0,1)$. By  assuming stochastic continuity of $T_a(w)$ and $T_0(w)$ in the interval $(0,1)$, ie assuming the probability of a jump discontinuity of $T_0(w)$ at a particular $w_0$ is 0,  the continuity of $AUC(w)$ will be proven.
 
 
 \begin{thm}
@@ -672,7 +673,7 @@ $Pr \left[ T(w)>0\right]$ is continuous with respect to $w$.
 \end{thm}
 
 \begin{proof}
-We know there exists a $\delta$ for any given $\epsilon>0$ satisfying (*). For any such $\delta$, consider the difference of the probabilities of the two events  $T(w)>0$ and $T(w+\delta)>0$ for any $w$.
+ There exists a $\delta$ for any given $\epsilon>0$ satisfying (*). For any such $\delta$, consider the difference of the probabilities of the two events  $T(w)>0$ and $T(w+\delta)>0$ for any $w$.
 \begin{eqnarray*}
 \| Pr\left[T(w+\delta)>0 \right]- Pr\left[T(w)>0 \right]\| & = & \| Pr\left[T(w+\delta)>0   \cap T(w) \leq 0 \right] + Pr\left[T(w+\delta)>0   \cap T(w) > 0 \right] - \\
 & & (Pr\left[T(w+\delta)> 0   \cap T(w) > 0 \right]+ Pr\left[T(w+\delta)\leq 0  \cap T(w) > 0\right]\| \\
@@ -693,12 +694,12 @@ We know there exists a $\delta$ for any given $\epsilon>0$ satisfying (*). For a
 \end{proof}
 
 
-The main assumption we used is the stochastic continuity of $T_0(w)$ and $T_a(w)$ .  In the constructed example, we assumed a certain symmetry in the realized configuration, which gave us a discontinuity at a particular  point of $w$. Any change in this symmetry will give a discontinuity at a different $w$. When the probability distribution of the data that leads to the dissimilarities is continuous, it can be argued that the probability of a  jump discontinuity at  a particular $w$ has measure zero which is equivalent to stochastic continuity.
+The main assumption  used in the proof is the stochastic continuity of $T_0(w)$ and $T_a(w)$ .  In the constructed example,  a certain symmetry in the realized configuration is assumed, which results in a discontinuity at a particular  point of $w$. Any change in this symmetry will give a discontinuity at a different $w$. When the probability distribution of the data that leads to the dissimilarities is continuous, it can be argued that the probability of a  jump discontinuity at  a particular $w$ has measure zero which is equivalent to stochastic continuity.
 
 
 \begin{comment}
 For the theorem to hold, a uniform bound on the derivatives with respect to $w$.
-One of the important questions to be explored is   the uniqueness of  $w^*$.   The first step in answering this question is to determine whether $\beta(w)$ is multimodal. In the two settings we described,   $\beta(w)$ seems to have one maxima that is $\in (0,1)$.
+One of the important questions to be explored is   the uniqueness of  $w^*$.   The first step in answering this question is to determine whether $\beta(w)$ is multimodal. In the two settings (Gaussian and Dirichlet),   $\beta(w)$ seems to have one maxima that is $\in (0,1)$.
 \end{comment}
  
 \begin{comment}
@@ -707,7 +708,7 @@ First, note that  $\beta(w)$ is continuous with respect to $w$ and locally conve
 
 \subsubsection{ A short detour : Discontinuity in weighted raw stress OOS configurations\label{subsubsec:Discontinuity}}
 
-Note that it is possible to have multiple local minima in the embedding step(see example in \cite{TrossetLocalMin}). We will construct an example  where $w$ controls which of the local minima is the global minimum among the configurations of $\hat{X}_{.}$.
+Note that it is possible to have multiple local minima in the embedding step(see example in \cite{TrossetLocalMin}). It is possible to construct an example  where $w$ controls which of the local minima is the global minimum among the configurations of $\hat{X}_{.}$.
  
 %Global Minimum Configuration determined by $w$ .
 
@@ -814,7 +815,7 @@ Local min for real config. & 2.80 & 1.77 & 1.62 & 1.47 & 0.04 \\
 \end{table}
 
 
-Other than such carefully constructed examples, we expect $w$ to have no effect on the ordering of the local minima according to their stress values.
+Other than such carefully constructed examples, it is  expected that $w$  will have no effect on the ordering of the local minima according to their stress values.
 Therefore,  the argmin among these local minima is independent of $w$. The minimum configuration is then a continuous function of $w$. 
 By the continuity of the distance function with respect to configurations, the test statistic is continuous with respect to $w$. One can conclude $\beta(w) $ is a continuous function of $w$. 
 %It is possible this is not the global minimum in $\mathbb{R}^d$  
@@ -870,10 +871,10 @@ If the magnitude of noise is small enough, and the embedding dimension is not la
 
 Given the setting ("Gaussian","Dirichlet"),   the steps for each Monte Carlo replicate are as follows:
 \begin{itemize}
-\item A training set ($\mathbf{T}_{mc}$) which consists of  $n$ pairs of matched measurements is generated.  If $c=0$, we are in the ``noiseless" setting and measurements are $p$-dimensional vectors, otherwise we are in the ``noisy" setting and measurement vectors are $(p+q)$-dimensional.
+\item A training set ($\mathbf{T}_{mc}$) which consists of  $n$ pairs of matched measurements is generated.  If $c=0$, the ``noiseless" data setting is being simulated and measurements are $p$-dimensional vectors, otherwise  the ``noisy" setting is being used to generate data and measurement vectors are $(p+q)$-dimensional.
 \item Dissimilarities are computed and embedded in  Euclidean space  via MDS (followed by a transformation from  $\mathbf{R}^d$ to  $\mathbf{R}^d$ and  projection into $\mathbf{R}^d$, respectively  for P$\circ$M and CCA) . The final embeddings lie in $\mathbb{R}^d$.   Denote this in-sample embedding as   $\hat{\mathbf{T}}$. Note that  if the JOFC method is being used, embedding is carried out with the weighted raw stress function $\sigma_{W}(\cdot)=f_{w}(D(\cdot),M)$ in equation \eqref{fid-comm-tradeoff-func} with a common weight $w$ for commensurability terms and another common weight $1-w$ for fidelity terms, otherwise unweighted raw stress function ($\sigma(\cdot)$) is used as a criterion function for embedding.
 
-\item We generate $m$ pairs of matched   measurements  which we treat as out-of-sample, and 
+\item  $m$ pairs of matched   measurements are generated which are treated as out-of-sample, and 
 \begin{itemize}
 \item compute the dissimilarities  %$\mathbf{\Delta}^{new}={ \delta_{ik}^{new}; i=1,\ldots, n;\hspace{5pt} k=1,2}$
  between these out-of-sample  points and the points in ${\mathbf{T}_{mc}}$,  
@@ -930,7 +931,7 @@ Given the setting ("Gaussian","Dirichlet"),   the steps for each Monte Carlo rep
 \label{fig:MVN-c001-power-w}
 \end{figure}
 
-Setting p and q to 5 and 10, respectively, for $n=150$ and $m=150$, the average of the power values for $nmc=150$ Monte Carlo replicates are computed at  different $\alpha$s and are plotted in Figure \ref{fig:MVN-c001-power-w} against $\alpha$ for the Gaussian setting.  Qualititatively similar plots for the Dirichlet setting  are not included for brevity.  The plot in Figure \ref{fig:MVN-c001-power-w} shows that for different values of  $w$, $\beta$-$\alpha$ curves vary significantly.  The conclusion is that the match detection tests with JOFC embedding using specific $w$ values have better performance than other $w$ values in terms of power.  In Figure \ref{fig:MVN-c001-beta-w},  $\beta(w)$ is plotted against $w$ for fixed values of $\alpha$. It is  interesting that the optimal value of $w$ seems to be in the range of $(0.85,1)$ for all settings, which suggests a significant emphasis on commensurability might be  critical for our hypothesis testing task. 
+Setting p and q to 5 and 10, respectively, for $n=150$ and $m=150$, the average of the power values for $nmc=150$ Monte Carlo replicates are computed at  different $\alpha$s and are plotted in Figure \ref{fig:MVN-c001-power-w} against $\alpha$ for the Gaussian setting.  Qualititatively similar plots for the Dirichlet setting  are not included for brevity.  The plot in Figure \ref{fig:MVN-c001-power-w} shows that for different values of  $w$, $\beta$-$\alpha$ curves vary significantly.  The conclusion is that the match detection tests with JOFC embedding using specific $w$ values have better performance than other $w$ values in terms of power.  In Figure \ref{fig:MVN-c001-beta-w},  $\beta(w)$ is plotted against $w$ for fixed values of $\alpha$. It is  interesting that the optimal value of $w$ seems to be in the range of $(0.85,1)$ for all settings, which suggests a significant emphasis on commensurability might be  critical for the match detection  task. 
 
 
 
@@ -968,12 +969,12 @@ Note that in Figure \ref{fig:MVN-c001-beta-w} for $\alpha=0.05$, $\beta_{\alpha=
 
 
 Note that  for all of the settings, the estimate of the optimal $w^{*}$ has  higher power than $w$=0.5 (the unweighted case).
-To test the statistical significance of this observation, we wish to test the null hypothesis that  $H_{0}: \beta_{\alpha}({\hat{w}^*})\leq\beta_{\alpha}({w=0.5})$ against the alternative $H_{A}=\beta_{\alpha}({\hat{w}^*})>\beta_{\alpha}({w=0.5})$.  The least favorable null hypothesis is that  $H_{0}: \beta_{\alpha}({\hat{w}^*})=\beta_{\alpha}({w=0.5})$.
+To test the statistical significance of this observation,   the null hypothesis that  $H_{0}: \beta_{\alpha}({\hat{w}^*})\leq\beta_{\alpha}({w=0.5})$  is tested against the alternative $H_{A}=\beta_{\alpha}({\hat{w}^*})>\beta_{\alpha}({w=0.5})$.  The least favorable null hypothesis is that  $H_{0}: \beta_{\alpha}({\hat{w}^*})=\beta_{\alpha}({w=0.5})$.
 Using previous notation,  the test statistic will be denoted by $T_a(w)$ under the alternative hypothesis and $T_0(w)$ under the null hypothesis.
 
 McNemar's test will be used to compare the two predictors (referred to as $C_1$ and $C_2$ with $w$=0.5 and $w$=$w^*$ at a fixed $\alpha$ value.
 
-For a fixed $\alpha$ value, one can compute two critical values $c(0.5)=max_l \{  P(T_0(0.5)>c)<\alpha\}$,  $c(w^*)=max_l \{  P(T_0(w_2)>c)<\alpha\}$. Using these critical  values, we can  determine the decision made by each test for each pair of embedded points, $(\tilde{y}_i^{(1)},\tilde{y}_i^{(2)}),\hspace{7pt}i=1,\ldots,m$. To compare the  two statistical tests with  $w=0.5$ and $w$=$w^*$  , one can prepare a $2\times 2$ contingency-table of correct decisions and incorrect decisions made by each statistical test (or equivalently true and false classifications made by two classifiers). Denote decision outcome as $g_1$ for the first statistical test and $g_2$ for the second statistical test. If $g_1=True$ and $g_2=False$ for an instance,  the first test made the correct decision and the second test made the incorrect decision with regard to the null and alternative hypotheses.
+For a fixed $\alpha$ value, one can compute two critical values $c(0.5)=max_l \{  P(T_0(0.5)>c)<\alpha\}$,  $c(w^*)=max_l \{  P(T_0(w_2)>c)<\alpha\}$. The values of the decision function that uses these critical  values, for each pair of embedded points (indexed by $i$, are  $(\tilde{y}_i^{(1)},\tilde{y}_i^{(2)}),\hspace{7pt}i=1,\ldots,m$. To compare the  two statistical tests with  $w=0.5$ and $w$=$w^*$  , one can prepare a $2\times 2$ contingency-table of correct decisions and incorrect decisions made by each statistical test (or equivalently true and false classifications made by two classifiers). Denote decision outcome as $g_1$ for the first statistical test and $g_2$ for the second statistical test. If $g_1=True$ and $g_2=False$ for an instance,  the first test made the correct decision and the second test made the incorrect decision with regard to the null and alternative hypotheses.
 % McNemar's test was used to compare the two contingency tables for fixed $\alpha$. McNemar's test is a statistical test for %comparing two binary classifiers based on a 2-by-2 table of the counts of misclassifications of each. That is,
 Consider the contingency table for a Monte Carlo replicate given by $$G^{(l)}= \begin{array}{|c|c|}
       \hline
@@ -1001,7 +1002,7 @@ $e_{01}$:Correctly Classified by $C_1$, \newline Misclassified by $C_2$ & $e_{11
 \end{figure}
 \end{comment}
 
-For the noisy version of the Gaussian setting at allowable type I error 0.05 for the two tests, when comparing  the null hypothesis that  $H_{0}: \beta_{\alpha}({\hat{w}^*})=\beta_{\alpha}({w=0.5})$ against the alternative $H_{A}=\beta_{\alpha}({\hat{w}^*})>\beta_{\alpha}({w=0.5})$, we find $p<1.09E-24$ which indicates the power using estimate of optimal $w^*$ is significantly greater than the power when using $w=0.5$. 
+For the noisy version of the Gaussian setting at allowable type I error 0.05 for the two tests, when comparing  the null hypothesis that  $H_{0}: \beta_{\alpha}({\hat{w}^*})=\beta_{\alpha}({w=0.5})$ against the alternative $H_{A}=\beta_{\alpha}({\hat{w}^*})>\beta_{\alpha}({w=0.5})$, the p-value is $p<1.09E-24$ which indicates the power using estimate of optimal $w^*$ is significantly greater than the power when using $w=0.5$. 
 %In fact
 % the distribution of p-values from McNemar's tests is skewed and  we reject $\beta_{0.5}>=\beta_{w^*} $ for  55\%  of the %Monte Carlo replicates.
 
@@ -1233,12 +1234,12 @@ first.est<- density(oos.diss.all.params.q.0[1,fix.i,])
 \section{The general case of more than two conditions}
 
 
-As it was mentioned, all of the approaches are generalizable to $K>2$ conditions, though some ambiguities need to be resolved. For example,  the alternative hypothesis could be  defined as the event that at least one of the K new dissimilarities are pairwise unmatched ($ H_{A1}: \exists i, j , 1\leq i < j \leq K :\bm{y}_{i} \nsim \bm{y}_{j} $ ) or it could be defined as the case that absolutely none of the K dissimilarities are matched   ($H_{A2}: \forall i, j , 1\leq i < j \leq K :\bm{y}_{i} \nsim \bm{y}_{j}$ )  .
+As it was mentioned, all of the approaches are generalizable to $K>2$ conditions, though some ambiguities in the definition of hypotheses need to be resolved. The alternative hypothesis could be  either defined as the event that at least one of the K new dissimilarities are pairwise unmatched ($ H_{A1}: \exists i, j , 1\leq i < j \leq K :\bm{y}_{i} \nsim \bm{y}_{j} $ ) or it could be defined as the case that absolutely none of the K dissimilarities are matched   ($H_{A2}: \forall i, j , 1\leq i < j \leq K :\bm{y}_{i} \nsim \bm{y}_{j}$ )  .
 % and the sample from the alternative must be generated accordingly during Monte Carlo simulation. In the first case, an appropriate test statistic is then the maximum of the pairwise %distances between embeddings of each test K-tuple.
 
-For PoM, one can use Procrustes analysis  generalized to more than two configurations. Generalized Procrustes Analysis \cite{GPCA} is a well established method for finding a collection of linear transformations that minimizes the mismatch between the transformed configurations and a "mean`` shape computed from these configurations. 
+For P$\circ$M approach, one can use Procrustes analysis  generalized to more than two configurations. Generalized Procrustes Analysis \cite{GPCA} is a well established method for finding a collection of linear transformations that minimizes the mismatch between the transformed configurations and a "mean`` shape computed from these configurations. 
 
-For CCA, there are multiple generalizations available as the correlation between more than two configurations can be defined in multiple ways \cite{generalCCA}. Let $X_1,\ldots,X_K$ be random vectors. Consider the first set of canonical variates to be computed, $Z_1^{1},\ldots,Z_K^{1}$. Denote  the correlation matrix of  $Z_1^{1},\ldots,Z_K^{1}$ by $\Phi^{(1)}$.   The following three criteria  are proposed in \cite{generalCCA}.
+For CCA approach, there are multiple generalizations available as the correlation between more than two configurations can be defined in multiple ways \cite{generalCCA}. Let $X_1,\ldots,X_K$ be random vectors. Consider the first set of canonical variates to be computed, $Z_1^{1},\ldots,Z_K^{1}$. Denote  the correlation matrix of  $Z_1^{1},\ldots,Z_K^{1}$ by $\Phi^{(1)}$.   The following three criteria  are proposed in \cite{generalCCA}.
 \begin{itemize}
 \item SUMCOR. Maximize the sum of the elements of $\Phi^{(1)}$ : $\mathbf{1'}(\Phi^{(1)})\mathbf{1'}$
 \item MAXVAR. Maximize the largest eigenvalue of $\Phi^{(1)}$ : $\lambda^{(1)}_1$ 
@@ -1248,13 +1249,13 @@ One can think of all of these criteria as different norms on the correlation mat
 %For $H_{A1}$ MINVAR might be a good choice, since the exploitation task is to find evidence against the null and as favorable to the alternative as possible. 
 %MINVAR should be small whenever there exists \emph{at least} one unmatched measurement so under the alternative hypothesis. MAXVAR, in this case, wouldn't be necessarily small under alternative with respect to null.  MINVAR statistic should be stochastically smaller compared to null distribution. For $H_{A2}$ MAXVAR is appropriate, since under the alternative hypothesis, MAXVAR should be very small compared to under the null hypothesis. 
 %For $H_{A2}$ MAXVAR is appropriate, since under the alternative hypothesis, MAXVAR should be very small compared to under the null hypothesis. It is quite possible the other generalizations are appropriate for our task.
-An interesting question is whether any of these generalizations is more appropriate for $H_{A1}$ or $H_{A2}$.
+An interesting question that will not be addressed in this work is whether any of these generalizations is more appropriate for $H_{A1}$ or $H_{A2}$.
 
 A multivariate normal model with $K=3$ conditions were used to generate $K$-condition matched data. 
 The simulations in the previous section\ref{sec:Simulation Results} were repeated with this $K$-condition data. 
-The alternative was chosen as $ H_{A1}$ and SUMCOR was chosen as the generalization of CCA.
- $q$-dimensional noise vectors of magnitude $c$ were added to the matched measurements. 
- The ROC curves for these simulations are shown in \ref{fig:MVN-c001-ROC-Kcond}.
+The alternative was chosen as $ H_{A1}$ and SUMCOR criterion was chosen as  generalized  CCA. The ``Noisy" case will be investigated, i.e. 
+ $q$-dimensional noise vectors of magnitude $c$ were added to the matched measurements, and ``signal" vectors were multiplied by $1-c$  
+ The ROC curves for these simulations are shown in \ref{fig:MVN-c001-power-w-Kcond}.
 
 
  
@@ -1274,10 +1275,10 @@ To test the JOFC approach with real data, a collection of articles are collected
 Wikipedia is our real-life dataset. It is possible to utilize both textual content of the documents and the hyperlink graph structure. The textual content of the documents is summarized by the bag-of-words model. Dissimilarities between documents  in the same language are computed by the Lin-Pantel discounted mutual information \cite{LinPantel}
  and cosine dissimilarity $k(x_{ik}; x_{jk}) = 1 - (x_{ik} x_{jk})/(\|x_{ik}\|_2\|x_{ik}\|_2)$. 
  The dissimilarities based on the hyperlink graph of the collection of the articles are 
- for each pair of vertices $i$ and $j$, the number of vertices one must travel to go from $i$ to $j$.   
-We will only consider dissimilarities based on the textual content in this example.
+ for each pair of vertices $i$ and $j$, the number of vertices one must travel to go from $i$ to $j$.  Further details about this dataset is available in \cite{Zhiliang_disparate}     
+Only  dissimilarities based on the textual content will be considered in this example.
    
-Our exploitation task is still testing for matchedness of vertices between different conditions, in this case wiki articles from different languages.
+The exploitation task is still testing for matchedness of vertices between different conditions, in this case wiki articles that are on the same topic  in  different languages.
 For hypothesis testing,   randomly held out four documents - one matched pair and one unmatched pair
  -  are used to compute empirical type I error $\alpha$ and estimate of power based on the critical value computed
   from the distribution of the test statistic for the remaining 1380 matched pairs. 
@@ -1303,11 +1304,11 @@ method \cite{ZhuGhodsi}, resulting in d = 6 for this data set.
 
 \section{Model Selection}
 For the simulations presented up to now, the embedding dimension $d$ was set to 2. This was a convenient choice which allowed us to investigate various aspects of JOFC and competing approaches.
-However we require  more care in selection of this parameter, since it plays such a big role in performance in general learning settings. Specifically, we want to consider the effect of this parameter on Fidelity and Commensurability.
+However,  more care is required in selection of this parameter, since it plays such a big role in performance in general learning settings. Specifically, the effect of this parameter on Fidelity and Commensurability should be elucidated.
 First consider the distribution of the test statistic for different values of the embedding dimension in the Gaussian setting.
 
 
-The plot here shows the effect of $d$ on Fidelity and Commensurability errors.
+\ref{fig:MVN-c0-beta-w} shows the effect of $d$ on Fidelity and Commensurability errors.
 
 
 \begin{comment}
@@ -1332,7 +1333,7 @@ for different $ d $ values.
 
 \section{Experiments on Graph Data}
 
-We wish to apply our approach to  the vertex matching problem in multiple graphs. These simulations will be for the same semi-supervised setting as mentioned in \ref{sec:RelatedWork}, where matchings between some vertices in different graphs are known 
+Another application of  the JOFC approach to  the vertex matching problem in multiple graphs. These simulations will be for the same semi-supervised setting as mentioned in \ref{sec:RelatedWork}, where matchings between some vertices in different graphs are known 
   and the task is to infer the correspondences between the remaining collection of vertices in the graphs.
 
 Suppose $A,B \in \mathcal{R}^{(r+s)\times (r+s)}$ are adjacency matrices for graphs 
@@ -1374,12 +1375,13 @@ In our experiments we will use three different dissimilarities between vertices 
  \item the shortest path on the  unweighted graph whose adjacency matrix is available
  \item the shortest path on a weighted version of the graph whose adjacency matrix is available
  \item diffusion distance between vertices on the (unweighted) graph.
+ \item DICE distance \cite{DICE,weightedDICE,} "????"
  \end{itemize}
  We will omit the results for weighted graph dissimilarities, since they seem to have the same performance as the weighted dissimilarities.
  
  Note that these dissimilarities can only be defined between vertices of the same graph. We impute the inter-condition dissimilarities   as described before\ref{omnibus}.
  
-  In the following simulation, $A$ is the adjacency matrix of an Erdos-Renyi graph, that is
+  To test JOFC approach, consider the following simulation: $A$ is the adjacency matrix of an Erdos-Renyi graph, that is
   $\left[A\right]_{ij} \sim Binomial(p)$ where $\left[A\right]_{ij}$ is $ij$-th entry of the adjacency matrix  $A$.
    and the adjacency matrix  $B$ is a entry-wise bit-flipped version of the adjacency matrix of $A$, that is
    In the following simulation, $A$ is the adjacency matrix of an Erdos-Renyi graph, that is
@@ -1389,7 +1391,7 @@ In our experiments we will use three different dissimilarities between vertices 
   
   The probability of flipping an entry of the adjacency matrix is the perturbation parameter $p_{pert}$ which is the variable on the x-axis. 
   The performance measure is the proportion of true matches to the number of matches. Note that 
-  under chance the expected number of true matches is 1, as shown with the dashed line. In the simulation, $r=20$ and $s=5$. $p_{pert}$ varies from $0$ to $1$ in increments of $0.1$. 
+  under chance, the expected number of true matches is 1, as shown with the dashed line. In the simulation, $r=20$ and $s=5$. $p_{pert}$ varies from $0$ to $1$ in increments of $0.1$. 
 \begin{figure}
   \includegraphics[scale=0.65]{FidCommPapergraph-plot-1.pdf}
 \end{figure}
@@ -1431,7 +1433,7 @@ This graph shows the effect of the diffusion distance parameter $T$ on the proba
 
 
 \section{Conclusion}
- We have investigated the tradeoff between Fidelity and Commensurability and the relation to the weighted raw stress criterion for MDS.
+ The tradeoff between Fidelity and Commensurability and the relation to the weighted raw stress criterion for MDS were both investigated with several simulations and experiments on real data.
   Two alternative approaches, P$\circ$M and CCA, were presented as extremes of the tradeoff  between Fidelity and Commensurability.
    For  hypothesis testing as the exploitation task, the three approaches were compared in terms of testing power.
     The results indicate that the joint optimization (JOFC) approach is superior to CCA and  P$\circ$M,
@@ -1440,8 +1442,8 @@ This graph shows the effect of the diffusion distance parameter $T$ on the proba
        which corresponds to an optimal weight $w^*$ of the weighted raw stress criterion in contrast to the unweighted raw stress 
         for omnibus matrix embedding. 
         The JOFC approach is quite versatile and can be applied to many problems where data of multiple modalities have to be made commensurate. 
-        We have applied JOFC to  test for matches between Wiki articles and pairs of vertices in random graph data.  Performance of JOFC shows that it 
-        it is appropriate for these settings.  
+        JOFC approach was also applied to  test for matches between Wiki articles and pairs of vertices in random graph data.  Performance of JOFC in these simulations and experiments shows that it 
+        it is an appropriate method for these settings.  
 
 
 
