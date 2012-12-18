@@ -45,23 +45,20 @@ if (par.compute){
 }
 
 model="MVN"
-num.cpus<-5
-
-gaussian_simulation_jofc_tradeoff
-gaussian_simulation_jofc_tradeoff_par
-gaussian_simulation_jofc_tradeoff_sf
-dirichlet_simulation_jofc_tradeoff
-dirichlet_simulation_jofc_tradeoff_par
-dirichlet_simulation_jofc_tradeoff_sf
+num.cpus<-num.cores
 
 
-if ((model=="MVN") && par.compute)              call.func<-gaussian_simulation_jofc_tradeoff_par
-if ((model=="MVN") && !par.compute)          call.func<-gaussian_simulation_jofc_tradeoff
-if ((model=="Dirichlet") && par.compute)        call.func<-dirichlet_simulation_jofc_tradeoff_par
-if ((model=="Dirichlet") && !par.compute)    call.func<-dirichlet_simulation_jofc_tradeoff
-if ((model=="MVN")       && par.compute.sf)           call.func<-gaussian_simulation_jofc_tradeoff_sf
-if ((model=="Dirichlet") && par.compute.sf)     call.func<-dirichlet_simulation_jofc_tradeoff_sf
-sim.res<-list()
+params$r<-3
+
+
+
+if ((model=="MVN") && par.compute)              call.func<-gaussian_simulation_jofc_tradeoff_par_Kcond
+if ((model=="MVN") && !par.compute)          call.func<-gaussian_simulation_jofc_tradeoff_Kcond
+if ((model=="Dirichlet") && par.compute)        call.func<-dirichlet_simulation_jofc_tradeoff_par_Kcond
+if ((model=="Dirichlet") && !par.compute)    call.func<-dirichlet_simulation_jofc_tradeoff_Kcond
+if ((model=="MVN")       && par.compute.sf)           call.func<-gaussian_simulation_jofc_tradeoff_sf_Kcond
+if ((model=="Dirichlet") && par.compute.sf)     call.func<-dirichlet_simulation_jofc_tradeoff_sf_Kcond
+sim.res.Kcond<-list()
 
 
 if (run.for.Sweave) print("c")
@@ -78,10 +75,12 @@ if (model=="Dirichlet") real.dim <- p+q+2
 rm(p)
 rm(q)
 
+params$r.g<-3
+
 params$compare.pom.cca<-TRUE
 
 begin.time.g <-Sys.time()
-args.for.func.call<-with(params,list(p=p, r=r, q=q, c.val=c.val,d=d,K=K,
+args.for.func.call<-with(params,list(p=p.g, r=r.g, q=q.g, c.val=c.val,d=d,K=K,
 		Wchoice     = "avg", 
 		pre.scaling = TRUE,
 		oos         = oos,
@@ -100,10 +99,10 @@ args.for.func.call<-with(params,list(p=p, r=r, q=q, c.val=c.val,d=d,K=K,
 		w.vals=w.vals,
 		wt.equalize=wt.equalize,
 		power.comparison.test=power.comparison.test,
-		verbose=verbose,
-		cca.reg=TRUE)
+		verbose=verbose)#,
+		#cca.reg=TRUE)
 )
-sim.res <- do.call(call.func,args=args.for.func.call)
+
 
 
 
@@ -112,7 +111,7 @@ sim.res <- do.call(call.func,args=args.for.func.call)
 if (!par.compute.sf)
 	args.for.func.call<- c(args.for.func.call,list(pprime1= real.dim, pprime2= real.dim))
 
-
+sim.res.Kcond <- do.call(call.func,args=args.for.func.call)
 
 
 
@@ -122,7 +121,7 @@ bootstrap.res <- with(params, do.call(test.bootstrapped.JOFC,args=c(list(model="
 ############################################
 #  Running simulation function 
 ############################################
-sim.res <- do.call(call.func,args=args.for.func.call)
+sim.res.Kcond <- do.call(call.func,args=args.for.func.call)
 end.time.g<-Sys.time()
 run.time.g <- end.time.g-begin.time.g
 
