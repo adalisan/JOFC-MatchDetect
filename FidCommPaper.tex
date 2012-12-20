@@ -673,17 +673,23 @@ $Pr \left[ T(w)>0\right]$ is continuous with respect to $w$.
 \end{thm}
 
 \begin{proof}
- There exists a $\delta$ for any given $\epsilon>0$ satisfying (*). For any such $\delta$, consider the difference of the probabilities of the two events  $T(w)>0$ and $T(w+\delta)>0$ for any $w$.
+ . For any  $\delta$ for which $\delta+w \in (0,1)$, consider the difference of the probabilities of the two events  $T(w)>0$ and $T(w+\delta)>0$ for any $w$.
+ \hspace{-1in}
+ %\begin{center}
 \begin{eqnarray*}
-\| Pr\left[T(w+\delta)>0 \right]- Pr\left[T(w)>0 \right]\| & = & \| Pr\left[T(w+\delta)>0   \cap T(w) \leq 0 \right] + Pr\left[T(w+\delta)>0   \cap T(w) > 0 \right] - \\
+\| Pr\left[T(w+\delta)>0\right]- Pr\left[T(w)>0 \right]\| & = & \| Pr\left[T(w+\delta)>0   \cap T(w) \leq 0 \right] + Pr\left[T(w+\delta)>0   \cap T(w) > 0 \right] - \\
 & & (Pr\left[T(w+\delta)> 0   \cap T(w) > 0 \right]+ Pr\left[T(w+\delta)\leq 0  \cap T(w) > 0\right]\| \\
 & = & \| Pr\left[T(w+\delta)>0   \cap T(w) \leq 0 \right]- Pr\left[T(w+\delta)\leq 0  \cap T(w) > 0\right]\| \\
-&= &\| Pr\left[T(w+\delta) - T(w)  > 0 \right]-  Pr\left[ T(w)- T(w+\delta)  > 0   \right]\|\\
-& \leq & \| Pr\left[\{T(w+\delta) - T(w)  > 0\} \vee \{T(w)- T(w+\delta)  > 0 \}  \right]\|\\
-& = & Pr\left[\|T(w+\delta) - T(w)\| >0 \right] \\
-& < & \epsilon
+& = & \| Pr\left[T(w+\delta)>0   | T(w) \leq 0 \right]Pr\left[T(w) \leq 0 \right]-\\
+& &  Pr\left[T(w+\delta)\leq 0  | T(w) > 0\right]Pr\left[T(w) > 0 \right]\| \\
+& \leq &  \max ( Pr\left[T(w+\delta)>0   | T(w) \leq 0 \right]Pr\left[T(w) \leq 0 \right] ,\\
+& & Pr\left[T(w+\delta)\leq 0  | T(w) > 0\right]Pr\left[T(w) > 0 \right] ) \\
+& \leq &  \max ( Pr\left[T(w+\delta)>0   | T(w) \leq 0 \right] ,\\
+& & Pr\left[T(w+\delta)\leq 0  | T(w) > 0\right]) 
+
 \end{eqnarray*} 
-.
+%\end{center}
+For any $w$, choose $\delta=\min(\delta_1 , \delta_2)$, such that $ Pr\left[T(w+\delta_1)>0   | T(w) \leq 0 \right] <\epsilon$   is in
 \end{proof}
 
 \begin{cor}{
@@ -1295,9 +1301,7 @@ Target dimensionality d is determined by the Zhu and Ghodsi  automatic dimension
 method \cite{ZhuGhodsi}, resulting in d = 6 for this data set.
 
 
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\includegraphics{graphs/FidCommPaperwiki-two-cond-plot} 
-\end{knitrout}
+\includegraphics{graphs/FidCommPaperwiki-two-cond-plot} 
 
 
 
