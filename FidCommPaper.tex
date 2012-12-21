@@ -689,7 +689,12 @@ $Pr \left[ T(w)>0\right]$ is continuous with respect to $w$.
 
 \end{eqnarray*} 
 %\end{center}
-For any $w$, choose $\delta=\min(\delta_1 , \delta_2)$, such that $ Pr\left[T(w+\delta_1)>0   | T(w) \leq 0 \right] <\epsilon$   is in
+For any $w$, choose $\delta$ such that such that both $ Pr\left[T(w+\delta)>0   | T(w) \leq 0 \right] <\epsilon$ and  $Pr\left[T(w+\delta)\leq 0  | T(w) > 0\right]<\epsilon $. Such a $\delta$ exists due to stochastic continuity. Therefore 
+\[
+\| Pr\left[T(w+\delta)>0\right]- Pr\left[T(w)>0 \right]\| \leq \max ( Pr\left[T(w+\delta)>0   | T(w) \leq 0 \right] , Pr\left[T(w+\delta)\leq 0  | T(w) > 0\right]) <\epsilon 
+\]
+Therefore $ Pr\left[T(w)>0\right]$ is continuous with respect to $w$
+
 \end{proof}
 
 \begin{cor}{
