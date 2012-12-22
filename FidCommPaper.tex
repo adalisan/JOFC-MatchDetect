@@ -572,7 +572,7 @@ X_{2m}
 X_{1u} \\
 X_{2u}
 \end {array}
-\right]\right)$ as two matrix-valued random variables $\Delta_{m}:\Omega \rightarrow \mathbf{M}_{n\times n} $,$\Delta_{u}:\Omega \rightarrow \mathbf{M}_{n\times n} $  for the probability space $(\Omega,\mathcal{B},\mu)$.
+\right]\right)$ as two matrix-valued random variables $\Delta_{m}:\Omega \rightarrow \mathbf{M}_{n\times n} $,$\Delta_{u}:\Omega \rightarrow \mathbf{M}_{n\times n} $  for the sample  space $(\Omega)$.
 
  The criterion function for the embedding is $\sigma_W(\cdot) =f_w(D({\cdot}),\Delta)$. All of the random variables following the embedding is dependent on $w$, for the sake of simplicity, it will not be shown in the notation. The embedding for the unmatched pair ${\hat{X}_{1u},\hat{X}_{2u}}$  is 
  \[
@@ -627,7 +627,7 @@ Denote by $F_Y$ the   cumulative distribution function of  $Y$ where $Y$ can be 
 Even for  given $\mathbf{F}_u,\mathbf{F}_m$,   $w^*$ must be defined with respect to the value of allowable type I error rate $\alpha$.  For two different $\alpha$ values, it is quite possible that $\beta_{\alpha_1}(w_1)>\beta_{\alpha_1}(w_2)$  and $\beta_{\alpha_2}(w_1)<\beta_{\alpha_2}(w_2)$. This can be observed in results in Section \ref{sec:Simulation Results}.  
 Investigation of some  properties of $w^{*}$  is included in section  \ref{sec:Simulation Results} .
  $w^*$ is defined to be the argmin of  the power function with respect to $w$ and some important questions about $w^*$ are  related to the nature of this function $\beta_{\alpha}\left( w\right)$.
-Note that in a general setting, finding the exact value of $w^*$ is intractable. The estimate $\hat{w}^*$ will be based on noisy evaluations of $\beta(w^*)$.  A Monte Carlo simulation is run in   \ref{sec:Simulation Results} 
+Note that in a general setting, finding the exact value of $w^*$ is intractable. The estimate $\hat{w}^*$ will be based on noisy evaluations of $\beta(w^*)$.  A Monte Carlo simulation is run in  Section  \ref{sec:Simulation Results} 
 to find the estimate of this function at various values of $w$.
 
 \begin{comment}
@@ -686,10 +686,9 @@ $Pr \left[ T(w)>0\right]$ is continuous with respect to $w$.
 & & Pr\left[T(w+\delta)\leq 0  | T(w) > 0\right]Pr\left[T(w) > 0 \right] ) \\
 & \leq &  \max ( Pr\left[T(w+\delta)>0   | T(w) \leq 0 \right] ,\\
 & & Pr\left[T(w+\delta)\leq 0  | T(w) > 0\right]) 
-
 \end{eqnarray*} 
 %\end{center}
-For any $w$, choose $\delta$ such that such that both $ Pr\left[T(w+\delta)>0   | T(w) \leq 0 \right] <\epsilon$ and  $Pr\left[T(w+\delta)\leq 0  | T(w) > 0\right]<\epsilon $. Such a $\delta$ exists due to stochastic continuity. Therefore 
+For any $w$, choose $\delta_{\epsilon}$ such that such that both $ Pr\left[T(w+\delta_{\epsilon})>0   | T(w) \leq 0 \right] <\epsilon$ and  $Pr\left[T(w+\delta_{\epsilon})\leq 0  | T(w) > 0\right]<\epsilon $. Such a value of  $\delta_{\epsilon}$  exists , since the conditional probabilities $Pr\left[T(w+\delta)>0   | T(w) \leq 0 \right]$ can be made smaller than $\epsilon$ due to stochastic continuity. Therefore 
 \[
 \| Pr\left[T(w+\delta)>0\right]- Pr\left[T(w)>0 \right]\| \leq \max ( Pr\left[T(w+\delta)>0   | T(w) \leq 0 \right] , Pr\left[T(w+\delta)\leq 0  | T(w) > 0\right]) <\epsilon 
 \]
@@ -705,7 +704,7 @@ Therefore $ Pr\left[T(w)>0\right]$ is continuous with respect to $w$
 \end{proof}
 
 
-The main assumption  used in the proof is the stochastic continuity of $T_0(w)$ and $T_a(w)$ .  In the constructed example,  a certain symmetry in the realized configuration is assumed, which results in a discontinuity at a particular  point of $w$. Any change in this symmetry will give a discontinuity at a different $w$. When the probability distribution of the data that leads to the dissimilarities is continuous, it can be argued that the probability of a  jump discontinuity at  a particular $w$ has measure zero which is equivalent to stochastic continuity.
+The main assumption  used in the proof is the stochastic continuity of $T_0(w)$ and $T_a(w)$ .  In the constructed example that is in the detour to follow,  a certain symmetry in the realized configuration is assumed, which results in a discontinuity at a particular  point of $w$. Any change in this symmetry will give a discontinuity at a different $w$. When the probability distribution of the data that leads to the dissimilarities is continuous, it can be argued that the probability of a  jump discontinuity at  a particular $w$ has measure zero which is equivalent to stochastic continuity.
 
 
 \begin{comment}
