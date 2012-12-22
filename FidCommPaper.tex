@@ -654,7 +654,7 @@ To prove differentiability of $\beta_{\alpha}\left( w\right)$ , we refer to Theo
  Let $T_0(w)$ and $T_a(w)$ denote the value of the test statistic under null and alternative distributions  for the embedding with $w$ .  %stochastic process whose sample path is  a function of $w$ where the randomness comes from $\Delta_{m}$, $\Delta_{u}$ and %$\mathcal{T}$ . 
 Consider $\beta_{\alpha}(\cdot)$ as a function of $w$, which can be written as $P\left[T_a(\cdot)>c_{\alpha}(\cdot)\right]$ where $c_{\alpha}(\cdot)$ is the critical value for level $\alpha$. Instead of  $\beta_{\alpha}(\cdot)$
 
-  the area under the curve measure will be shown to be continuous as a surrogate: $$AUC(w)=P\left[T_a(w)>T_0(w)\right]$$ where $T_a(\cdot)$ and $T_0(\cdot)$ can also be regarded as  stochastic processes whose sample paths are continuous functions of $w$ except at a finite number of points in $(0,1)$. By  assuming stochastic continuity of $T_a(w)$ and $T_0(w)$ in the interval $(0,1)$, ie assuming the probability of a jump discontinuity of $T_0(w)$ at a particular $w_0$ is 0,  the continuity of $AUC(w)$ will be proven.
+  the area under the curve measure will be shown to be continuous as a surrogate: $$AUC(w)=P\left[T_a(w)>T_0(w)\right]$$ where $T_a(\cdot)$ and $T_0(\cdot)$ can also be regarded as  stochastic processes whose sample paths are continuous functions of $w$ except at a finite number of points in $(0,1)$. By  assuming stochastic continuity of $T_a(w)$ and $T_0(w)$ in the interval $(0,1)$, i.e. assuming the probability of a jump discontinuity of $T_0(w)$ at a particular $w_0$ is 0,  the continuity of $AUC(w)$ will be proven.
 
 
 \begin{thm}
@@ -688,7 +688,7 @@ $Pr \left[ T(w)>0\right]$ is continuous with respect to $w$.
 & & Pr\left[T(w+\delta)\leq 0  | T(w) > 0\right]) 
 \end{eqnarray*} 
 %\end{center}
-For any $w$, choose $\delta_{\epsilon}$ such that such that both $ Pr\left[T(w+\delta_{\epsilon})>0   | T(w) \leq 0 \right] <\epsilon$ and  $Pr\left[T(w+\delta_{\epsilon})\leq 0  | T(w) > 0\right]<\epsilon $. Such a value of  $\delta_{\epsilon}$  exists , since the conditional probabilities $Pr\left[T(w+\delta)>0   | T(w) \leq 0 \right]$ can be made smaller than $\epsilon$ due to stochastic continuity. Therefore 
+For any $w$, choose $\delta_{\epsilon}$ such that such that both $ Pr\left[T(w+\delta_{\epsilon})>0   | T(w) \leq 0 \right] <\epsilon$ and  $Pr\left[T(w+\delta_{\epsilon})\leq 0  | T(w) > 0\right]<\epsilon $. Such a value of  $\delta_{\epsilon}$  exists , since the conditional probabilities $Pr\left[T(w+\delta)>0   | T(w) \leq 0 \right]$ and $ Pr\left[T(w+\delta)\leq 0  | T(w) > 0\right]$  can be made smaller than $\epsilon$ due to stochastic continuity. Therefore 
 \[
 \| Pr\left[T(w+\delta)>0\right]- Pr\left[T(w)>0 \right]\| \leq \max ( Pr\left[T(w+\delta)>0   | T(w) \leq 0 \right] , Pr\left[T(w+\delta)\leq 0  | T(w) > 0\right]) <\epsilon 
 \]
