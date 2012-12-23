@@ -126,6 +126,10 @@ print(run.time.g)
 
 save.image(file=paste(date(),".Rdata"))
 
+
+
+ draw.plots(sim.res,"MVN",params,plot.w.vals=1:length(params$w.vals),TRUE,TRUE,FALSE)
+
 #source("./src/color-setting.R")
 
 draw.plots<-function(sim.res,model,params,plot.w.vals,compare.pom.cca,cca.reg,compute.bound){
@@ -216,7 +220,7 @@ if (compute.bound) {
 }
 
 legend.txt <- (params$w.vals)[plot.w.vals]
-legend.txt.prefix <- c("w=",rep(c("  "),sum(plot.w.vals)-1))
+legend.txt.prefix <- c("w=",rep(c("  "),length(plot.w.vals)-1))
 legend.txt<- paste(legend.txt.prefix,legend.txt)
 if (compare.pom.cca)
 	legend.txt <-c(legend.txt ,"pom","cca")
@@ -236,7 +240,7 @@ if(!run.in.linux&(!run.for.Sweave))  savePlot(paste("./",fname,".pdf",sep="",col
 if(!run.in.linux&(!run.for.Sweave))  savePlot(filename=paste("./",fname,".ps",sep="",collapse=""),type="ps")
 if(!run.in.linux&(!run.for.Sweave)) savePlot(filename=paste("./",fname,".png",collapse="",sep=""),type="png")
 
-dev.off()
+#dev.off()
 
 
 
@@ -313,7 +317,7 @@ if(!run.in.linux&(!run.for.Sweave)) savePlot(paste(fname,".ps",sep="",collapse="
 par(lwd=lwd.old)
 
 #dev.print(png,file=fname,height=600,width=600)
-dev.off()
+#dev.off()
 
 
 

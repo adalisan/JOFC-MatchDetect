@@ -901,9 +901,6 @@ Given the setting ("Gaussian","Dirichlet"),   the steps for each Monte Carlo rep
 
 
 
-
-
-
 \begin{figure}
 \includegraphics[scale=0.35]{MVN-FC-Tradeoff-OOSc0-01-n150.pdf}
 \caption{Power ($\beta$) vs Type I error ($\alpha$) plot for different $w$ values for the Gaussian setting (noisy case)}
@@ -1017,8 +1014,13 @@ For the noisy version of the Gaussian setting at allowable type I error 0.05 for
 % the distribution of p-values from McNemar's tests is skewed and  we reject $\beta_{0.5}>=\beta_{w^*} $ for  55\%  of the %Monte Carlo replicates.
 
 
+ Another avenue for investigation is  how the parameters of the distribution of  data such as $p$ ,$q$, $r$, $c$ and $d$ affect the results. For example, it was  speculated that as $q$, the number of   ``noise" dimensions increases, the performance of  CCA approach would suffer, due to spurious correlations. This hypothesis was tested using simulated data with q=45. The  bundle of ROC curves in the Figure \ref{fig:largeq}.  Both CCA and  regularized CCA is not competitive with JOFC approach with the appropriate $w$ values.
 
-
+\begin{figure}
+\includegraphics{MVN-FC-Tradeoff-OOSc0-01-n150-q45}
+\caption{}
+\label{fig:largeq}
+\end{figure}
 
 
 \begin{comment}
