@@ -286,14 +286,16 @@ run.wiki.JOFC.sim.mc.replicate <- function(m.i,N, test.samp.size, w.val.len, m, 
 	power.w.star<- 0
 	print("starting JOFC embedding ")
 	
+	
+
 	JOFC.results <- run.jofc(
 			D1, D2, D10A,D20,D2A,
 			D.oos.1,
 			D.oos.2.null ,
 			D.oos.2.alt ,
 			
-			ideal.omnibus.0  ,
-			ideal.omnibus.A ,
+			L.in.oos.0 ,
+			L.in.oos.A,
 			
 			n,m,
 			
@@ -328,13 +330,36 @@ run.wiki.JOFC.sim.mc.replicate <- function(m.i,N, test.samp.size, w.val.len, m, 
 
 
 
+require(parallel)
+
+num.cores<-parallel::detectCores()
+iter_per_core <- ceiling(nmc/num.cores)
+	
+
+
+if(seq){
+  registerDoSEQ()
+} else if (.Platform$OS.type != "windows" && require("multicore")) {
+  require(doMC)
+  registerDoMC()
+} else if (FALSE &&                     # doSMP is buggy
+  require("doSMP")) {
+  workers <- startWorkers(num.cores,FORCE=TRUE) # My computer has 4 cores
+  on.exit(stopWorkers(workers), add = TRUE)
+  registerDoSMP(workers)
+} else if (require("doSNOW")) {
+  cl <- snow::makeCluster(num.cores, type = "SOCK")
+  on.exit(snow::stopCluster(cl), add = TRUE)
+  registerDoSNOW(cl)
+} else {
+  registerDoSEQ()
+}  
+
+
+
 
 	
-	sfInit( parallel=TRUE, cpus=4 )
-
-
-	
-	JOFC.wiki.res<-lapply(1:nmc, run.wiki.JOFC.sim.mc.replicate, N = N, test.samp.size = test.samp.size,
+	JOFC.wiki.res<-parLapply(cl,1:nmc, run.wiki.JOFC.sim.mc.replicate, N = N, test.samp.size = test.samp.size,
 					w.val.len = w.val.len, m = m, TE = TE, TF = TF, n = n,
 					model = "gaussian", oos = oos, Wchoice = Wchoice,
 					separability.entries.w = separability.entries.w, wt.equalize = wt.equalize,
@@ -349,6 +374,32 @@ run.wiki.JOFC.sim.mc.replicate <- function(m.i,N, test.samp.size, w.val.len, m, 
 	sfStop()
 	
 
+  
+  
+  
+#   
+#   
+# 	JOFC.wiki.res <- foreach(i=1:nmc, .combine="c",.export=c("bitflip_MC_rep","run.experiment.JOFC")) %dopar% {
+# 	  
+# 	  
+# 	  
+# 	  
+# 	  
+# 	  
+# 	  mc.rep.result<-run.wiki.JOFC.sim.mc.replicate(m.i=i, N = N, test.samp.size = test.samp.size,
+# 	                                                w.val.len = w.val.len, m = m, TE = TE, TF = TF, n = n,
+# 	                                                model = "gaussian", oos = oos, Wchoice = Wchoice,
+# 	                                                separability.entries.w = separability.entries.w, wt.equalize = wt.equalize,
+# 	                                                assume.matched.for.oos = assume.matched.for.oos, oos.use.imputed = oos.use.imputed,
+# 	                                                w.vals = w.vals, size = size, verbose = verbose,  level.mcnemar = level.mcnemar			
+# 	  )
+# 	  list(mc.rep.result)
+# 	}	
+# 	
+# 	for (mc.i in 1:nmc){
+# 	  power.nmc[,mc.i,]<- JOFC.wiki.res[[mc.i]]$power.mc
+# 	}   
+	
 
 colors.vec <- c("red","green","gold4","purple","aquamarine",
 		"darkblue","azure3","salmon","rosybrown","magenta","orange",
