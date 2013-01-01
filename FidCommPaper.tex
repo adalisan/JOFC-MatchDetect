@@ -686,6 +686,8 @@ $Pr \left[ T(w)>0\right]$ is continuous with respect to $w$.
 & & Pr\left[T(w+\delta)\leq 0  | T(w) > 0\right]Pr\left[T(w) > 0 \right] ) \\
 & \leq &  \max ( Pr\left[T(w+\delta)>0   | T(w) \leq 0 \right] ,\\
 & & Pr\left[T(w+\delta)\leq 0  | T(w) > 0\right]) 
+& \leq &  \max ( Pr\left[T(w+\delta)>0   | T(w) \leq 0 \right] ,\\
+& & Pr\left[T(w+\delta)\leq 0  | T(w) > 0\right]) 
 \end{eqnarray*} 
 %\end{center}
 For any $w$, choose $\delta_{\epsilon}$ such that such that both $ Pr\left[T(w+\delta_{\epsilon})>0   | T(w) \leq 0 \right] <\epsilon$ and  $Pr\left[T(w+\delta_{\epsilon})\leq 0  | T(w) > 0\right]<\epsilon $. Such a value of  $\delta_{\epsilon}$  exists , since the conditional probabilities $Pr\left[T(w+\delta)>0   | T(w) \leq 0 \right]$ and $ Pr\left[T(w+\delta)\leq 0  | T(w) > 0\right]$  can be made smaller than $\epsilon$ due to stochastic continuity. Therefore 
@@ -1017,7 +1019,7 @@ For the noisy version of the Gaussian setting at allowable type I error 0.05 for
  Another avenue for investigation is  how the parameters of the distribution of  data such as $p$ ,$q$, $r$, $c$ and $d$ affect the results. For example, it was  speculated that as $q$, the number of   ``noise" dimensions increases, the performance of  CCA approach would suffer, due to spurious correlations. This hypothesis was tested using simulated data with q=45. The  bundle of ROC curves in the Figure \ref{fig:largeq}.  Both CCA and  regularized CCA is not competitive with JOFC approach with the appropriate $w$ values.
 
 \begin{figure}
-\includegraphics{MVN-FC-Tradeoff-OOSc0-01-n150-q45}
+\includegraphics{MVN_JOFC_q_90_c_0_001}
 \caption{}
 \label{fig:largeq}
 \end{figure}

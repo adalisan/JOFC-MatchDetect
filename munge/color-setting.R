@@ -10,6 +10,7 @@
 	colors.vec[9]<-"red"
 	colors.vec.len<-length(colors.vec)
 	
+  require(RColorBrewer)
 	colors.vec<- brewer.pal(colors.vec.len,"YlOrRd")
 	
 	colors.vec[colors.vec.len+1]<-"cornflowerblue"
