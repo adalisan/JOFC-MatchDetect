@@ -14,9 +14,8 @@ if (!run.for.Sweave){
 }
 print(debug.mode)
 if (par.compute){
-	if (par.compute.sf){
-		
-	} else{
+	
+
     
 	  
 	  num.cores<-parallel::detectCores()
@@ -24,14 +23,14 @@ if (par.compute){
 	  require(foreach)
 	  
 	  
-	  if (.Platform$OS.type != "windows" && require("multicore")) {
+	  if (!par.compute.sf && .Platform$OS.type != "windows" && require("multicore")) {
 	    require(doMC)
 	    registerDoMC(parallel::detectCores())
-	  } else if (FALSE &&                     # doSMP is buggy
+	  } else if (!par.compute.sf && FALSE &&                     # doSMP is buggy
 	    require("doSMP")) {
 	    workers <- startWorkers(num.cores,FORCE=TRUE) # My computer has 4 cores
-	    on.exit(stopWorkers(w), add = TRUE)
-	    registerDoSMP(w)
+	    on.exit(stopWorkers(workers), add = TRUE)
+	    registerDoSMP(workers)
 	  } else if (require("doSNOW")) {
 	    cl <- snow::makeCluster(num.cores, type = "SOCK")
 	    on.exit(snow::stopCluster(cl), add = TRUE)
@@ -41,11 +40,20 @@ if (par.compute){
 	  }
     
 	
-	}
-}
+	
+} else {
+	    registerDoSEQ()
+	  }
 
+model <- NULL   
+if ( gauss.sim) {
 model="MVN"
-num.cpus<-5
+} elseif {dirichlet.sim} {
+model="Dirichlet"
+} else{
+stop("invalid model name")}
+
+num.cpus<-num.cores
 
 gaussian_simulation_jofc_tradeoff
 gaussian_simulation_jofc_tradeoff_par
@@ -63,6 +71,28 @@ if ((model=="MVN")       && par.compute.sf)           call.func<-gaussian_simula
 if ((model=="Dirichlet") && par.compute.sf)     call.func<-dirichlet_simulation_jofc_tradeoff_sf
 sim.res<-list()
 
+if (model=="MVN") real.dim<- params$p.g+params$q.g
+if (model=="Dirichlet") real.dim <- params$p.d+params$q.d+2
+
+params$compare.pom.cca<-TRUE
+
+
+if (model=="MVN"){
+params$p <-params$p.g
+params$q <- params$q.g
+params$r <- params$r.g
+} else{
+params$p <- params$p.d
+params$q <- params$q.d
+params$r <- params$r.d
+}
+
+
+
+
+
+
+
 
 if (run.for.Sweave) print("c")
 
@@ -71,17 +101,22 @@ if (run.for.Sweave) print(p)
 if (run.for.Sweave) print("w values")
 if (run.for.Sweave)  print(w.vals)
 
-p<-params$p
-q<-params$q
-if (model=="MVN") real.dim<- p+q
-if (model=="Dirichlet") real.dim <- p+q+2
-rm(p)
-rm(q)
 
-params$compare.pom.cca<-TRUE
+
+
+
+
+
+
+
+
+
+
+
 
 begin.time.g <-Sys.time()
-args.for.func.call<-with(params,list(p=p, r=r, q=q, c.val=c.val,d=d,
+args.for.func.call<-with(params,list(p=p, r=r, q=q, 
+c.val=c.val,d=d,
 		
 		Wchoice     = "avg", 
 		pre.scaling = TRUE,
@@ -124,7 +159,7 @@ run.time.g <- end.time.g-begin.time.g
 
 print(run.time.g)
 
-save.image(file=paste(date(),".Rdata"))
+save.image(file= paste("JOFC_MVN_Dir_Sim_",format(Sys.time(), "%b %d %H:%M:%S"),".RData"))
 
 
 

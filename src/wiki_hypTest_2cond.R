@@ -199,6 +199,9 @@
 #
 #}
 
+print(getwd())
+load("./data/wiki.RData")
+N <- 1382
 
 model= "gaussian"
 w.vals = c(0.1,0.2,0.4,0.5,0.8,0.9,0.925,0.95,0.99,0.999)
@@ -214,6 +217,8 @@ m<- test.samp.size
 n<- N-(2*test.samp.size)
 
 Wchoice<-"avg"
+size <- seq(0, 1, 0.01)
+
 
 separability.entries.w<- FALSE
 wt.equalize<-FALSE
@@ -233,9 +238,23 @@ if (pre.scaling) {
 
 TF<-TF*s
 
+
+
+par.compute<-TRUE
+
 run.wiki.JOFC.sim.mc.replicate <- function(m.i,N, test.samp.size, w.val.len, m, TE, TF,
-		n, model, oos, Wchoice, separability.entries.w, wt.equalize,
+		n,d, model, oos, Wchoice, separability.entries.w, wt.equalize,
 		assume.matched.for.oos, oos.use.imputed, w.vals, size, verbose,  level.mcnemar) {
+    source("./lib/simulation_math_util_fn.R")
+    source("./lib/smacofM.R")
+    source("./lib/oosIM.R")
+
+
+
+
+
+
+
 	power.mc <-array(0,dim=c(w.val.len,length(size)))
 	left.out.samp<- sample(1:N,2*test.samp.size)
 	test.matched<- left.out.samp[1:test.samp.size] 
@@ -335,15 +354,19 @@ require(parallel)
 num.cores<-parallel::detectCores()
 iter_per_core <- ceiling(nmc/num.cores)
 	
+cl <- NULL
+use.snow <- TRUE
 
 
-if(seq){
+
+
+if(!par.compute){
   registerDoSEQ()
-} else if (.Platform$OS.type != "windows" && require("multicore")) {
+} else if ( !use.snow && .Platform$OS.type != "windows" && require("multicore") ) {
   require(doMC)
   registerDoMC()
 } else if (FALSE &&                     # doSMP is buggy
-  require("doSMP")) {
+  require("doSMP")&& !use.snow) {
   workers <- startWorkers(num.cores,FORCE=TRUE) # My computer has 4 cores
   on.exit(stopWorkers(workers), add = TRUE)
   registerDoSMP(workers)
@@ -359,8 +382,8 @@ if(seq){
 
 
 	
-	JOFC.wiki.res<-parLapply(cl,1:nmc, run.wiki.JOFC.sim.mc.replicate, N = N, test.samp.size = test.samp.size,
-					w.val.len = w.val.len, m = m, TE = TE, TF = TF, n = n,
+	JOFC.wiki.res<-parLapply(cl=cl,1:nmc, run.wiki.JOFC.sim.mc.replicate, N = N, test.samp.size = test.samp.size,
+					w.val.len = w.val.len, m = m, TE = TE, TF = TF, n = n, d=d,
 					model = "gaussian", oos = oos, Wchoice = Wchoice,
 					separability.entries.w = separability.entries.w, wt.equalize = wt.equalize,
 					assume.matched.for.oos = assume.matched.for.oos, oos.use.imputed = oos.use.imputed,
@@ -371,7 +394,6 @@ if(seq){
 		power.nmc[,mc.i,]<- JOFC.wiki.res[[mc.i]]$power.mc
 		
 	}
-	sfStop()
 	
 
   
@@ -400,6 +422,9 @@ if(seq){
 # 	  power.nmc[,mc.i,]<- JOFC.wiki.res[[mc.i]]$power.mc
 # 	}   
 	
+save.image(file= paste("./cache/JOFC_Wiki_Exp_HypTest",format(Sys.time(), "%b %d %H:%M:%S"),".RData"))
+
+
 
 colors.vec <- c("red","green","gold4","purple","aquamarine",
 		"darkblue","azure3","salmon","rosybrown","magenta","orange",
@@ -423,6 +448,8 @@ for (i in 1:w.val.len){
 	
 }
 
+dev.copy2pdf(file= paste("JOFC_Wiki_Exp_HypTest",format(Sys.time(), "%b %d %H:%M:%S"),".pdf"))
+dev.copy(device=png,file= paste("JOFC_Wiki_Exp_HypTest",format(Sys.time(), "%b %d %H:%M:%S"),".png"))
 
 legend.txt <- w.vals
 

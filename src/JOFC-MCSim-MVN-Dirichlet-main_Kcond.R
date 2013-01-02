@@ -14,9 +14,8 @@ if (!run.for.Sweave){
 }
 print(debug.mode)
 if (par.compute){
-	if (par.compute.sf){
 		
-	} else{
+
     
 	  
 	  num.cores<-parallel::detectCores()
@@ -24,14 +23,14 @@ if (par.compute){
 	  require(foreach)
 	  
 	  
-	  if (.Platform$OS.type != "windows" && require("multicore")) {
+	  if (!par.compute.sf && .Platform$OS.type != "windows" && require("multicore")) {
 	    require(doMC)
 	    registerDoMC(parallel::detectCores())
-	  } else if (FALSE &&                     # doSMP is buggy
+	  } else if (!par.compute.sf && FALSE &&                     # doSMP is buggy
 	    require("doSMP")) {
 	    workers <- startWorkers(num.cores,FORCE=TRUE) # My computer has 4 cores
-	    on.exit(stopWorkers(w), add = TRUE)
-	    registerDoSMP(w)
+	    on.exit(stopWorkers(workers), add = TRUE)
+	    registerDoSMP(workers)
 	  } else if (require("doSNOW")) {
 	    cl <- snow::makeCluster(num.cores, type = "SOCK")
 	    on.exit(snow::stopCluster(cl), add = TRUE)
@@ -41,14 +40,16 @@ if (par.compute){
 	  }
     
 	
+	
+} else {
+	    registerDoSEQ()
 	}
-}
+    
 
 model="MVN"
 num.cpus<-num.cores
 
 
-params$r<-3
 
 
 
@@ -61,6 +62,18 @@ if ((model=="Dirichlet") && par.compute.sf)     call.func<-dirichlet_simulation_
 sim.res.Kcond<-list()
 
 
+
+
+
+if (model=="MVN"){
+params$p <-params$p.g
+params$q <- params$q.g
+params$r <- params$r.g
+} else{
+params$p <- params$p.d
+params$q <- params$q.d
+params$r <- params$r.d
+}
 if (run.for.Sweave) print("c")
 
 if (run.for.Sweave) print(c.val)
@@ -68,19 +81,15 @@ if (run.for.Sweave) print(p)
 if (run.for.Sweave) print("w values")
 if (run.for.Sweave)  print(w.vals)
 
-p<-params$p
-q<-params$q
-if (model=="MVN") real.dim<- p+q
-if (model=="Dirichlet") real.dim <- p+q+2
-rm(p)
-rm(q)
 
 params$r.g<-3
 
 params$compare.pom.cca<-TRUE
 
 begin.time.g <-Sys.time()
-args.for.func.call<-with(params,list(p=p.g, r=r.g, q=q.g, c.val=c.val,d=d,K=K,
+args.for.func.call<-with(params,list(p=p, r=r, q=q, 
+c.val=c.val,d=d,
+		
 		Wchoice     = "avg", 
 		pre.scaling = TRUE,
 		oos         = oos,
@@ -115,19 +124,23 @@ sim.res.Kcond <- do.call(call.func,args=args.for.func.call)
 
 
 
-bootstrap.res <- with(params, do.call(test.bootstrapped.JOFC,args=c(list(model="gaussian"),args.for.func.call)))
+#bootstrap.res <- with(params, do.call(test.bootstrapped.JOFC,args=c(list(model="gaussian"),args.for.func.call)))
 
 
 ############################################
 #  Running simulation function 
 ############################################
-sim.res.Kcond <- do.call(call.func,args=args.for.func.call)
+
 end.time.g<-Sys.time()
 run.time.g <- end.time.g-begin.time.g
 
 print(run.time.g)
 
-save.image(file=paste(date(),".Rdata"))
+save.image(file= paste("JOFC_MVN_Dir_Sim_",format(Sys.time(), "%b %d %H:%M:%S"),".RData"))
+
+
+
+ draw.plots(sim.res,"MVN",params,plot.w.vals=1:length(params$w.vals),TRUE,TRUE,FALSE)
 
 #source("./src/color-setting.R")
 
@@ -219,7 +232,7 @@ if (compute.bound) {
 }
 
 legend.txt <- (params$w.vals)[plot.w.vals]
-legend.txt.prefix <- c("w=",rep(c("  "),sum(plot.w.vals)-1))
+legend.txt.prefix <- c("w=",rep(c("  "),length(plot.w.vals)-1))
 legend.txt<- paste(legend.txt.prefix,legend.txt)
 if (compare.pom.cca)
 	legend.txt <-c(legend.txt ,"pom","cca")
