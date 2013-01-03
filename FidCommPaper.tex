@@ -397,6 +397,7 @@ Note that the Procrustes transformation $\mathbf{Q}^*$  is limited to  a linear 
 \subsection{Canonical Correlational  Analysis on Multidimensional Scaling Embeddings} 
 
 Again MDS is used  to compute embedding configurations, $ X_1$ and $X_2$. It is desirable to  embed into the highest dimensional space  possible ($\mathbb{R}^{d'}$ where $d'=p+q$ for the Gaussian and Dirichlet settings)  to  preserve as many of the signal dimensions as possible (at the risk of possibly including  some noise dimensions). CCA~\cite{Hardoon2004}, then,  yields two mappings $\mathcal{U}_1$ and $\mathcal{U}_2$ that map these embeddings in $\mathbb{R}^{d'}$ to  the low-dimensional commensurate space ($\mathbb{R}^d$). 
+While embedding the dissimilarities in the the highest dimension possible is a good idea for preserving the signal dimensions, in the presence of noise dimensions, the embeddings will incorporate the noise. Even if the dissimilarities are errorless representation of measurements of a particular dimension, for  the  sake of inference, it is preferable  embed at a lower  dimension due to bias-variance tradeoff. This variant of CCA approach, which is called regularized CCA, with the  embedding dimension choice $d'< (p+q)$ is expected to have performance better than CCA approach.
 
 \subsubsection*{Canonical Correlational Analysis}
 
@@ -690,8 +691,8 @@ $Pr \left[ T(w)>0\right]$ is continuous with respect to $w$.
 & & Pr\left[T(w+\delta)\leq 0  | T(w) > 0\right]) 
 \end{eqnarray*} 
 %\end{center}
-For any $w$, choose $\delta_{\epsilon}$ such that such that both $ Pr\left[T(w+\delta_{\epsilon})>0   | T(w) \leq 0 \right] <\epsilon$ and  $Pr\left[T(w+\delta_{\epsilon})\leq 0  | T(w) > 0\right]<\epsilon $. Such a value of  $\delta_{\epsilon}$  exists , since the conditional probabilities $Pr\left[T(w+\delta)>0   | T(w) \leq 0 \right]$ and $ Pr\left[T(w+\delta)\leq 0  | T(w) > 0\right]$  can be made smaller than $\epsilon$ due to stochastic continuity. Therefore 
-\[
+For any $w$, choose $\delta_{\epsilon}$ such that such that both $ Pr\left[T(w+\delta_{\epsilon})>0   | T(w) \leq-+ 0 \right] <\epsilon$ and  $Pr\left[T(w+\delta_{\epsilon})\leq 0  | T(w) > 0\right]<\epsilon $. Such a value of  $\delta_{\epsilon}$  exists , since the conditional probabilities $Pr\left[T(w+\delta)>0   | T(w) \leq 0 \right]$ and $ Pr\left[T(w+\delta)\leq 0  | T(w) > 0\right]$  can be made smaller than $\epsilon$ due to stochastic continuity. Therefore 
+\[2
 \| Pr\left[T(w+\delta)>0\right]- Pr\left[T(w)>0 \right]\| \leq \max ( Pr\left[T(w+\delta)>0   | T(w) \leq 0 \right] , Pr\left[T(w+\delta)\leq 0  | T(w) > 0\right]) <\epsilon 
 \]
 Therefore $ Pr\left[T(w)>0\right]$ is continuous with respect to $w$
@@ -1016,7 +1017,7 @@ For the noisy version of the Gaussian setting at allowable type I error 0.05 for
 % the distribution of p-values from McNemar's tests is skewed and  we reject $\beta_{0.5}>=\beta_{w^*} $ for  55\%  of the %Monte Carlo replicates.
 
 
- Another avenue for investigation is  how the parameters of the distribution of  data such as $p$ ,$q$, $r$, $c$ and $d$ affect the results. For example, it was  speculated that as $q$, the number of   ``noise" dimensions increases, the performance of  CCA approach would suffer, due to spurious correlations. This hypothesis was tested using simulated data with q=45. The  bundle of ROC curves in the Figure \ref{fig:largeq}.  Both CCA and  regularized CCA is not competitive with JOFC approach with the appropriate $w$ values.
+ Another avenue for investigation is  how the parameters of the distribution of  data such as $p$ ,$q$, $r$, $c$ and $d$ affect the results. For example, it was  speculated that as $q$, the number of   ``noise" dimensions increases, the performance of  CCA approach would suffer, due to spurious correlations. This hypothesis was tested using simulated data with q=90. The  bundle of ROC curves in the Figure \ref{fig:largeq}.  Both CCA and  regularized CCA is not competitive with JOFC approach with the appropriate $w$ values. In fact, the ROC curve for CCA is not very distinct from  random guess line.
 
 \begin{figure}
 \includegraphics{MVN_JOFC_q_90_c_0_001}
@@ -1345,7 +1346,7 @@ for different $ d $ values.
 \section{Experiments on Graph Data}
 
 Another application of  the JOFC approach to  the vertex matching problem in multiple graphs. These simulations will be for the same semi-supervised setting as mentioned in \ref{sec:RelatedWork}, where matchings between some vertices in different graphs are known 
-  and the task is to infer the correspondences between the remaining collection of vertices in the graphs.
+  and the task is to infer the correspondences between the remaining collection of vertices in the graphs. The pairs of vertices whose correspondences are known will be referred to as ``seeds''.
 
 Suppose $A,B \in \mathcal{R}^{(r+s)\times (r+s)}$ are adjacency matrices for graphs 
  partitioned as ($r$ rows then $s$ rows, $r$ columns then $s$ columns)
@@ -1386,7 +1387,7 @@ In our experiments we will use three different dissimilarities between vertices 
  \item the shortest path on the  unweighted graph whose adjacency matrix is available
  \item the shortest path on a weighted version of the graph whose adjacency matrix is available
  \item diffusion distance between vertices on the (unweighted) graph.
- \item DICE distance \cite{DICE,weightedDICE,} "????"
+ \item weighted extension Czekanowski-Dice distance \cite{DICE,weightedDICE}
  \end{itemize}
  We will omit the results for weighted graph dissimilarities, since they seem to have the same performance as the weighted dissimilarities.
  
@@ -1403,20 +1404,22 @@ In our experiments we will use three different dissimilarities between vertices 
   The probability of flipping an entry of the adjacency matrix is the perturbation parameter $p_{pert}$ which is the variable on the x-axis. 
   The performance measure is the proportion of true matches to the number of matches. Note that 
   under chance, the expected number of true matches is 1, as shown with the dashed line. In the simulation, $r=20$ and $s=5$. $p_{pert}$ varies from $0$ to $1$ in increments of $0.1$. 
+	
 \begin{figure}
   \includegraphics[scale=0.65]{FidCommPapergraph-plot-1.pdf}
 \end{figure}
 
 
-In the plot above, JOFC approach applied to  dissimilarities based on weighted and unweighted graphs is compared with classical MDS on dissimilarities of weighted graphs.
+In the plot above, JOFC approach is used to find  matched pairs of vertices using  dissimilarities based on weighted and unweighted graphs and  compared with classical MDS embedding of dissimilarities of weighted graphs.
 
 Note that JOFC for unweighted and weighted graphs  have better performance compared to CMDS. As the perturbation parameter gets larger, the performance degrades until it is indistinguishable from random chance at $pert=0.5$.
 
+\begin{comment}
 Another feature of the plot is the U-shape of the curve for diffusion-distance based dissimilarities. This invariancy with respect to complement of the graph should be investigated further.
 
 \includegraphics{graphs/FidCommPapergraph-plot-3}An interesting trend in the graph is that shortest-path based dissimilarities are an improvement over diffusion-path dissimilarities for perturbation parameter less than 0.5 , but as perturbation parameter increases past 0.5, fraction of correct matches for diffusion distance based dissimilarity recovers, while for other dissimilarities the fraction continues to fall. 
+\end{comment}
 
-The dissimilarity type that has the best improvement in performance is JOFC with shortest path distances in weighted graphs(unweighted graphs have similar performance)
 
 
 
@@ -1424,12 +1427,7 @@ This graph shows the effect of the weight parameter of stress $w$ on the probabi
 
 \includegraphics{FidCommPaper-graph-plot-4}
 
-
-This graph shows the effect of the diffusion distance parameter $T$ on the probability of true matches for dissimilarities based on diffusion distance.
-
-
-\includegraphics{FidCommPaper-graph-plot-5}
-
+There are a lot  of interesting questions to ponder about the number of known correspondences, such as , how many known correspondences are necessary for satisfactory performance for graphs of some fixed size and whether , in the ``match ratio'' vs number of known correspondences curve,  there are any ``elbows'' , after which the cost of more correspondences are not justified by the accompanying increase in ``match ratio''. Figure xxx shows ``match ratio'' plotted against number of ``seeds'' for the same bitflip experiments.
 
 
 

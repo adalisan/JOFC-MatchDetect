@@ -357,6 +357,7 @@ par(lwd=lwd.old)
 
 
 }
+draw.plots(sim.res,"MVN",params,plot.w.vals=1:length(params$w.vals),TRUE,TRUE,FALSE)
 
 
 

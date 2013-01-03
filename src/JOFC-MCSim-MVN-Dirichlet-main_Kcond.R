@@ -234,15 +234,23 @@ if (compute.bound) {
 legend.txt <- (params$w.vals)[plot.w.vals]
 legend.txt.prefix <- c("w=",rep(c("  "),length(plot.w.vals)-1))
 legend.txt<- paste(legend.txt.prefix,legend.txt)
-if (compare.pom.cca)
+
+all.colors.vec<- NULL
+if (compare.pom.cca){
 	legend.txt <-c(legend.txt ,"pom","cca")
-if (compute.bound) legend.txt <-c(legend.txt ,"bound")
-if (cca.reg)
+      all.colors.vec =c(colors.vec[plot.w.vals],colors.vec[(w.val.len+1:2)])
+} else {
+all.colors.vec =colors.vec[plot.w.vals]
+}
+if (cca.reg){
 	legend.txt <-c(legend.txt ,"cca.reg")
+ all.colors.vec =c(all.colors.vec,colors.vec[w.val.len+3])
+
+}
 if (compute.bound) {legend.txt <-c(legend.txt ,"bound")}
 
 legend("bottomright",legend=legend.txt,
-		col=c(colors.vec[plot.w.vals],colors.vec[(w.val.len+1:3)]),lty=lty.i.vec,lwd=linewd)
+		col=all.colors.vec,lty=lty.i.vec,lwd=linewd)
 title(plot.title)
 par(lty=1)
 fname<- file.path('graphs',paste(c(model,"-FC-Tradeoff-",ifelse(oos,"OOS","noOOS"),"c",params$c.val),collapse=""))
@@ -252,7 +260,7 @@ if(!run.in.linux&(!run.for.Sweave))  savePlot(paste("./",fname,".pdf",sep="",col
 if(!run.in.linux&(!run.for.Sweave))  savePlot(filename=paste("./",fname,".ps",sep="",collapse=""),type="ps")
 if(!run.in.linux&(!run.for.Sweave)) savePlot(filename=paste("./",fname,".png",collapse="",sep=""),type="png")
 
-dev.off()
+#dev.off()
 
 
 
@@ -329,11 +337,14 @@ if(!run.in.linux&(!run.for.Sweave)) savePlot(paste(fname,".ps",sep="",collapse="
 par(lwd=lwd.old)
 
 #dev.print(png,file=fname,height=600,width=600)
-dev.off()
+#dev.off()
 
 
 
 }
+
+
+draw.plots(sim.res.Kcond,"MVN",params,plot.w.vals=1:length(params$w.vals),TRUE,FALSE,FALSE)
 
 
 
