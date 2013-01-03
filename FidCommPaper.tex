@@ -1387,7 +1387,7 @@ In our experiments we will use three different dissimilarities between vertices 
  \item the shortest path on the  unweighted graph whose adjacency matrix is available
  \item the shortest path on a weighted version of the graph whose adjacency matrix is available
  \item diffusion distance between vertices on the (unweighted) graph.
- \item weighted extension Czekanowski-Dice distance \cite{DICE,weightedDICE}
+ \item weighted extension of Czekanowski-Dice dissimilarity\cite{DICE,weightedDICE} which simplifies to the original Czekanowski-Dice dissimilarity which quantifies local similarity of two vertices in a graph.
  \end{itemize}
  We will omit the results for weighted graph dissimilarities, since they seem to have the same performance as the weighted dissimilarities.
  
@@ -1427,9 +1427,11 @@ This graph shows the effect of the weight parameter of stress $w$ on the probabi
 
 \includegraphics{FidCommPaper-graph-plot-4}
 
-There are a lot  of interesting questions to ponder about the number of known correspondences, such as , how many known correspondences are necessary for satisfactory performance for graphs of some fixed size and whether , in the ``match ratio'' vs number of known correspondences curve,  there are any ``elbows'' , after which the cost of more correspondences are not justified by the accompanying increase in ``match ratio''. Figure xxx shows ``match ratio'' plotted against number of ``seeds'' for the same bitflip experiments.
-
-
+There are a lot  of interesting questions to ponder about the number of known correspondences, such as , how many known correspondences are necessary for satisfactory performance for graphs of some fixed size and whether , in the ``match ratio'' vs number of known correspondences curve,  there are any ``elbows'' , after which the cost of more correspondences are not justified by the accompanying increase in ``match ratio''. Figure \ref[bitflip_JOFC] shows ``match ratio'' plotted against number of ``seeds'' for the same bitflip experiments using  Czekanowski-Dice dissimilarities . These results suggest that even with the perturbation, when a portion of the correspondences are known, it is possible to recover most of the remaining correspondences
+\begin{figure}
+\includegraphics{bitflip_JOFC}
+\caption{Bitflip Simulations for JOFC\label[bitflip_JOFC]}
+\end{figure}
 
 
 \section{Conclusion}
