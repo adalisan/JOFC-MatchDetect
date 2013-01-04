@@ -114,7 +114,7 @@
 
 %%% The "real" document content comes below...
 
-\title{Optimal Weighting for Joint Optimization of Fidelity and Commensurability in Tests of Matchedness}
+\title{ Fidelity-Commensurability tradeoff in Joint Embedding of Disparate Dissimilarities}
 
 
 %input affiliations
@@ -680,13 +680,12 @@ $Pr \left[ T(w)>0\right]$ is continuous with respect to $w$.
 \begin{eqnarray*}
 \| Pr\left[T(w+\delta)>0\right]- Pr\left[T(w)>0 \right]\| & = & \| Pr\left[T(w+\delta)>0   \cap T(w) \leq 0 \right] + Pr\left[T(w+\delta)>0   \cap T(w) > 0 \right] - \\
 & & (Pr\left[T(w+\delta)> 0   \cap T(w) > 0 \right]+ Pr\left[T(w+\delta)\leq 0  \cap T(w) > 0\right]\| \\
-& = & \| Pr\left[T(w+\delta)>0   \cap T(w) \leq 0 \right]- Pr\left[T(w+\delta)\leq 0  \cap T(w) > 0\right]\| \\
-& = & \| Pr\left[T(w+\delta)>0   | T(w) \leq 0 \right]Pr\left[T(w) \leq 0 \right]-\\
+& = & \| Pr\left[T(w+\delta)>0   \cap T(w) \leq 0 \right]- Pr\left[T(w+\delta)\leq 0  \cap   \leq 0 \right]Pr\left[T(w) \leq 0 \right]-\\
 & &  Pr\left[T(w+\delta)\leq 0  | T(w) > 0\right]Pr\left[T(w) > 0 \right]\| \\
 & \leq &  \max ( Pr\left[T(w+\delta)>0   | T(w) \leq 0 \right]Pr\left[T(w) \leq 0 \right] ,\\
 & & Pr\left[T(w+\delta)\leq 0  | T(w) > 0\right]Pr\left[T(w) > 0 \right] ) \\
 & \leq &  \max ( Pr\left[T(w+\delta)>0   | T(w) \leq 0 \right] ,\\
-& & Pr\left[T(w+\delta)\leq 0  | T(w) > 0\right]) 
+& & Pr\left[T(w+\delta)\leq 0  | T(w) > 0\right]) \\
 & \leq &  \max ( Pr\left[T(w+\delta)>0   | T(w) \leq 0 \right] ,\\
 & & Pr\left[T(w+\delta)\leq 0  | T(w) > 0\right]) 
 \end{eqnarray*} 
@@ -734,19 +733,19 @@ Consider five in-sample points in $\mathbb{R}^2$ with locations $X_1=(0,0)$, $X_
   Denote the Euclidean distance matrix by $D$. 
   Suppose, due to noise, or due to dissimilarities not being Euclidean distances, 
   the dissimilarity matrix is $$D'_{ij}=\begin{cases}
-  D_ij-1.4 & \textrm{if  $(i,j) \in \{(4,6),(6,4),(2,7),(7,2)   \}$ }\\
-  D_ij  & \textrm{ otherwise}\\
+  D_{ij}-1.4 & \textrm{if  $(i,j) \in \{(4,6),(6,4),(2,7),(7,2)   \}$ }\\
+  D_{ij}  & \textrm{ otherwise}\\
   \end{cases}.$$ 
-Qualitatively, the three points $X_1$, $X_7$ and $X_3$ form a barrier which   the OOS points need to cross  to reach their matched counterparts.
-   
-   Based on the initial configuration, the  embedding coordinates of $\hat{X}_6$ might be closer
-    to $X_4$ compared to $X_2$. This is due to a local minimum in the configuration space.  If $\hat{X}_6$ starts from the initial configuration where it's located on the $X_4$ side of the y=x line at the start of optimization, 
-    it might have to cross paths with the embedding of  ${X}_1,{X}_3,{X}_7$ with which it has a  nonzero dissimilarity.  
-    Based on value of $w$, it might be easier to get out of this local minimum. 
-    In fact, depending on w can this  local minimum can be a global minimum. 
-    That is, the configuration where $X_6$ stays on the side of $X_4$ instead of $X_2$ might have a lower stress than the configuration where $X_6$ is near $X_2$. 
-    The following plots shows the local minimum $\hat{X}_6$ ends up in, depending on initial configuration. 
-    Depending on $w$ value, one of these minima has a lower weighted stress than the other.   
+Qualitatively, the three points $X_1$, $X_7$ and $X_3$ form a barrier which   the OOS points need to cross  to reach their matched counterparts. 
+
+The MDS criterion function is optimized starting with different initial configurations.   Depending on the initial configuration, the  embedding coordinates of $\hat{X}_6$ might be closer
+    to $X_4$ compared to $X_2$. This is due to a local minimum in the configuration space.  If, at the start of optimization, the initial coordinates of $\hat{X}_6$ is on the $X_4$ side of the $y=x$ line  inn  $\mathbb{R}^2$ , 
+    it might have to cross paths with the embeddings of  ${X}_1,{X}_3,{X}_7$ and it has   nonzero dissimilarities with those points.  This is the cause of   the ``barrier" mentioned. It is possible to distinguish two kinds of local minima, one where the embedded OOS points $X_5$ and $X_6$ end up in the same side as their respective matched points $X_2$ and $X_4$ (named ``true'' or real config.) and the other where they end up in sides  opposite their matched points (named ``alternative" local min.). Other configurations such as the ones where $X_5$ and $X_6$  end up in the same side are not local minima, since the original dissimilarity between them is large ($\sqrt{2}$) compared to dissimilarities between other pairs of points and embedding them close would increase raw stress significantly.
+    Based on value of $w$, it might be easier to get out of the  ``alternative" local minimum. 
+    In addition, depending on $w$ , this  local minimum can be a global minimum. 
+    That is, if $w$ is small enough, the configuration where $X_6$ stays on the side of $X_4$ instead of $X_2$ might have a lower stress than the configuration where $X_6$ is near its matched point $X_2$, due to the fact that  contribution of $ D_{ij}-d(X_i,X_j)$ to the raw stress where $(i,j)=(4,6)$  is  multiplied by $1-w$ while every other dissimilarity is multiplied by $w$.
+    The following plots shows the local minimum ${X}_5$(in red) and ${X}_6$(in blue) ends up in. Each red-blue point pair is for a different initial configuration. The point pairs plotted in the left box are those configurations  where the  ${X}_5$ and ${X}_6$ end up in the side of their matched points. The configurations in the right are those where the points end up in the opposite side of their matched points. Note that around $w=0.78$ in Figure \ref{fig:Finalconfig-MultMin-w-0_78}, the barrier starts to become negligible, and all of the $X_5$ and $X_6$  pairs start ending up in the side of their matched points.
+    
 
 
 \begin{figure}
@@ -775,14 +774,14 @@ Qualitatively, the three points $X_1$, $X_7$ and $X_3$ form a barrier which   th
 \begin{figure}
 \begin{minipage}[b]{0.5\linewidth}
 \centering
-\includegraphics[scale=0.35]{true-min-w-0_5.pdf}
+\includegraphics[scale=0.35]{true-min-w0_5}
 
 \label{fig:figure2-1}
 \end{minipage}
 \hspace{0.5cm}
 \begin{minipage}[b]{0.5\linewidth}
 \centering
-\includegraphics[scale=0.35]{other-min-w-0_5.pdf}
+\includegraphics[scale=0.35]{other-min-w0_5.pdf}
 
 \label{fig:figure2-2}
 \end{minipage}
@@ -792,18 +791,37 @@ Qualitatively, the three points $X_1$, $X_7$ and $X_3$ form a barrier which   th
 
 \end{figure}
 
-
 \begin{figure}
 \begin{minipage}[b]{0.5\linewidth}
 \centering
-\includegraphics[scale=0.35]{true-min-w-0_99.pdf}
+\includegraphics[scale=0.35]{true-min-w0_78.pdf}
 
 \label{fig:figure2-1}
 \end{minipage}
 \hspace{0.5cm}
 \begin{minipage}[b]{0.5\linewidth}
 \centering
-\includegraphics[scale=0.35]{other-min-w-0_99.pdf}
+\includegraphics[scale=0.35]{other-min-w0_78.pdf}
+
+\label{fig:figure2-2}
+\end{minipage}
+
+\caption{Final configurations for for different $w=0.78$ }
+\label{fig:Finalconfig-MultMin-w-0_78}
+
+\end{figure}
+
+\begin{figure}
+\begin{minipage}[b]{0.5\linewidth}
+\centering
+\includegraphics[scale=0.35]{true-min-w0_99.pdf}
+
+\label{fig:figure2-1}
+\end{minipage}
+\hspace{0.5cm}
+\begin{minipage}[b]{0.5\linewidth}
+\centering
+\includegraphics[scale=0.35]{other-min-w0_99.pdf}
 
 \label{fig:figure2-2}
 \end{minipage}
@@ -821,16 +839,16 @@ Qualitatively, the three points $X_1$, $X_7$ and $X_3$ form a barrier which   th
  $w$ value & 0.1 & 0.45 & 0.5 & 0.55 & 0.99 \\ 
   \hline
 Local min for real config. & 2.80 & 1.77 & 1.62 & 1.47 & 0.04 \\ 
-  Alternative local min & 0.39 & 1.53 & 1.65 & 1.74 & 100.00 \\ 
+  Alternative local min & 0.39 & 1.53 & 1.65 & 1.74 & NA \\ 
    \hline
 \end{tabular}
 \end{center}
 \end{table}
 
 
-Other than such carefully constructed examples, it is  expected that $w$  will have no effect on the ordering of the local minima according to their stress values.
-Therefore,  the argmin among these local minima is independent of $w$. The minimum configuration is then a continuous function of $w$. 
-By the continuity of the distance function with respect to configurations, the test statistic is continuous with respect to $w$. One can conclude $\beta(w) $ is a continuous function of $w$. 
+Other than such carefully constructed examples, it is  unexpected that slight changes in $w$  will change the ordering of the local minima according to their stress values.
+Therefore,  the argmin among the local minima configurations is independent of $w$. The minimum configuration is then a continuous function of $w$. 
+By the continuity of the distance function with respect to configurations, the test statistic is continuous with respect to $w$. One can conclude  that stochastic continuity  is a valid assumption and $\beta(w) $ is a continuous function of $w$. 
 %It is possible this is not the global minimum in $\mathbb{R}^d$  
 
 %Does the discontinuity in configurations mean discontinuity  in the $\beta(w)$ function
@@ -884,8 +902,15 @@ If the magnitude of noise is small enough, and the embedding dimension is not la
 
 Given the setting ("Gaussian","Dirichlet"),   the steps for each Monte Carlo replicate are as follows:
 \begin{itemize}
-\item A training set ($\mathbf{T}_{mc}$) which consists of  $n$ pairs of matched measurements is generated.  If $c=0$, the ``noiseless" data setting is being simulated and measurements are $p$-dimensional vectors, otherwise  the ``noisy" setting is being used to generate data and measurement vectors are $(p+q)$-dimensional.
-\item Dissimilarities are computed and embedded in  Euclidean space  via MDS (followed by a transformation from  $\mathbf{R}^d$ to  $\mathbf{R}^d$ and  projection into $\mathbf{R}^d$, respectively  for P$\circ$M and CCA) . The final embeddings lie in $\mathbb{R}^d$.   Denote this in-sample embedding as   $\hat{\mathbf{T}}$. Note that  if the JOFC method is being used, embedding is carried out with the weighted raw stress function $\sigma_{W}(\cdot)=f_{w}(D(\cdot),M)$ in equation \eqref{fid-comm-tradeoff-func} with a common weight $w$ for commensurability terms and another common weight $1-w$ for fidelity terms, otherwise unweighted raw stress function ($\sigma(\cdot)$) is used as a criterion function for embedding.
+\item A training set ($\mathbf{T}_{mc}$) which consists of  $n$ pairs of matched measurements is generated.  If $c=0$, the ``noiseless" data setting is being simulated and measurements are $p$-dimensional vectors, otherwise  the ``noisy" setting is being used to generate data and measurement vectors are $(p+q)$-dimensional. $ \mathbf{T}_{mc}$ = 
+$\begin{array}{ccc}
+        X_{11} & \ldots & X_{1K} \\
+        \cdots & \cdots      & \cdots   \\ 
+        X_{n1} & \ldots     & X_{nK} \\
+    \end{array}
+$
+ where each $X_{ik}$ is a random vector of dimension $(p+q \times I(c>0))$ and the conditional distribution  $X_(i.)|\bm{\alpha}_i  $ is specified as an appropriate Multivariate Normal or Dirichlet distribution.
+\item Dissimilarities are computed and embedded in  Euclidean space  via MDS (followed by a transformation from  $\mathbf{R}^d$ to  $\mathbf{R}^d$ and  projection into $\mathbf{R}^d$, respectively  for P$\circ$M and CCA) . The final embeddings lie in $\mathbb{R}^d$.   Denote this in-sample embedding configuration as   $\hat{\mathbf{T}}$. Note that  if the JOFC method is being used, embedding is carried out with the weighted raw stress function $\sigma_{W}(\cdot)=f_{w}(D(\cdot),M)$ in equation \eqref{fid-comm-tradeoff-func} with a common weight $w$ for commensurability terms and another common weight $1-w$ for fidelity terms, otherwise unweighted raw stress function ($\sigma(\cdot)$) is used as a criterion function for embedding.
 
 \item  $m$ pairs of matched   measurements are generated which are treated as out-of-sample, and 
 \begin{itemize}
@@ -1387,11 +1412,11 @@ In our experiments we will use three different dissimilarities between vertices 
  \item the shortest path on the  unweighted graph whose adjacency matrix is available
  \item the shortest path on a weighted version of the graph whose adjacency matrix is available
  \item diffusion distance between vertices on the (unweighted) graph.
- \item weighted extension of Czekanowski-Dice dissimilarity\cite{DICE,weightedDICE} which simplifies to the original Czekanowski-Dice dissimilarity which quantifies local similarity of two vertices in a graph.
+ \item weighted extension of Czekanowski-Dice dissimilarity\cite{DICE,weightedDICE} which simplifies to the original Czekanowski-Dice dissimilarity (C-D dissimilarity  quantifies local similarity of two vertices in a graph).
  \end{itemize}
  We will omit the results for weighted graph dissimilarities, since they seem to have the same performance as the weighted dissimilarities.
  
- Note that these dissimilarities can only be defined between vertices of the same graph. We impute the inter-condition dissimilarities   as described before\ref{omnibus}.
+ Note that these dissimilarities can only be defined between vertices of the same graph. We impute the inter-condition dissimilarities   as described before in section \ref{omnibus}.
  
   To test JOFC approach, consider the following simulation: $A$ is the adjacency matrix of an Erdos-Renyi graph, that is
   $\left[A\right]_{ij} \sim Binomial(p)$ where $\left[A\right]_{ij}$ is $ij$-th entry of the adjacency matrix  $A$.
@@ -1427,10 +1452,10 @@ This graph shows the effect of the weight parameter of stress $w$ on the probabi
 
 \includegraphics{FidCommPaper-graph-plot-4}
 
-There are a lot  of interesting questions to ponder about the number of known correspondences, such as , how many known correspondences are necessary for satisfactory performance for graphs of some fixed size and whether , in the ``match ratio'' vs number of known correspondences curve,  there are any ``elbows'' , after which the cost of more correspondences are not justified by the accompanying increase in ``match ratio''. Figure \ref[bitflip_JOFC] shows ``match ratio'' plotted against number of ``seeds'' for the same bitflip experiments using  Czekanowski-Dice dissimilarities . These results suggest that even with the perturbation, when a portion of the correspondences are known, it is possible to recover most of the remaining correspondences
+There are a lot  of interesting questions to ponder about the number of known correspondences, such as , how many known correspondences are necessary for satisfactory performance for graphs of some fixed size and whether , in the ``match ratio'' vs number of known correspondences curve,  there are any ``elbows'' , after which the cost of more correspondences are not justified by the accompanying increase in ``match ratio''. Figure \ref{bitflipJOFC} shows ``match ratio'' plotted against number of ``seeds'' for the same bitflip experiments using  Czekanowski-Dice dissimilarities . These results suggest that even with the perturbation, when a portion of the correspondences are known, it is possible to recover most of the remaining correspondences. This application of JOFC is  investigated further in \cite{SGMviaJOFC} with real datasets.
 \begin{figure}
 \includegraphics{bitflip_JOFC}
-\caption{Bitflip Simulations for JOFC\label[bitflip_JOFC]}
+\caption{Bitflip Simulations for JOFC \label{bitflipJOFC}}
 \end{figure}
 
 

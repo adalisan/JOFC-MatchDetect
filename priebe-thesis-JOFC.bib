@@ -1,534 +1,756 @@
-@book{Zadrozny2004,
-address = {New York, New York, USA},
-author = {Zadrozny, Bianca},
-booktitle = {Twenty-first international conference on Machine learning - ICML '04},
-doi = {10.1145/1015330.1015425},
-isbn = {1581138285},
-pages = {114},
-publisher = {ACM Press},
-title = {{Learning and evaluating classifiers under sample selection bias}},
-url = {http://portal.acm.org/citation.cfm?doid=1015330.1015425},
-year = {2004}
+% This file was created with JabRef 2.8.1.
+% Encoding: Cp1252
+
+@ARTICLE{SGMviaJOFC,
+  author = {Adali, S and Lyzinski, V and Fishkind, D.E. and  Priebe, C.E},
+  title = {Seeded Graph Matching via Joint Optimization of Fidelity and Commensurability},
+  year = {2012},
+  note = {in preparation},
+  owner = {Sancar},
+  timestamp = {2013.01.04}
 }
 
-@article{Smith2007,
-abstract = {This paper presents approaches to semi-supervised learning when the labeled training data and test data are differently distributed. Specifically, the samples selected for labeling are a biased subset of some general distribution and the test set consists of samples drawn from either that general distribution or the distribution of the unlabeled samples. An example of the former appears in loan application approval, where samples with repay/default labels exist only for approved applicants and the goal is to model the repay/default behavior of all applicants. An example of the latter appears in spam filtering, in which the labeled samples can be out-dated due to the cost of labeling email by hand, but an unlabeled set of up-to-date emails exists and the goal is to build a filter to sort new incoming email.Most approaches to overcoming such bias in the literature rely on the assumption that samples are selected for labeling depending only on the features, not the labels, a case in which provably correct methods exist. The missing labels are said to be "missing at random" (MAR). In real applications, however, the selection bias can be more severe. When the MAR conditional independence assumption is not satisfied and missing labels are said to be "missing not at random" (MNAR), and no learning method is provably always correct.We present a generative classifier, the shifted mixture model (SMM), with separate representations of the distributions of the labeled samples and the unlabeled samples. The SMM makes no conditional independence assumptions and can model distributions of semi-labeled data sets with arbitrary bias in the labeling. We present a learning method based on the expectation maximization (EM) algorithm that, while not always able to overcome arbitrary labeling bias, learns SMMs with higher test-set accuracy in real-world data sets (with MNAR bias) than existing learning methods that are proven to overcome MAR bias.},
-author = {Smith, Andrew T. and Elkan, Charles},
-journal = {International Conference on Knowledge Discovery and Data Mining},
-keywords = {generative classifiers,reject inference,sample selection bias,semi-supervised learning},
-pages = {657},
-title = {{Making generative classifiers robust to selection bias}},
-url = {http://portal.acm.org/citation.cfm?id=1281263},
-year = {2007}
+@ARTICLE{weightedDICE,
+  author = {Angelelli, Jean-Baptiste and Baudot, AnaÃ¯s and Brun, Christine
+	and GuÃ©noche, Alain},
+  title = {Two local dissimilarity measures for weighted graphs with application
+	to protein interaction networks},
+  journal = {Advances in Data Analysis and Classification},
+  year = {2008},
+  volume = {2},
+  pages = {3-16},
+  doi = {10.1007/s11634-008-0018-3},
+  issn = {1862-5347},
+  issue = {1},
+  keywords = {Graph distance; Graph partitioning; Heuristic optimisation; Biological
+	networks; 05C12; 90C35; 90C59},
+  language = {English},
+  publisher = {Springer-Verlag},
+  url = {http://dx.doi.org/10.1007/s11634-008-0018-3}
 }
 
-
-
-
-@article {Hung-algo,
-author = {Kuhn, H. W.},
-title = {The Hungarian method for the assignment problem},
-journal = {Naval Research Logistics (NRL)},
-volume = {52},
-number = {1},
-publisher = {Wiley Subscription Services, Inc., A Wiley Company},
-issn = {1520-6750},
-url = {http://dx.doi.org/10.1002/nav.20053},
-doi = {10.1002/nav.20053},
-pages = {7--21},
-year = {2005},
+@BOOK{borg+groenen:1997,
+  title = {Modern Multidimensional Scaling. Theory and Applications},
+  publisher = {Springer},
+  year = {1997},
+  author = {Borg, I. and Groenen, P.}
 }
 
-
-
-@article{Hand2006a,
-abstract = {A great many tools have been developed for supervised classification, ranging from early methods such as linear discriminant analysis through to modern developments such as neural networks and support vector machines. A large number of comparative studies have been conducted in attempts to establish the relative superiority of these methods. This paper argues that these comparisons often fail to take into account important aspects of real problems, so that the apparent superiority of more sophisticated methods may be something of an illusion. In particular, simple methods typically yield performance almost as good as more sophisticated methods, to the extent that the difference in performance may be swamped by other sources of uncertainty that generally are not considered in the classical supervised classification paradigm.},
-arxivId = {math/0606441},
-author = {Hand, David J.},
-doi = {10.1214/088342306000000060},
-file = {:C$\backslash$:/Users/Sancar/AppData/Local/Mendeley Ltd./Mendeley Desktop/Downloaded/Hand - 2006 - Classifier Technology and the Illusion of Progress.pdf:pdf},
-issn = {0883-4237},
-journal = {Statistical Science},
-keywords = {Statistics,Theory},
-month = feb,
-number = {1},
-pages = {1--14},
-title = {{Classifier Technology and the Illusion of Progress}},
-url = {http://arxiv.org/abs/math/0606441},
-volume = {21},
-year = {2006}
-}
-@article{Hand2006b,
-author = {Hand, David J.},
-issn = {0883-4237},
-journal = {Statistical Science},
-keywords = {Supervised classification,empirical comparisons,error rate,flat maximum effect,misclassification rate,population drift,principle of parsimony,problem uncertainty,selectivity bias,simplicity},
-month = feb,
-number = {1},
-pages = {1--14},
-title = {{Classifier Technology and the Illusion of Progress}},
-url = {http://projecteuclid.org/euclid.ss/1149600839},
-volume = {21},
-year = {2006}
-}
-@inproceedings{Wang2008,
-address = {New York, New York, USA},
-author = {Wang, C. and Mahadevan, S.},
-booktitle = {Proceedings of the 25th international conference on Machine learning - ICML '08},
-doi = {10.1145/1390156.1390297},
-isbn = {9781605582054},
-pages = {1120--1127},
-publisher = {ACM Press},
-title = {{Manifold alignment using Procrustes analysis}},
-url = {http://portal.acm.org/citation.cfm?doid=1390156.1390297},
-year = {2008}
-}
-@article{Wang2009,
-abstract = {In machine learning problems, labeled data are often in short supply. One of the feasible solution for this problem is transfer learning. It can make use of the labeled data from other domain to discriminate those unlabeled data in the target domain. In this paper, we propose a transfer learning framework based on similarity matrix approximation to tackle such problems. Two practical algorithms are proposed, which are the label propagation and the similarity propagation. In these methods, we build a hybrid graph based on all available data. Then the information is transferred cross domains through alternatively constructing the similarity matrix for different part of the graph. Among all related methods, similarity propagation approach can make maximum use of all available similarity information across domains. This leads to more efficient transfer and better learning result. The experiment on real world text mining applications demonstrates the promise and effectiveness of our algorithms.},
-author = {Wang, Zheng and Song, Yangqiu and Zhang, Changshui},
-journal = {International Joint Conference On Artificial Intelligence},
-pages = {1291--1296},
-title = {{Knowledge transfer on hybrid graph}},
-url = {http://portal.acm.org/citation.cfm?id=1661652},
-year = {2009}
-}
-@article{Gu2009,
-abstract = {The predictive capacity of a marker in a population can be described using the population distribution of risk (Huang et al. 2007; Pepe et al. 2008a; Stern 2008). Virtually all standard statistical summaries of predictability and discrimination can be derived from it (Gail and Pfeiffer 2005). The goal of this paper is to develop methods for making inference about risk prediction markers using summary measures derived from the risk distribution. We describe some new clinically motivated summary measures and give new interpretations to some existing statistical measures. Methods for estimating these summary measures are described along with distribution theory that facilitates construction of confidence intervals from data. We show how markers and, more generally, how risk prediction models, can be compared using clinically relevant measures of predictability. The methods are illustrated by application to markers of lung function and nutritional status for predicting subsequent onset of major pulmonary infection in children suffering from cystic fibrosis. Simulation studies show that methods for inference are valid for use in practice.},
-author = {Gu, Wen and Pepe, Margaret},
-doi = {10.2202/1557-4679.1188},
-issn = {1557-4679},
-journal = {The international journal of biostatistics},
-month = jan,
-number = {1},
-pages = {Article27},
-pmid = {20224632},
-title = {{Measures to Summarize and Compare the Predictive Capacity of Markers.}},
-url = {http://www.pubmedcentral.nih.gov/articlerender.fcgi?artid=2827895\&tool=pmcentrez\&rendertype=abstract},
-volume = {5},
-year = {2009}
-}
-@article{Si2010,
-abstract = {Is it possible to train a learning model to separate tigers from elks when we have 1) labeled samples of leopard and zebra and 2) unlabelled samples of tiger and elk at hand? Cross-domain learning algorithms can be used to solve the above problem. However, existing cross-domain algorithms cannot be applied for dimension reduction, which plays a key role in computer vision tasks, e.g., face recognition and web image annotation. This paper envisions the cross-domain discriminative dimension reduction to provide an effective solution for cross-domain dimension reduction. In particular, we propose the cross-domain discriminative Hessian Eigenmaps or CDHE for short. CDHE connects training and test samples by minimizing the quadratic distance between the distribution of the training set and that of the test set. Therefore, a common subspace for data representation can be well preserved. Furthermore, we basically expect the discriminative information used to separate leopards and zebra can be shared to separate tigers and elks, and thus we have a chance to duly address the above question. Margin maximization principle is adopted in CDHE so the discriminative information for separating different classes (e.g., leopard and zebra here) can be well preserved. Finally, CDHE encodes the local geometry of each training class (e.g., leopard and zebra here) in the local tangent space which is locally isometric to the data manifold and thus CDHE preserves the intraclass local geometry. The objective function of CDHE is not convex, so the gradient descent strategy can only find a local optimal solution. In this paper, we carefully design an evolutionary search strategy to find a better solution of CDHE. Experimental evidence on both synthetic and real word image datasets demonstrates the effectiveness of CDHE for cross-domain web image annotation and face recognition.},
-author = {Si, Si and Tao, Dacheng and Chan, Kwok-Ping},
-issn = {1057-7149},
-journal = {IEEE Transactions on Image Processing},
-keywords = {cross-domain learning,dimension reduction,evolutionary search,face recognition,manifold learning,web image annotation},
-number = {4},
-pages = {1075--1086},
-title = {{Evolutionary cross-domain discriminative hessian eigenmaps}},
-url = {http://portal.acm.org/citation.cfm?id=1820776.1820795},
-volume = {19},
-year = {2010}
-}
-@article{Zadrozny2004a,
-abstract = {Classifier learning methods commonly assume that the training data consist of randomly drawn examples from the same distribution as the test examples about which the learned model is expected to make predictions. In many practical situations, however, this assumption is violated, in a problem known in econometrics as sample selection bias. In this paper, we formalize the sample selection bias problem in machine learning terms and study analytically and experimentally how a number of well-known classifier learning methods are affected by it. We also present a bias correction method that is particularly useful for classifier evaluation under sample selection bias.},
-author = {Zadrozny, Bianca},
-journal = {ACM International Conference Proceeding Series; Vol. 69},
-title = {{Learning and evaluating classifiers under sample selection bias}},
-url = {http://portal.acm.org/citation.cfm?id=1015425},
-year = {2004}
-}
-@article{Dai2007,
-abstract = {Traditional machine learning makes a basic assumption: the training and test data should be under the same distribution. However, in many cases, this identical-distribution assumption does not hold. The assumption might be violated when a task from one new domain comes, while there are only labeled data from a similar old domain. Labeling the new data can be costly and it would also be a waste to throw away all the old data. In this paper, we present a novel transfer learning framework called TrAdaBoost, which extends boosting-based learning algorithms (Freund \& Schapire, 1997). TrAdaBoost allows users to utilize a small amount of newly labeled data to leverage the old data to construct a high-quality classification model for the new data. We show that this method can allow us to learn an accurate model using only a tiny amount of new data and a large amount of old data, even when the new data are not sufficient to train a model alone. We show that TrAdaBoost allows knowledge to be effectively transferred from the old data to the new. The effectiveness of our algorithm is analyzed theoretically and empirically to show that our iterative algorithm can converge well to an accurate model.},
-author = {Dai, Wenyuan and Yang, Qiang and Xue, Gui-Rong and Yu, Yong},
-journal = {ICML; Vol. 227},
-pages = {193},
-title = {{Boosting for transfer learning}},
-url = {http://portal.acm.org/citation.cfm?id=1273521},
-year = {2007}
-}
-@misc{Schmidhuber1995,
-abstract = {This paper introduces the "incremental self-improvement paradigm". Unlike previous methods, incremental self-improvement encourages a reinforcement learning system to improve the way it learns, and to improve the way it improves the way it learns ..., without significant theoretical limitations --- the system is able to "shift its inductive bias" in a universal way. Its major features are: (1) There is no explicit difference between "learning", "meta-learning", and other kinds of information processing. Using a Turing machine equivalent programming language, the system itself occasionally executes self-delimiting, initially highly random "self-modification programs" which modify the context-dependent probabilities of future action sequences (including future self-modification programs). (2) The system keeps only those probability modifications computed by "useful" selfmodification programs: those which bring about more payoff (reward, reinforcement) per time than all previous self-modi...},
-author = {Schmidhuber, J\"{u}rgen},
-file = {:C$\backslash$:/Users/Sancar/AppData/Local/Mendeley Ltd./Mendeley Desktop/Downloaded/Schmidhuber - 1995 - On Learning How to Learn Learning Strategies.pdf:pdf},
-title = {{On Learning How to Learn Learning Strategies}},
-url = {http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.34.1796},
-year = {1995}
+@ARTICLE{3wayNMDS,
+  author = {Castle, Brent and Trosset, Michael W. and Priebe, Carey E.},
+  title = {A Nonmetric Embedding Approach to Testing for Matched Pairs},
+  year = {2011},
+  number = {TR-11-04},
+  month = {October},
+  address = {Bloomington, Indiana},
+  institution = {Department of Statistics, Indiana University},
+  url = {http://www.stat.indiana.edu/files/TR/TR-11-04.pdf}
 }
 
-@article{Joachims1999,
-author = {Joachims, Thorsten},
-journal = {Proceedings of the Sixteenth International Conference on Machine Learning},
-pages = {200},
-title = {{Transductive Inference for Text Classification using Support Vector Machines}},
-url = {http://portal.acm.org/citation.cfm?id=657646},
-year = {1999}
+@INPROCEEDINGS{Choi:2008:MIM:1619995.1620064,
+  author = {Choi, H. and Choi, S. and Choe, Y.},
+  title = {Manifold integration with Markov random walks},
+  booktitle = {Proceedings of the 23rd national conference on Artificial intelligence
+	- Volume 1},
+  year = {2008},
+  pages = {424--429},
+  publisher = {AAAI Press},
+  acmid = {1620064},
+  isbn = {978-1-57735-368-3},
+  location = {Chicago, Illinois},
+  numpages = {6},
+  url = {http://portal.acm.org/citation.cfm?id=1619995.1620064}
 }
 
-@article{Ling2008,
-abstract = {Traditional spectral classification has been proved to be effective in dealing with both labeled and unlabeled data when these data are from the same domain. In many real world applications, however, we wish to make use of the labeled data from one domain (called in-domain) to classify the unlabeled data in a different domain (out-of-domain). This problem often happens when obtaining labeled data in one domain is difficult while there are plenty of labeled data from a related but different domain. In general, this is a transfer learning problem where we wish to classify the unlabeled data through the labeled data even though these data are not from the same domain. In this paper, we formulate this domain-transfer learning problem under a novel spectral classification framework, where the objective function is introduced to seek consistency between the in-domain supervision and the out-of-domain intrinsic structure. Through optimization of the cost function, the label information from the in-domain data is effectively transferred to help classify the unlabeled data from the out-of-domain. We conduct extensive experiments to evaluate our method and show that our algorithm achieves significant improvements on classification performance over many state-of-the-art algorithms.},
-author = {Ling, Xiao and Dai, Wenyuan and Xue, Gui-Rong and Yang, Qiang and Yu, Yong},
-journal = {International Conference on Knowledge Discovery and Data Mining},
-keywords = {spectral learning,transfer learning},
-pages = {488--496},
-title = {{Spectral domain-transfer learning}},
-url = {http://portal.acm.org/citation.cfm?id=1401951},
-year = {2008}
+@ARTICLE{Dai2007,
+  author = {Dai, Wenyuan and Yang, Qiang and Xue, Gui-Rong and Yu, Yong},
+  title = {{Boosting for transfer learning}},
+  journal = {ICML; Vol. 227},
+  year = {2007},
+  pages = {193},
+  abstract = {Traditional machine learning makes a basic assumption: the training
+	and test data should be under the same distribution. However, in
+	many cases, this identical-distribution assumption does not hold.
+	The assumption might be violated when a task from one new domain
+	comes, while there are only labeled data from a similar old domain.
+	Labeling the new data can be costly and it would also be a waste
+	to throw away all the old data. In this paper, we present a novel
+	transfer learning framework called TrAdaBoost, which extends boosting-based
+	learning algorithms (Freund \& Schapire, 1997). TrAdaBoost allows
+	users to utilize a small amount of newly labeled data to leverage
+	the old data to construct a high-quality classification model for
+	the new data. We show that this method can allow us to learn an accurate
+	model using only a tiny amount of new data and a large amount of
+	old data, even when the new data are not sufficient to train a model
+	alone. We show that TrAdaBoost allows knowledge to be effectively
+	transferred from the old data to the new. The effectiveness of our
+	algorithm is analyzed theoretically and empirically to show that
+	our iterative algorithm can converge well to an accurate model.},
+  url = {http://portal.acm.org/citation.cfm?id=1273521}
 }
 
-@article{TrossetLocalMin,
-	location = {http://www.scientificcommons.org/43179744},
-	title = {On the Existence of Nonglobal Minimizers of the Stress Criterion for Metric Multidimensional Scaling},
-	author = {Michael W. Trosset and Rudolf Mathar},
-	year = {1997},
-	abstract = {Multidimensional scaling (MDS) is a collection of data analytic techniques for constructing configurations of points from dissimilarity information about interpoint distances. A popular measure of the fit of the constructed distances to the observed dissimilarities is the stress criterion, which must be minimized by numerical optimization. Empirical evidence concerning the existence of nonglobal minimizers of the stress criterion is somewhat contradictory. We report a configuration that we have demonstrated to be a nonglobal minimizer. 1 Preliminaries Multidimensional scaling (MDS) is a collection of techniques for fitting distance models to distance data. The data are called dissimilarities. Formally, a symmetric n \Theta n matrix \Delta = (ffi ij ) is a dissimilarity matrix if ffi ij 0 and ffi ii = 0. In this report, we restrict attention to the case of a single dissimilarity matrix (two-way MDS). The goal of MDS is to construct a configuration of points in a target metric (usually...},
-	url = {http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.57.1251},
-	institution = {CiteSeerX - Scientific Literature Digital Library and Search Engine [http://citeseerx.ist.psu.edu/oai2] (United States)},
-}
-
-@article{TrossetOOS,
- author = {Trosset, Michael W. and Priebe, Carey E.},
- title = {The out-of-sample problem for classical multidimensional scaling},
- journal = {Comput. Stat. Data Anal.},
- volume = {52},
- issue = {10},
- month = {June},
- year = {2008},
- issn = {0167-9473},
- pages = {4635--4642},
- numpages = {8},
- url = {http://portal.acm.org/citation.cfm?id=1377056.1377408},
- doi = {10.1016/j.csda.2008.02.031},
- acmid = {1377408},
- publisher = {Elsevier Science Publishers B. V.},
- address = {Amsterdam, The Netherlands, The Netherlands},
-} 
-@article{3wayNMDS,
- number=        {TR-11-04},
- author = {Castle, Brent and Trosset, Michael W. and Priebe, Carey E.},
-title={A Nonmetric Embedding Approach to Testing for Matched Pairs},
-institution={Department of Statistics, Indiana University},
-  ADDRESS =       {Bloomington, Indiana},
-month={October},
-year={2011},
-url={http://www.stat.indiana.edu/files/TR/TR-11-04.pdf}
-}
-
-@article {GPCA,
-   author = {Gower, J.},
-   affiliation = {Rothamsted Experimental Station Harpenden Herts Harpenden Herts},
-   title = {Generalized procrustes analysis},
-   journal = {Psychometrika},
-   publisher = {Springer New York},
-   issn = {0033-3123},
-   keyword = {Behavioral Science},
-   pages = {33-51},
-   volume = {40},
-   issue = {1},
-   url = {http://dx.doi.org/10.1007/BF02291478},
-   note = {10.1007/BF02291478},
-   year = {1975}
-}
-
-@inproceedings{Zhai2010,
-   title = {Manifold Alignment via Corresponding Projections},
-   author = {Zhai, D. and Li, B. and Chang, H. and Shan, S. and Chen, X. and Gao, W.},
-   year = {2010},
-   pages = {3.1--3.11},
-   booktitle = {Proceedings of the British Machine Vision Conference},
-   publisher = {BMVA Press},
-   editors = {Labrosse, Fr\'ed\'eric and Zwiggelaar, Reyer and Liu, Yonghuai and Tiddeman, Bernie},
-   isbn = {1-901725-40-5},
-   note = {doi:10.5244/C.24.3}
-}
-
-
-@inproceedings{Ham2005a,
-abstract = {In this paper, we study a family of semisupervised learning algorithms for "aligning" di\#erent data sets that are characterized by the same underlying manifold. The optimizations of these algorithms are based on graphs that provide a discretized approximation to the manifold. Partial alignments of the data sets---obtained from prior knowledge of their manifold structure or from pairwise correspondences of subsets of labeled examples--- are completed by integrating supervised signals with unsupervised frameworks for manifold learning. As an illustration of this semisupervised setting, we show how to learn mappings between different data sets of images that are parameterized by the same underlying modes of variability (e.g., pose and viewing angle). The curse of dimensionality in these problems is overcome by exploiting the low dimensional structure of image manifolds.},
-author = {Ham, Jihun and Lee, D and Saul, L.},
-booktitle = {Proceedings of the Annual Conference on Uncertainty in Artificial Intelligence, Z. Ghahramani and R. Cowell, Eds},
-file = {:home/sancar/Documents/MendeleyDesktopLib/Ham, Lee, Saul - Semisupervised alignment of manifolds - 2005.pdf:pdf},
-pages = {120--127},
-publisher = {Citeseer},
-title = {{Semisupervised alignment of manifolds}},
-url = {http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.59.8098\&amp;rep=rep1\&amp;type=pdf},
-volume = {10},
-year = {2005}
-}
-@inproceedings{Choi:2008:MIM:1619995.1620064,
- author = {Choi, H. and Choi, S. and Choe, Y.},
- title = {Manifold integration with Markov random walks},
- booktitle = {Proceedings of the 23rd national conference on Artificial intelligence - Volume 1},
- year = {2008},
- isbn = {978-1-57735-368-3},
- location = {Chicago, Illinois},
- pages = {424--429},
- numpages = {6},
- url = {http://portal.acm.org/citation.cfm?id=1619995.1620064},
- acmid = {1620064},
- publisher = {AAAI Press},
-} 
-
-
-
-
-@article{McFee:2011:LMS:1953048.1953063,
- author = {McFee, B. and Lanckriet, G.R.G},
- title = {Learning Multi-modal Similarity},
- journal = {The Journal of Machine Learning Research},
- issue_date = {2/1/2011},
- volume = {12},
- month = {February},
- year = {2011},
- issn = {1532-4435},
- pages = {491--523},
- numpages = {33},
- url = {http://portal.acm.org/citation.cfm?id=1953048.1953063},
- acmid = {1953063},
- publisher = {JMLR.org},
-} 
-
-@article{Lin2009,
-author = {Lin, Y.Y. and Liu, T.L. and Fuh, C.S.},
-journal = {Advances in Neural Information Processing Systems},
-pages = {961--968},
-publisher = {Citeseer},
-title = {{Dimensionality reduction for data in multiple feature representations}},
-url = {http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.144.4222\&amp;rep=rep1\&amp;type=pdf},
-volume = {21},
-year = {2009}
-}
-
-@article{Lanckriet2004,
-author = {Lanckriet, G.R.G. and Cristianini, N. and Bartlett, Peter and Ghaoui, L.E. and Jordan, M.I.},
-journal = {The Journal of Machine Learning Research},
-pages = {27--72},
-publisher = {JMLR. org},
-title = {{Learning the kernel matrix with semidefinite programming}},
-url = {http://portal.acm.org/citation.cfm?id=1005334},
-volume = {5},
-year = {2004}
-}
-
-@article{Dryden1997,
-author = {Dryden, Ian L. and Faghihi, Mohammad Reza and Taylor, Charles C.},
-doi = {10.1111/1467-9868.00072},
-issn = {1369-7412},
-journal = {Journal of the Royal Statistical Society: Series B (Statistical Methodology)},
-keywords = {shape,size,spatial statistics,triangle},
-month = may,
-number = {2},
-pages = {353--374},
-title = {{Procrustes Shape Analysis of Planar Point Subsets}},
-url = {http://www.blackwell-synergy.com/links/doi/10.1111/1467-9868.00072},
-volume = {59},
-year = {1997}
-}
-@article{MarkusOjala2010,
-author = {{Markus Ojala} and {Gemma C. Garriga}},
-title = {{Permutation Tests for Studying Classifier Performance}},
-url = {http://jmlr.csail.mit.edu/papers/volume11/ojala10a/ojala10a.pdf},
-year = {2010}
-}
-@article{Dryden,
-author = {Dryden, Ian L. and Faghihi, Mohammad Reza and Taylor, Charles C.},
-journal = {Journal of the Royal Statistical Society. Series B (Methodological)},
-number = {2},
-title = {{Procrustes Shape Analysis of Planar Point Subsets}},
-url = {http://www.jstor.org/stable/2346050},
-volume = {59}
-}
-@article{Sibson,
-author = {Sibson, Robin},
-file = {:home/sancar/Documents/MendeleyDesktopLib/Sibson - Studies in the Robustness of Multidimensional Scaling Procrustes Statistics - Unknown.pdf:pdf},
-journal = {Journal of the Royal Statistical Society. Series B (Methodological)},
-keywords = {multidimensional scaling,procrustes analysis,robustness,rotational fit},
-number = {2},
-pages = {234--238},
-title = {{Studies in the Robustness of Multidimensional Scaling: Procrustes Statistics}},
-volume = {40},
-year = {1978}
-}
-
-
-@article{JOFC,
-author = {Priebe, C.E. and Marchette, D.J.  and Ma, Z. and  Adali, S.},
-title= {Manifold Matching: Joint Optimization of Fidelity and Commensurability},
-journal={Brazilian Journal of Probability and Statistics},
-note = {Submitted for publication}
-}
-
-
-@article{Hardoon2004,
- author = {Hardoon, David R. and Szedmak, Sandor R. and Shawe-taylor, John R.},
- title = {Canonical Correlation Analysis: An Overview with Application to Learning Methods},
- journal = {Neural Computation},
- volume = {16},
- issue = {12},
- month = {December},
- year = {2004},
- issn = {0899-7667},
- pages = {2639--2664},
- numpages = {26},
- url = {http://portal.acm.org/citation.cfm?id=1119696.1119703},
- doi = {10.1162/0899766042321814},
- acmid = {1119703},
- publisher = {MIT Press},
- address = {Cambridge, MA, USA},
-} 
-
-@article{generalCCA,
-     jstor_articletype = {research-article},
-     title = {Canonical Analysis of Several Sets of Variables},
-     author = {Kettenring, J. R.},
-     journal = {Biometrika},
-     jstor_issuetitle = {},
-     volume = {58},
-     number = {3},
-     jstor_formatteddate = {Dec., 1971},
-     pages = {pp. 433-451},
-     url = {http://www.jstor.org/stable/2334380},
-     ISSN = {00063444},
-     abstract = {Five extensions of the classical two-set theory of canonical correlation analysis to three or more sets are considered. For each one, a model of the general principal component type is constructed to aid in motivating, comparing and understanding the methods. Procedures are developed for finding the canonical variables associated with the different approaches. Some practical considerations and an example are also included.},
-     language = {English},
-     year = {1971},
-     publisher = {Biometrika Trust},
-     copyright = {Copyright © 1971 Biometrika Trust},
-    }
-
-
-
-@article{CMDS,
-author={Torgerson, W.},
-year={1952},
-title={Multidimensional scaling: I. theory and method},
-journal={Psychometrika},
-volume ={17}, 
-pages={401-419}
-}
-
-@article{ZhuGhodsi,
-  author    = {Mu Zhu and
-               Ali Ghodsi},
-  title     = {Automatic dimensionality selection from the scree plot via
-               the use of profile likelihood},
-  journal   = {Computational Statistics {\&} Data Analysis},
-  volume    = {51},
-  number    = {2},
-  year      = {2006},
-  pages     = {918-930},
-  ee        = {http://dx.doi.org/10.1016/j.csda.2005.09.010},
-  bibsource = {DBLP, http://dblp.uni-trier.de}
-}
-
-
-
-@book{Mardia1980,
-author = {Mardia, Kanti V. and Kent, J. T. and Bibby, J. M.},
-isbn = {0124712525},
-pages = {521},
-publisher = {Academic Press},
-title = {{Multivariate Analysis (Probability and Mathematical Statistics)}},
-url = {http://www.amazon.com/Multivariate-Analysis-Probability-Mathematical-Statistics/dp/0124712525},
-year = {1980}
-}
-
-
-
-@book{borg+groenen:1997, 
-	author  = {Borg, I. and Groenen, P.}, 
-	year = {1997}, 
-	title = {Modern Multidimensional Scaling.  Theory and Applications}, 
-	publisher = {Springer}
-}
-@book{duin2005dissimilarity,
-  title={The dissimilarity representation for pattern recognition: foundations and applications},
-  author={Pekalska, E. and Duin, R.P.W.},
-  isbn={9789812565303},
-  lccn={2006283693},
-  series={Series in machine perception and artificial intelligence},
-  url={http://books.google.co.uk/books?id=YPPr6eypHFwC},
-  year={2005},
-  publisher={World Scientific}
-}
-
-@article{DICE,
-  title={Structure g{\'e}om{\'e}trique des principaux indices de dissimilarit{\'e} sur signes de pr{\'e}sence-absence},
-  author={Fichet, B. and Le Calv{\'e}, G.},
-  journal={Statistique et analyse des donn{\'e}es},
-  volume={9},
-  number={3},
-  pages={11--44},
-  year={1984},
-  publisher={Association pour la statistique et ses utilisations}
-}
-@article{weightedDICE,
-year={2008},
-issn={1862-5347},
-journal={Advances in Data Analysis and Classification},
-volume={2},
-issue={1},
-doi={10.1007/s11634-008-0018-3},
-title={Two local dissimilarity measures for weighted graphs with application to protein interaction networks},
-url={http://dx.doi.org/10.1007/s11634-008-0018-3},
-publisher={Springer-Verlag},
-keywords={Graph distance; Graph partitioning; Heuristic optimisation; Biological networks; 05C12; 90C35; 90C59},
-author={Angelelli, Jean-Baptiste and Baudot, AnaÃ¯s and Brun, Christine and GuÃ©noche, Alain},
-pages={3-16},
-language={English}
-}
-
-
-
-
-@Manual{Rref,
-       title        = {R: A Language and Environment for Statistical
-                       Computing},
-       author       = {{R Development Core Team}},
-       organization = {R Foundation for Statistical Computing},
-       address      = {Vienna, Austria},
-       year         = 2010,
-       note         = {{ISBN} 3-900051-07-0},
-       url          = {http://www.R-project.org}
-     }
-@Manual{veganref,
-  title = {vegan: Community Ecology Package},
-  author = {Jari Oksanen and F. Guillaume Blanchet and Roeland Kindt and Pierre Legendre and R. B. O'Hara and Gavin L. Simpson and Peter Solymos and M. Henry H. Stevens and Helene Wagner},
-  year = {2010},
-  note = {R package version 1.17-3},
-  url = {http://CRAN.R-project.org/package=vegan},
-}
-@Manual{MCMCref,
-  title = {MCMCpack: Markov chain Monte Carlo (MCMC) Package},
-  author = {Andrew D. Martin and Kevin M. Quinn and Jong Hee Park},
-  year = {2010},
-  note = {R package version 1.0-6},
-  url = {http://CRAN.R-project.org/package=MCMCpack},
-}
-@Manual{procOPAref,
+@MANUAL{procOPAref,
   title = {shapes: Statistical shape analysis},
   author = {Ian Dryden},
   year = {2009},
   note = {R package version 1.1-3},
-  url = {http://CRAN.R-project.org/package=shapes},
+  url = {http://CRAN.R-project.org/package=shapes}
 }
-@Manual{R,
-    title = {R: A Language and Environment for Statistical Computing},
-    author = {{R Development Core Team}},
-    organization = {R Foundation for Statistical Computing},
-    address = {Vienna, Austria},
-    year = {2010},
-    note = {{ISBN} 3-900051-07-0},
-    url = {http://www.R-project.org},
-  }
-@Manual{MATLAB,
-    title = {MATLAB: Getting Started},
-	author = {{The MathWorks Inc.}},  
-	organization = {The MathWorks Inc.},
-	address = {Natick,MA},
-	year = {2010},
-	note= {version 7.9.0(R2009b)},    
-	url={http://www.mathworks.com/products/matlab/}
-  }
-@Manual{StatToolbox,
-    title = {Statistics Toolbox:For Use With Matlab User's Guide},
-	author = {{The MathWorks Inc.}},  
-	organization = {The MathWorks Inc.},
-	address = {Natick,MA},
-	year = {2010},
-	note= {version 7.2(R2009b)} ,   
-	url={http://www.mathworks.com/access/helpdesk/help/pdf_doc/stats/stats.pdf},
-  }
 
+@ARTICLE{Dryden,
+  author = {Dryden, Ian L. and Faghihi, Mohammad Reza and Taylor, Charles C.},
+  title = {{Procrustes Shape Analysis of Planar Point Subsets}},
+  journal = {Journal of the Royal Statistical Society. Series B (Methodological)},
+  volume = {59},
+  number = {2},
+  url = {http://www.jstor.org/stable/2346050}
+}
 
+@ARTICLE{Dryden1997,
+  author = {Dryden, Ian L. and Faghihi, Mohammad Reza and Taylor, Charles C.},
+  title = {{Procrustes Shape Analysis of Planar Point Subsets}},
+  journal = {Journal of the Royal Statistical Society: Series B (Statistical Methodology)},
+  year = {1997},
+  volume = {59},
+  pages = {353--374},
+  number = {2},
+  month = may,
+  doi = {10.1111/1467-9868.00072},
+  issn = {1369-7412},
+  keywords = {shape,size,spatial statistics,triangle},
+  url = {http://www.blackwell-synergy.com/links/doi/10.1111/1467-9868.00072}
+}
+
+@ARTICLE{DICE,
+  author = {Fichet, B. and Le Calv{\'e}, G.},
+  title = {Structure g{\'e}om{\'e}trique des principaux indices de dissimilarit{\'e}
+	sur signes de pr{\'e}sence-absence},
+  journal = {Statistique et analyse des donn{\'e}es},
+  year = {1984},
+  volume = {9},
+  pages = {11--44},
+  number = {3},
+  publisher = {Association pour la statistique et ses utilisations}
+}
+
+@ARTICLE{GPCA,
+  author = {Gower, J.},
+  title = {Generalized procrustes analysis},
+  journal = {Psychometrika},
+  year = {1975},
+  volume = {40},
+  pages = {33-51},
+  note = {10.1007/BF02291478},
+  affiliation = {Rothamsted Experimental Station Harpenden Herts Harpenden Herts},
+  issn = {0033-3123},
+  issue = {1},
+  keyword = {Behavioral Science},
+  publisher = {Springer New York},
+  url = {http://dx.doi.org/10.1007/BF02291478}
+}
+
+@ARTICLE{Gu2009,
+  author = {Gu, Wen and Pepe, Margaret},
+  title = {{Measures to Summarize and Compare the Predictive Capacity of Markers.}},
+  journal = {The international journal of biostatistics},
+  year = {2009},
+  volume = {5},
+  pages = {Article27},
+  number = {1},
+  month = jan,
+  abstract = {The predictive capacity of a marker in a population can be described
+	using the population distribution of risk (Huang et al. 2007; Pepe
+	et al. 2008a; Stern 2008). Virtually all standard statistical summaries
+	of predictability and discrimination can be derived from it (Gail
+	and Pfeiffer 2005). The goal of this paper is to develop methods
+	for making inference about risk prediction markers using summary
+	measures derived from the risk distribution. We describe some new
+	clinically motivated summary measures and give new interpretations
+	to some existing statistical measures. Methods for estimating these
+	summary measures are described along with distribution theory that
+	facilitates construction of confidence intervals from data. We show
+	how markers and, more generally, how risk prediction models, can
+	be compared using clinically relevant measures of predictability.
+	The methods are illustrated by application to markers of lung function
+	and nutritional status for predicting subsequent onset of major pulmonary
+	infection in children suffering from cystic fibrosis. Simulation
+	studies show that methods for inference are valid for use in practice.},
+  doi = {10.2202/1557-4679.1188},
+  issn = {1557-4679},
+  pmid = {20224632},
+  url = {http://www.pubmedcentral.nih.gov/articlerender.fcgi?artid=2827895\&tool=pmcentrez\&rendertype=abstract}
+}
+
+@INPROCEEDINGS{Ham2005a,
+  author = {Ham, Jihun and Lee, D and Saul, L.},
+  title = {{Semisupervised alignment of manifolds}},
+  booktitle = {Proceedings of the Annual Conference on Uncertainty in Artificial
+	Intelligence, Z. Ghahramani and R. Cowell, Eds},
+  year = {2005},
+  volume = {10},
+  pages = {120--127},
+  publisher = {Citeseer},
+  abstract = {In this paper, we study a family of semisupervised learning algorithms
+	for "aligning" di\#erent data sets that are characterized by the
+	same underlying manifold. The optimizations of these algorithms are
+	based on graphs that provide a discretized approximation to the manifold.
+	Partial alignments of the data sets---obtained from prior knowledge
+	of their manifold structure or from pairwise correspondences of subsets
+	of labeled examples--- are completed by integrating supervised signals
+	with unsupervised frameworks for manifold learning. As an illustration
+	of this semisupervised setting, we show how to learn mappings between
+	different data sets of images that are parameterized by the same
+	underlying modes of variability (e.g., pose and viewing angle). The
+	curse of dimensionality in these problems is overcome by exploiting
+	the low dimensional structure of image manifolds.},
+  file = {:home/sancar/Documents/MendeleyDesktopLib/Ham, Lee, Saul - Semisupervised alignment of manifolds - 2005.pdf:pdf},
+  url = {http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.59.8098\&amp;rep=rep1\&amp;type=pdf}
+}
+
+@ARTICLE{Hand2006a,
+  author = {Hand, David J.},
+  title = {{Classifier Technology and the Illusion of Progress}},
+  journal = {Statistical Science},
+  year = {2006},
+  volume = {21},
+  pages = {1--14},
+  number = {1},
+  month = feb,
+  abstract = {A great many tools have been developed for supervised classification,
+	ranging from early methods such as linear discriminant analysis through
+	to modern developments such as neural networks and support vector
+	machines. A large number of comparative studies have been conducted
+	in attempts to establish the relative superiority of these methods.
+	This paper argues that these comparisons often fail to take into
+	account important aspects of real problems, so that the apparent
+	superiority of more sophisticated methods may be something of an
+	illusion. In particular, simple methods typically yield performance
+	almost as good as more sophisticated methods, to the extent that
+	the difference in performance may be swamped by other sources of
+	uncertainty that generally are not considered in the classical supervised
+	classification paradigm.},
+  arxivid = {math/0606441},
+  doi = {10.1214/088342306000000060},
+  file = {:C$\backslash$:/Users/Sancar/AppData/Local/Mendeley Ltd./Mendeley Desktop/Downloaded/Hand - 2006 - Classifier Technology and the Illusion of Progress.pdf:pdf},
+  issn = {0883-4237},
+  keywords = {Statistics,Theory},
+  url = {http://arxiv.org/abs/math/0606441}
+}
+
+@ARTICLE{Hand2006b,
+  author = {Hand, David J.},
+  title = {{Classifier Technology and the Illusion of Progress}},
+  journal = {Statistical Science},
+  year = {2006},
+  volume = {21},
+  pages = {1--14},
+  number = {1},
+  month = feb,
+  issn = {0883-4237},
+  keywords = {Supervised classification,empirical comparisons,error rate,flat maximum
+	effect,misclassification rate,population drift,principle of parsimony,problem
+	uncertainty,selectivity bias,simplicity},
+  url = {http://projecteuclid.org/euclid.ss/1149600839}
+}
+
+@ARTICLE{Hardoon2004,
+  author = {Hardoon, David R. and Szedmak, Sandor R. and Shawe-taylor, John R.},
+  title = {Canonical Correlation Analysis: An Overview with Application to Learning
+	Methods},
+  journal = {Neural Computation},
+  year = {2004},
+  volume = {16},
+  pages = {2639--2664},
+  month = {December},
+  acmid = {1119703},
+  address = {Cambridge, MA, USA},
+  doi = {10.1162/0899766042321814},
+  issn = {0899-7667},
+  issue = {12},
+  numpages = {26},
+  publisher = {MIT Press},
+  url = {http://portal.acm.org/citation.cfm?id=1119696.1119703}
+}
+
+@ARTICLE{Joachims1999,
+  author = {Joachims, Thorsten},
+  title = {{Transductive Inference for Text Classification using Support Vector
+	Machines}},
+  journal = {Proceedings of the Sixteenth International Conference on Machine
+	Learning},
+  year = {1999},
+  pages = {200},
+  url = {http://portal.acm.org/citation.cfm?id=657646}
+}
+
+@ARTICLE{generalCCA,
+  author = {Kettenring, J. R.},
+  title = {Canonical Analysis of Several Sets of Variables},
+  journal = {Biometrika},
+  year = {1971},
+  volume = {58},
+  pages = {pp. 433-451},
+  number = {3},
+  abstract = {Five extensions of the classical two-set theory of canonical correlation
+	analysis to three or more sets are considered. For each one, a model
+	of the general principal component type is constructed to aid in
+	motivating, comparing and understanding the methods. Procedures are
+	developed for finding the canonical variables associated with the
+	different approaches. Some practical considerations and an example
+	are also included.},
+  copyright = {Copyright © 1971 Biometrika Trust},
+  issn = {00063444},
+  jstor_articletype = {research-article},
+  jstor_formatteddate = {Dec., 1971},
+  language = {English},
+  publisher = {Biometrika Trust},
+  url = {http://www.jstor.org/stable/2334380}
+}
+
+@ARTICLE{Hung-algo,
+  author = {Kuhn, H. W.},
+  title = {The Hungarian method for the assignment problem},
+  journal = {Naval Research Logistics (NRL)},
+  year = {2005},
+  volume = {52},
+  pages = {7--21},
+  number = {1},
+  doi = {10.1002/nav.20053},
+  issn = {1520-6750},
+  publisher = {Wiley Subscription Services, Inc., A Wiley Company},
+  url = {http://dx.doi.org/10.1002/nav.20053}
+}
+
+@ARTICLE{Lanckriet2004,
+  author = {Lanckriet, G.R.G. and Cristianini, N. and Bartlett, Peter and Ghaoui,
+	L.E. and Jordan, M.I.},
+  title = {{Learning the kernel matrix with semidefinite programming}},
+  journal = {The Journal of Machine Learning Research},
+  year = {2004},
+  volume = {5},
+  pages = {27--72},
+  publisher = {JMLR. org},
+  url = {http://portal.acm.org/citation.cfm?id=1005334}
+}
+
+@ARTICLE{Lin2009,
+  author = {Lin, Y.Y. and Liu, T.L. and Fuh, C.S.},
+  title = {{Dimensionality reduction for data in multiple feature representations}},
+  journal = {Advances in Neural Information Processing Systems},
+  year = {2009},
+  volume = {21},
+  pages = {961--968},
+  publisher = {Citeseer},
+  url = {http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.144.4222\&amp;rep=rep1\&amp;type=pdf}
+}
+
+@ARTICLE{Ling2008,
+  author = {Ling, Xiao and Dai, Wenyuan and Xue, Gui-Rong and Yang, Qiang and
+	Yu, Yong},
+  title = {{Spectral domain-transfer learning}},
+  journal = {International Conference on Knowledge Discovery and Data Mining},
+  year = {2008},
+  pages = {488--496},
+  abstract = {Traditional spectral classification has been proved to be effective
+	in dealing with both labeled and unlabeled data when these data are
+	from the same domain. In many real world applications, however, we
+	wish to make use of the labeled data from one domain (called in-domain)
+	to classify the unlabeled data in a different domain (out-of-domain).
+	This problem often happens when obtaining labeled data in one domain
+	is difficult while there are plenty of labeled data from a related
+	but different domain. In general, this is a transfer learning problem
+	where we wish to classify the unlabeled data through the labeled
+	data even though these data are not from the same domain. In this
+	paper, we formulate this domain-transfer learning problem under a
+	novel spectral classification framework, where the objective function
+	is introduced to seek consistency between the in-domain supervision
+	and the out-of-domain intrinsic structure. Through optimization of
+	the cost function, the label information from the in-domain data
+	is effectively transferred to help classify the unlabeled data from
+	the out-of-domain. We conduct extensive experiments to evaluate our
+	method and show that our algorithm achieves significant improvements
+	on classification performance over many state-of-the-art algorithms.},
+  keywords = {spectral learning,transfer learning},
+  url = {http://portal.acm.org/citation.cfm?id=1401951}
+}
+
+@BOOK{Mardia1980,
+  title = {{Multivariate Analysis (Probability and Mathematical Statistics)}},
+  publisher = {Academic Press},
+  year = {1980},
+  author = {Mardia, Kanti V. and Kent, J. T. and Bibby, J. M.},
+  pages = {521},
+  isbn = {0124712525},
+  url = {http://www.amazon.com/Multivariate-Analysis-Probability-Mathematical-Statistics/dp/0124712525}
+}
+
+@ARTICLE{MarkusOjala2010,
+  author = {{Markus Ojala} and {Gemma C. Garriga}},
+  title = {{Permutation Tests for Studying Classifier Performance}},
+  year = {2010},
+  url = {http://jmlr.csail.mit.edu/papers/volume11/ojala10a/ojala10a.pdf}
+}
+
+@MANUAL{MCMCref,
+  title = {MCMCpack: Markov chain Monte Carlo (MCMC) Package},
+  author = {Andrew D. Martin and Kevin M. Quinn and Jong Hee Park},
+  year = {2010},
+  note = {R package version 1.0-6},
+  url = {http://CRAN.R-project.org/package=MCMCpack}
+}
+
+@ARTICLE{McFee:2011:LMS:1953048.1953063,
+  author = {McFee, B. and Lanckriet, G.R.G},
+  title = {Learning Multi-modal Similarity},
+  journal = {The Journal of Machine Learning Research},
+  year = {2011},
+  volume = {12},
+  pages = {491--523},
+  month = {February},
+  acmid = {1953063},
+  issn = {1532-4435},
+  issue_date = {2/1/2011},
+  numpages = {33},
+  publisher = {JMLR.org},
+  url = {http://portal.acm.org/citation.cfm?id=1953048.1953063}
+}
+
+@MANUAL{veganref,
+  title = {vegan: Community Ecology Package},
+  author = {Jari Oksanen and F. Guillaume Blanchet and Roeland Kindt and Pierre
+	Legendre and R. B. O'Hara and Gavin L. Simpson and Peter Solymos
+	and M. Henry H. Stevens and Helene Wagner},
+  year = {2010},
+  note = {R package version 1.17-3},
+  url = {http://CRAN.R-project.org/package=vegan}
+}
+
+@BOOK{duin2005dissimilarity,
+  title = {The dissimilarity representation for pattern recognition: foundations
+	and applications},
+  publisher = {World Scientific},
+  year = {2005},
+  author = {Pekalska, E. and Duin, R.P.W.},
+  series = {Series in machine perception and artificial intelligence},
+  isbn = {9789812565303},
+  lccn = {2006283693},
+  url = {http://books.google.co.uk/books?id=YPPr6eypHFwC}
+}
+
+@ARTICLE{JOFC,
+  author = {Priebe, C.E. and Marchette, D.J. and Ma, Z. and Adali, S.},
+  title = {Manifold Matching: Joint Optimization of Fidelity and Commensurability},
+  journal = {Brazilian Journal of Probability and Statistics},
+  note = {Submitted for publication}
+}
+
+@MANUAL{R,
+  title = {R: A Language and Environment for Statistical Computing},
+  author = {{R Development Core Team}},
+  organization = {R Foundation for Statistical Computing},
+  address = {Vienna, Austria},
+  year = {2010},
+  note = {{ISBN} 3-900051-07-0},
+  url = {http://www.R-project.org}
+}
+
+@MANUAL{Rref,
+  title = {R: A Language and Environment for Statistical Computing},
+  author = {{R Development Core Team}},
+  organization = {R Foundation for Statistical Computing},
+  address = {Vienna, Austria},
+  year = {2010},
+  note = {{ISBN} 3-900051-07-0},
+  url = {http://www.R-project.org}
+}
+
+@MISC{Schmidhuber1995,
+  author = {Schmidhuber, J\"{u}rgen},
+  title = {{On Learning How to Learn Learning Strategies}},
+  year = {1995},
+  abstract = {This paper introduces the "incremental self-improvement paradigm".
+	Unlike previous methods, incremental self-improvement encourages
+	a reinforcement learning system to improve the way it learns, and
+	to improve the way it improves the way it learns ..., without significant
+	theoretical limitations --- the system is able to "shift its inductive
+	bias" in a universal way. Its major features are: (1) There is no
+	explicit difference between "learning", "meta-learning", and other
+	kinds of information processing. Using a Turing machine equivalent
+	programming language, the system itself occasionally executes self-delimiting,
+	initially highly random "self-modification programs" which modify
+	the context-dependent probabilities of future action sequences (including
+	future self-modification programs). (2) The system keeps only those
+	probability modifications computed by "useful" selfmodification programs:
+	those which bring about more payoff (reward, reinforcement) per time
+	than all previous self-modi...},
+  file = {:C$\backslash$:/Users/Sancar/AppData/Local/Mendeley Ltd./Mendeley Desktop/Downloaded/Schmidhuber - 1995 - On Learning How to Learn Learning Strategies.pdf:pdf},
+  url = {http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.34.1796}
+}
+
+@ARTICLE{Si2010,
+  author = {Si, Si and Tao, Dacheng and Chan, Kwok-Ping},
+  title = {{Evolutionary cross-domain discriminative hessian eigenmaps}},
+  journal = {IEEE Transactions on Image Processing},
+  year = {2010},
+  volume = {19},
+  pages = {1075--1086},
+  number = {4},
+  abstract = {Is it possible to train a learning model to separate tigers from elks
+	when we have 1) labeled samples of leopard and zebra and 2) unlabelled
+	samples of tiger and elk at hand? Cross-domain learning algorithms
+	can be used to solve the above problem. However, existing cross-domain
+	algorithms cannot be applied for dimension reduction, which plays
+	a key role in computer vision tasks, e.g., face recognition and web
+	image annotation. This paper envisions the cross-domain discriminative
+	dimension reduction to provide an effective solution for cross-domain
+	dimension reduction. In particular, we propose the cross-domain discriminative
+	Hessian Eigenmaps or CDHE for short. CDHE connects training and test
+	samples by minimizing the quadratic distance between the distribution
+	of the training set and that of the test set. Therefore, a common
+	subspace for data representation can be well preserved. Furthermore,
+	we basically expect the discriminative information used to separate
+	leopards and zebra can be shared to separate tigers and elks, and
+	thus we have a chance to duly address the above question. Margin
+	maximization principle is adopted in CDHE so the discriminative information
+	for separating different classes (e.g., leopard and zebra here) can
+	be well preserved. Finally, CDHE encodes the local geometry of each
+	training class (e.g., leopard and zebra here) in the local tangent
+	space which is locally isometric to the data manifold and thus CDHE
+	preserves the intraclass local geometry. The objective function of
+	CDHE is not convex, so the gradient descent strategy can only find
+	a local optimal solution. In this paper, we carefully design an evolutionary
+	search strategy to find a better solution of CDHE. Experimental evidence
+	on both synthetic and real word image datasets demonstrates the effectiveness
+	of CDHE for cross-domain web image annotation and face recognition.},
+  issn = {1057-7149},
+  keywords = {cross-domain learning,dimension reduction,evolutionary search,face
+	recognition,manifold learning,web image annotation},
+  url = {http://portal.acm.org/citation.cfm?id=1820776.1820795}
+}
+
+@ARTICLE{Sibson,
+  author = {Sibson, Robin},
+  title = {{Studies in the Robustness of Multidimensional Scaling: Procrustes
+	Statistics}},
+  journal = {Journal of the Royal Statistical Society. Series B (Methodological)},
+  year = {1978},
+  volume = {40},
+  pages = {234--238},
+  number = {2},
+  file = {:home/sancar/Documents/MendeleyDesktopLib/Sibson - Studies in the Robustness of Multidimensional Scaling Procrustes Statistics - Unknown.pdf:pdf},
+  keywords = {multidimensional scaling,procrustes analysis,robustness,rotational
+	fit}
+}
+
+@ARTICLE{Smith2007,
+  author = {Smith, Andrew T. and Elkan, Charles},
+  title = {{Making generative classifiers robust to selection bias}},
+  journal = {International Conference on Knowledge Discovery and Data Mining},
+  year = {2007},
+  pages = {657},
+  abstract = {This paper presents approaches to semi-supervised learning when the
+	labeled training data and test data are differently distributed.
+	Specifically, the samples selected for labeling are a biased subset
+	of some general distribution and the test set consists of samples
+	drawn from either that general distribution or the distribution of
+	the unlabeled samples. An example of the former appears in loan application
+	approval, where samples with repay/default labels exist only for
+	approved applicants and the goal is to model the repay/default behavior
+	of all applicants. An example of the latter appears in spam filtering,
+	in which the labeled samples can be out-dated due to the cost of
+	labeling email by hand, but an unlabeled set of up-to-date emails
+	exists and the goal is to build a filter to sort new incoming email.Most
+	approaches to overcoming such bias in the literature rely on the
+	assumption that samples are selected for labeling depending only
+	on the features, not the labels, a case in which provably correct
+	methods exist. The missing labels are said to be "missing at random"
+	(MAR). In real applications, however, the selection bias can be more
+	severe. When the MAR conditional independence assumption is not satisfied
+	and missing labels are said to be "missing not at random" (MNAR),
+	and no learning method is provably always correct.We present a generative
+	classifier, the shifted mixture model (SMM), with separate representations
+	of the distributions of the labeled samples and the unlabeled samples.
+	The SMM makes no conditional independence assumptions and can model
+	distributions of semi-labeled data sets with arbitrary bias in the
+	labeling. We present a learning method based on the expectation maximization
+	(EM) algorithm that, while not always able to overcome arbitrary
+	labeling bias, learns SMMs with higher test-set accuracy in real-world
+	data sets (with MNAR bias) than existing learning methods that are
+	proven to overcome MAR bias.},
+  keywords = {generative classifiers,reject inference,sample selection bias,semi-supervised
+	learning},
+  url = {http://portal.acm.org/citation.cfm?id=1281263}
+}
+
+@MANUAL{MATLAB,
+  title = {MATLAB: Getting Started},
+  author = {{The MathWorks Inc.}},
+  organization = {The MathWorks Inc.},
+  address = {Natick,MA},
+  year = {2010},
+  note = {version 7.9.0(R2009b)},
+  url = {http://www.mathworks.com/products/matlab/}
+}
+
+@MANUAL{StatToolbox,
+  title = {Statistics Toolbox:For Use With Matlab User's Guide},
+  author = {{The MathWorks Inc.}},
+  organization = {The MathWorks Inc.},
+  address = {Natick,MA},
+  year = {2010},
+  note = {version 7.2(R2009b)},
+  url = {http://www.mathworks.com/access/helpdesk/help/pdf_doc/stats/stats.pdf}
+}
+
+@ARTICLE{CMDS,
+  author = {Torgerson, W.},
+  title = {Multidimensional scaling: I. theory and method},
+  journal = {Psychometrika},
+  year = {1952},
+  volume = {17},
+  pages = {401-419}
+}
+
+@ARTICLE{TrossetLocalMin,
+  author = {Michael W. Trosset and Rudolf Mathar},
+  title = {On the Existence of Nonglobal Minimizers of the Stress Criterion
+	for Metric Multidimensional Scaling},
+  journal = {American Statistical Association: Proceedings Statistical Computing
+	Section},
+  year = {1997},
+  abstract = {Multidimensional scaling (MDS) is a collection of data analytic techniques
+	for constructing configurations of points from dissimilarity information
+	about interpoint distances. A popular measure of the fit of the constructed
+	distances to the observed dissimilarities is the stress criterion,
+	which must be minimized by numerical optimization. Empirical evidence
+	concerning the existence of nonglobal minimizers of the stress criterion
+	is somewhat contradictory. We report a configuration that we have
+	demonstrated to be a nonglobal minimizer. 1 Preliminaries Multidimensional
+	scaling (MDS) is a collection of techniques for fitting distance
+	models to distance data. The data are called dissimilarities. Formally,
+	a symmetric n \Theta n matrix \Delta = (ffi ij ) is a dissimilarity
+	matrix if ffi ij 0 and ffi ii = 0. In this report, we restrict attention
+	to the case of a single dissimilarity matrix (two-way MDS). The goal
+	of MDS is to construct a configuration of points in a target metric
+	(usually...},
+  institution = {CiteSeerX - Scientific Literature Digital Library and Search Engine
+	[http://citeseerx.ist.psu.edu/oai2] (United States)},
+  location = {http://www.scientificcommons.org/43179744},
+  url = {www.caam.rice.edu/~trosset/asa97.ps}
+}
+
+@ARTICLE{TrossetOOS,
+  author = {Trosset, Michael W. and Priebe, Carey E.},
+  title = {The out-of-sample problem for classical multidimensional scaling},
+  journal = {Comput. Stat. Data Anal.},
+  year = {2008},
+  volume = {52},
+  pages = {4635--4642},
+  month = {June},
+  acmid = {1377408},
+  address = {Amsterdam, The Netherlands, The Netherlands},
+  doi = {10.1016/j.csda.2008.02.031},
+  issn = {0167-9473},
+  issue = {10},
+  numpages = {8},
+  publisher = {Elsevier Science Publishers B. V.},
+  url = {http://portal.acm.org/citation.cfm?id=1377056.1377408}
+}
+
+@INPROCEEDINGS{Wang2008,
+  author = {Wang, C. and Mahadevan, S.},
+  title = {{Manifold alignment using Procrustes analysis}},
+  booktitle = {Proceedings of the 25th international conference on Machine learning
+	- ICML '08},
+  year = {2008},
+  pages = {1120--1127},
+  address = {New York, New York, USA},
+  publisher = {ACM Press},
+  doi = {10.1145/1390156.1390297},
+  isbn = {9781605582054},
+  url = {http://portal.acm.org/citation.cfm?doid=1390156.1390297}
+}
+
+@ARTICLE{Wang2009,
+  author = {Wang, Zheng and Song, Yangqiu and Zhang, Changshui},
+  title = {{Knowledge transfer on hybrid graph}},
+  journal = {International Joint Conference On Artificial Intelligence},
+  year = {2009},
+  pages = {1291--1296},
+  abstract = {In machine learning problems, labeled data are often in short supply.
+	One of the feasible solution for this problem is transfer learning.
+	It can make use of the labeled data from other domain to discriminate
+	those unlabeled data in the target domain. In this paper, we propose
+	a transfer learning framework based on similarity matrix approximation
+	to tackle such problems. Two practical algorithms are proposed, which
+	are the label propagation and the similarity propagation. In these
+	methods, we build a hybrid graph based on all available data. Then
+	the information is transferred cross domains through alternatively
+	constructing the similarity matrix for different part of the graph.
+	Among all related methods, similarity propagation approach can make
+	maximum use of all available similarity information across domains.
+	This leads to more efficient transfer and better learning result.
+	The experiment on real world text mining applications demonstrates
+	the promise and effectiveness of our algorithms.},
+  url = {http://portal.acm.org/citation.cfm?id=1661652}
+}
+
+@BOOK{Zadrozny2004,
+  title = {{Learning and evaluating classifiers under sample selection bias}},
+  publisher = {ACM Press},
+  year = {2004},
+  author = {Zadrozny, Bianca},
+  pages = {114},
+  address = {New York, New York, USA},
+  booktitle = {Twenty-first international conference on Machine learning - ICML
+	'04},
+  doi = {10.1145/1015330.1015425},
+  isbn = {1581138285},
+  url = {http://portal.acm.org/citation.cfm?doid=1015330.1015425}
+}
+
+@ARTICLE{Zadrozny2004a,
+  author = {Zadrozny, Bianca},
+  title = {{Learning and evaluating classifiers under sample selection bias}},
+  journal = {ACM International Conference Proceeding Series; Vol. 69},
+  year = {2004},
+  abstract = {Classifier learning methods commonly assume that the training data
+	consist of randomly drawn examples from the same distribution as
+	the test examples about which the learned model is expected to make
+	predictions. In many practical situations, however, this assumption
+	is violated, in a problem known in econometrics as sample selection
+	bias. In this paper, we formalize the sample selection bias problem
+	in machine learning terms and study analytically and experimentally
+	how a number of well-known classifier learning methods are affected
+	by it. We also present a bias correction method that is particularly
+	useful for classifier evaluation under sample selection bias.},
+  url = {http://portal.acm.org/citation.cfm?id=1015425}
+}
+
+@INPROCEEDINGS{Zhai2010,
+  author = {Zhai, D. and Li, B. and Chang, H. and Shan, S. and Chen, X. and Gao,
+	W.},
+  title = {Manifold Alignment via Corresponding Projections},
+  booktitle = {Proceedings of the British Machine Vision Conference},
+  year = {2010},
+  pages = {3.1--3.11},
+  publisher = {BMVA Press},
+  note = {doi:10.5244/C.24.3},
+  editors = {Labrosse, Fr\'ed\'eric and Zwiggelaar, Reyer and Liu, Yonghuai and
+	Tiddeman, Bernie},
+  isbn = {1-901725-40-5}
+}
+
+@ARTICLE{ZhuGhodsi,
+  author = {Mu Zhu and Ali Ghodsi},
+  title = {Automatic dimensionality selection from the scree plot via the use
+	of profile likelihood},
+  journal = {Computational Statistics {\&} Data Analysis},
+  year = {2006},
+  volume = {51},
+  pages = {918-930},
+  number = {2},
+  bibsource = {DBLP, http://dblp.uni-trier.de},
+  ee = {http://dx.doi.org/10.1016/j.csda.2005.09.010}
+}
 
