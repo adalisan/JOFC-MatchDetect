@@ -163,13 +163,13 @@ save.image(file= paste("JOFC_MVN_Dir_Sim_",format(Sys.time(), "%b %d %H:%M:%S"),
 
 
 
- draw.plots(sim.res,"MVN",params,plot.w.vals=1:length(params$w.vals),TRUE,TRUE,FALSE)
+ #draw.plots(sim.res,"MVN",params,plot.w.vals=1:length(params$w.vals),TRUE,TRUE,FALSE)
 
 #source("./src/color-setting.R")
 
 draw.plots<-function(sim.res,model,params,plot.w.vals,compare.pom.cca,cca.reg,compute.bound){
 
-plot.title<-"Power Curves for Match Testing: JOFC vs Others"
+#plot.title<-"Power Curves for Match Testing: JOFC vs Others"
 #
 # Plotting of ROC curves
 #
@@ -266,7 +266,7 @@ if (compute.bound) {legend.txt <-c(legend.txt ,"bound")}
 
 legend("bottomright",legend=legend.txt,
 		col=c(colors.vec[plot.w.vals],colors.vec[(w.val.len+1:3)]),lty=lty.i.vec,lwd=linewd)
-title(plot.title)
+#title(plot.title)
 par(lty=1)
 fname<- file.path('graphs',paste(c(model,"-FC-Tradeoff-",ifelse(oos,"OOS","noOOS"),"c",params$c.val),collapse=""))
 
@@ -338,7 +338,7 @@ lines(x=x.vals,y=avg.power.w.2,col="red",xlog=TRUE)
 lines(x=x.vals,y=avg.power.w.3,col="green",xlog=TRUE)
 par(cex.axis=0.9)
 axis(side=1,at=1:length(params$w.vals), labels = params$w.vals)
-legend("bottomright",expression(alpha==0.01,alpha==0.05,
+legend("topright",expression(alpha==0.01,alpha==0.05,
 				alpha==0.1),col=c("blue","red","green"),lty=rep(1,3))
 
 

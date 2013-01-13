@@ -1,0 +1,68 @@
+1
+rival.w = 0.95
+
+2
+
+c.val=0.01
+rival.w = 0.95
+
+
+3
+
+c.val=0
+rival.w = 0.95
+
+4
+
+d=5
+c.val = 0.01
+rival.w=0.95
+
+
+
+5
+q<-45
+q.g<-45
+c<-0.001
+
+
+6
+n.val<-400
+
+
+
+7
+q.g <- 45
+q=45
+
+
+8
+r.g =2
+r=2
+
+
+9
+
+assume.matched.for.oos = FALSE
+power.comparison =T
+
+
+
+
+14-15
+
+Dirichlet c=0.1 and c=0
+
+
+
+16-20
+
+Gaussian
+p.g=p=10
+
+d=2,5,7,10,15
+
+
+
+10
+q.g <- 100

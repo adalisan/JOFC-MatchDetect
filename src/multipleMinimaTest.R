@@ -2,6 +2,7 @@
 require(gdata)
 require(Hmisc)
 require(rgl)
+require(animation)
 source("./lib/smacofM.R")
 source("./lib/oosIM.R")
 verbose <- FALSE
@@ -12,7 +13,7 @@ create.ani <-FALSE
 
 fps=10
 
-ani.options(outdir=file.path(getwd(),"graphs"))
+ani.options(outdir=file.path(Sys.getenv("PROJECT_DIR"),"graphs"))
 
 meshgrid <- function(a,b) {
   list(
@@ -550,7 +551,7 @@ for (w.i in 1:length(w.vals)){
     par(pch=3)
     points(x=close.to.init.2[,1],y=close.to.init.2[,2],col="blue")
     title(paste("Final config Close to true config- w=",w,collapse=""))
-    legend("bottomright",legend=c(expression(X[5]),expression(X[6])),col=c("red","blue"),pch=rep(1,2))
+    legend("topright",legend=c(expression(X[6]),expression(X[7])),col=c("red","blue"),pch=c(1,3))
     
     dev.print(paste(results.dir,"/","true-min-w",w,".png",collapse="",sep=""),device=png,width=600,height=600)
     fname<-paste(results.dir,"/","true-min-w",w,".pdf",collapse="",sep="")
@@ -575,7 +576,7 @@ for (w.i in 1:length(w.vals)){
     par(pch=3)
     points(x=far.to.init.2[,1],y=far.to.init.2[,2],col="blue")
     title(paste("Final config Far to true config- w=",w,collapse=""))
-    legend("bottomright",legend=c(expression(X[5]),expression(X[6])),col=c("red","blue"),pch=rep(1,2))
+    legend("topright",legend=c(expression(X[6]),expression(X[7])),col=c("red","blue"),pch=c(1,3))
     
     dev.print(paste(results.dir,"/","other-min-w",w,".png",collapse="",sep=""),device=png, width=600,height=600)
     fname<-paste(results.dir,"/","other-min-w",w,".pdf",collapse="",sep="")

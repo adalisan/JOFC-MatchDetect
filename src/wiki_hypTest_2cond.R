@@ -201,6 +201,11 @@
 
 print(getwd())
 load("./data/wiki.RData")
+
+#load("./data/wiki_adj.RData")
+
+
+
 N <- 1382
 
 model= "gaussian"
@@ -212,15 +217,16 @@ size <- seq(0, 1, 0.01)
 oos.use.imputed<-FALSE
 level.mcnemar <- 0.02
 power.nmc <-array(0,dim=c(w.val.len,nmc,length(size)))
-test.samp.size <- 40
+test.samp.size <- 100
 m<- test.samp.size
 n<- N-(2*test.samp.size)
 
 Wchoice<-"avg"
 size <- seq(0, 1, 0.01)
 
+#originally was false
+separability.entries.w<- TRUE
 
-separability.entries.w<- FALSE
 wt.equalize<-FALSE
 assume.matched.for.oos<-TRUE
 oos.use.imputed<-FALSE
