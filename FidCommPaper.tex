@@ -143,7 +143,7 @@ Baltimore, MD 21218-2682}
 
 \begin{document}
 \maketitle
-\abstract{For matched data from disparate sources (objects observed under different conditions), optimality of information fusion must be defined with respect to the inference task at hand. Defining the task as matched/unmatched hypothesis testing for dissimilarity observations, the forthcoming Manifold Matching paper by Priebe et al.~\cite{JOFC} presents an embedding method based on joint optimization of fidelity (preservation of within-condition dissimilarities between observations of an object) and commensurability (preservation of between-condition dissimilarities between observations) . The tradeoff between fidelity and commensurability is investigated by varying weights in weighted embedding of an omnibus dissimilarity matrix. Optimal (defined with respect to the power of the test) weights for the optimization correspond to an optimal compromise between fidelity and commensurability. The two extremes of this tradeoff are commensurability optimization prioritized over fidelity optimization and vice versa. Results indicate optimal weights are different than equal weights for commensurability and fidelity and the proposed weighted embedding scheme provides significant improvements in test power.
+\abstract{For matched data from disparate sources (objects observed under different conditions), optimality of information fusion must be defined with respect to the inference task at hand. Defining the task as matched/unmatched hypothesis testing for dissimilarity observations,  Priebe et al.~\cite{JOFC} presents manifold matching using an embedding method based on joint optimization of fidelity (preservation of within-condition dissimilarities between observations of an object) and commensurability (preservation of between-condition dissimilarities between observations) . The tradeoff between fidelity and commensurability is investigated by varying weights in weighted embedding of an omnibus dissimilarity matrix. Optimal (defined with respect to the power of the test) weights for the optimization correspond to an optimal compromise between fidelity and commensurability. The two extremes of this tradeoff are commensurability optimization prioritized over fidelity optimization and vice versa. Results indicate optimal weights are different than equal weights for commensurability and fidelity and the proposed weighted embedding scheme provides significant improvements in test power.
 }
 
 
@@ -151,15 +151,14 @@ Baltimore, MD 21218-2682}
 
 \section{Introduction}
 
- It is a challenge  to do a tractable analysis on data from disparate sources of data(such as multiple sensors). The multitude  of sensors technology and large numbers of sensors both are  sources of difficulty and hold promise for efficient inference.
- The typical multiple sensor setting is visualized in ~\ref{fig:fig1}.
+ It is a challenge  to do a tractable analysis on data from disparate sources of data (such as multiple sensors). The multitude  of sensors technology and large numbers of sensors both are  sources of difficulty and hold promise for efficient inference.
+ The typical multiple sensor setting is visualized in  Figure ~\ref{fig:fig1}.
 
 \begin{figure}
-\begin{center}
-\includegraphics[scale=0.25]{gen-model-orig-proj.pdf}
+\centering
+\includegraphics[scale=0.75]{gen-model-orig-proj.pdf}
 \caption{Multiple Sensor setting}
 \label{fig:fig1}
-\end{center}
 \end{figure}
 
 
@@ -186,9 +185,9 @@ $n$ different objects/instances are measured/judged under $K$ different conditio
         Object ~ n & \bm{x}_{n1} & \sim \cdots \sim & \bm{x}_{nK}
       \end{array}      
 \]
-To each pair of measurements $x_{ik},x_{jk}$ in the same space, a dissimilarity value $\delta_{ijk}=\delta\{x_{ik},x_{jk}\}$, can be assigned,  possibly dependent on the space $\Xi_k$. The dissimilarities are assumed to be non-negative and  symmetric, and 0 for $\delta\{x_{ik},x_{ik}\}$   . These  dissimilarities are exploited to do inference on the following hypothesis testing task:
+To each pair of measurements $x_{ik},x_{jk}$ in the same space, a dissimilarity value $\delta_{ijk}=\delta\{x_{ik},x_{jk}\}$, can be assigned,  possibly dependent on the space $\Xi_k$. The dissimilarities are assumed to be non-negative and  symmetric, and 0 for $\delta\{x_{ik},x_{ik}\}$   . These  dissimilarities are exploited to carry out  the following hypothesis testing task:
 
- Given dissimilarities between  $K$ new measurements/observations($\bm{y}_{k};k=1,\ldots,K$) and the previous 
+ Given dissimilarities between  $K$ new measurements/observations ($\bm{y}_{k};k=1,\ldots,K$) and the previous 
 $n$ objects under $K$ conditions,    test the null hypothesis  that ``these measurements are from the same  object"  against the alternative hypothesis that ``they are not  from the same  object"~\cite{JOFC}:
     \[
 \begin{array}{l}
@@ -204,13 +203,13 @@ Dissimilarities are in the form  of $n \times n$  dissimilarity matrices $\{\Del
 
  Since dissimilarities are  measured between pairs of objects under the same condition, they will be the entries in  
  separate dissimilarity matrices , each matrix consisting of dissimilarities between pairs of  measurements for a separate condition.
- Due to the fact that data sources are ``disparate", it is not immediately obvious how  a dissimilarity between an object in one condition and another object in another condition  can be computed, or even defined.  In general, these between-condition between-object  similarities are not available. 
+ Due to the fact that data sources are ``disparate", it is not immediately obvious how  a dissimilarity between an object in one condition and another object in another condition  can be computed, or even defined in a sensible way.  In general, these between-condition between-object  similarities are not available. 
 
-Throughout this paper , it will be assumed,  the number of conditions, $K$, is equal to $2$ for the  simplicity of presentation. However, the proposed JOFC approach is  generalizable  to $K>2$ and  simulation results for a data setting where $K=3$ will be presented.
+Throughout this paper , it will be assumed,  the number of conditions, $K$, is equal to $2$ for the  simplicity of presentation. However, the proposed JOFC approach is  generalizable  to $K>2$ and  simulation results for a data setting where $K=3$ will be presented in a later section.
 
 \section{``Matched" and ``Conditions" in data}
 
- ``conditions" and ``matched" refer to concepts dependent on the context of the  problem. Conditions could be different modalities of data, e.g., one condition could be  an image of an object, while the other condition could be a text description of the object. ``Matched", in general, means observations of the same object, or realizations of a common concept. Some specific examples include:
+ ``Conditions" and ``matched" refer to concepts dependent on the context of the  problem. Conditions could be different modalities of data, e.g., one condition could be  an image of an object, while the other condition could be a text description of the object. ``Matched", in general, means observations of the same object, or realizations of a common concept. Some specific examples include:
 
   \begin{itemize}
     \item
@@ -226,44 +225,44 @@ The condition of a text document can be the language it is in and ``matched'' co
   \end{itemize}
 
 \section{Two  models for generating data}
-Here  two data models are proposed that illustrate the idea of matchedness.
+In this section, two data models are proposed that illustrate the idea of matchedness.
 \subsection{Gaussian setting\label{subsec:GaussianSet}}
 	Let    $\Xi_1 = \mathbb{R}^{p}$ and $\Xi_2 = \mathbb{R}^{p}$.
-  Let $\bm{\alpha}_i \sim^{iid} MVNormal(\bm{0},I_p)$ represent $n$ ``objects".  Let $X_{ik} \sim^{iid} MVNormal(\bm{\alpha_i},\Sigma)$ represent $K=2$ matched measurements (each under a different condition).
+  Let $\bm{\alpha}_i \sim^{iid} MVNormal(\bm{0},I_p)$ represent $n$ ``objects".  Let $\bm{x}_{ik}  \sim^{iid} MVNormal(\bm{\alpha_i},\Sigma)$ represent $K=2$ matched measurements (each under a different condition).
   $\Sigma$ is a positive-definite $p\times p$ matrix such that  $\max(\Lambda(\Sigma))=\frac{1}{r} $ where $\Sigma=U\Lambda(\Sigma)U'$  is the eigenvalue decomposition of $\Sigma$. See Figure~\ref{fig:Fig1}.
 
 The parameter $r$ controls the variability between ``matched" measurements. If $r$ is large, it is expected that the distance between matched measurements
-$X_{i1}$ and $X_{i2}$ to be stochastically smaller than $X_{i1}$ and $X_{i'2}$ for $i \neq i'$ ; if r is small, then ``matched" is not informative in terms of similarity of measurements.
+$\bm{x}_{i1}$ and $\bm{x}_{i2}$ to be stochastically smaller than $\bm{x}_{i1}$ and $\bm{x}_{i'2}$ for $i \neq i'$ ; if r is small, then ``matched" is not informative in terms of similarity of measurements.
  Smaller $r$ will make the decision problem harder and will lead to higher rate of errors or tests with smaller power for fixed type I error rate $\alpha$.
   
     \begin{figure}
 	\begin{center}
     \includegraphics[scale=0.75]{MVN_alpha_r_multiple_sancar.pdf}
-    \caption{For the  Gaussian setting (Section \ref{subsec:GaussianSet}), the $\alpha_i$ are denoted by black points and the $X_{ik}$ are denoted by red and blue points respectively.}
+    \caption{For the  Gaussian setting (Section \ref{subsec:GaussianSet}), the $\bm{\alpha_i},$ are denoted by black points and the $\bm{x}_{ik}$ are denoted by red and blue points respectively.}
 \label{fig:Fig1}
 	\end{center}
   \end{figure}
 
 \subsection{Dirichlet setting\label{subsec:DirichletSet}}
-Let $S^p=\{\bm{x}:\bm{x}\in\mathbb{R}^{(p+1)}, \sum_{l=1}^p{x_l}=1\}$ be the standard $p$-simplex in $\mathbb{R}^{p+1}$.
+Let $S^p=\{\bm{x}:\bm{x}\in\mathbb{R}^{(p+1)}, \sum_{l=1}^{p+1}{x_l}=1\}$ be the standard $p$-simplex in $\mathbb{R}^{p+1}$.
  Let $\Xi_1 = S^p$ and $\Xi_2 = S^p$.   Denote a vector of ones by $\bm{1}_{p+1}\in \mathbb{R}^{(p+1)}$.
-  Let $\bm{\alpha}_i \sim^{iid} Dirichlet(\bm{1}_{p+1})$ represent $n$  ``objects'' and let $X_{ik} \sim^{iid} Dirichlet(r\bm{\alpha}_i+\bm{1}_{p+1})$ represent $K$ measurements. See Figure~\ref{fig:Fig2}.
+  Let $\bm{\alpha}_i \sim^{iid} Dirichlet(\bm{1}_{p+1})$ represent $n$  ``objects'' and let $\bm{x}_{ik} \sim^{iid} Dirichlet(r\bm{\alpha}_i+\bm{1}_{p+1})$ represent $K$ measurements. See Figure~\ref{fig:Fig2}.
 
  The parameter $r$ again controls the variability between ``matched" measurements.
     \begin{figure}
 	\begin{center}
     \includegraphics[scale=0.75]{Dirichlet_alpha_r_multiple_sancar.pdf}
-   \caption{ For the  Dirichlet setting (Section \ref{subsec:DirichletSet}),  the $\alpha_i$ are denoted by black points and the $X_{ik}$ are denoted by red and blue points respectively.}
+   \caption{ For the  Dirichlet setting (Section \ref{subsec:DirichletSet}),  the $\bm{\alpha_i},$ are denoted by black points and the $\bm{x}_{ik}$ are denoted by red and blue points respectively.}
 \label{fig:Fig2}
 	\end{center}
   \end{figure}
 
 \subsection{Noise\label{noise}}
-Measurements $X_{ik}$ carry the signal that is relevant to the exploitation task. Noise dimensions can be introduced to  the measurements by concatenating a $q$-dimensional error vector whose magnitude is controlled by the parameter $c$. The noisy measurements will be  represented by the random vectors 
+Measurements $\bm{x}_{ik}$ carry the signal that is relevant to the exploitation task.  Noise dimensions can be introduced to  the measurements by concatenating a $q$-dimensional error vector whose magnitude is controlled by the parameter $c, c\in (0,1)$. The noisy measurements will be  represented by the random vectors 
  \begin{equation}
-\breve{X}_{ik}=[(1-c)X_{ik}\hspace{5pt} cE_{ik}]\label{eq:noise-expr}
+\breve{X}_{ik}=[(1-c)\bm{x}_{ik}\hspace{5pt} cE_{ik}]\label{eq:noise-expr}
 \end{equation}
- where $E_{ik} \sim^{iid} Dirichlet(\bm{1}_{(q+1)})\label{eq:noise-model-dir} $ for the Dirichlet setting and $E_{ik} \sim^{iid} MVNormal(\bm{0} , (1+\frac{1}{r})I_{q+1}) \label{eq:noise-model-mvn} $ for the Gaussian setting. $\breve{X}_{ik}$ will be used instead of ${X}_{ik}$ for computing dissimilarities in the ``noisy" version of the problem. These noisy measurements allow the comparison of  different methods applied to the problem with respect to their robustness.
+ where $E_{ik} \sim^{iid} Dirichlet(\bm{1}_{(q+1)})\label{eq:noise-model-dir} $ for the Dirichlet setting and $E_{ik} \sim^{iid} MVNormal(\bm{0} , (1+\frac{1}{r})I_{q+1}) \label{eq:noise-model-mvn} $ for the Gaussian setting. $\breve{X}_{ik}$ will be used instead of $\bm{x}_{ik}$ for computing dissimilarities in the ``noisy" version of the problem. These noisy measurements allow the comparison of  different methods applied to the problem with respect to their robustness.
   
 
 \section{Manifold Matching\label{sec:JOFC}}
@@ -406,14 +405,14 @@ While embedding the dissimilarities in the the highest dimension possible is a g
 
  Let $X$ and $Y$ be two $s$-dimensional random vectors. If  one wants to find  the pair of linear projection operators $U_1:\mathbb{R}^s \rightarrow  \mathbb{R}$, $U_2 :\mathbb{R}^s \rightarrow  \mathbb{R}$ that maximize correlation between the projections of   $X$ and $Y$, CCA finds the solution as stated in the  optimization problem
 $$
-{\hat{u}_1 ,\hat{u}_2}=\arg\max_{u_1\in\mathbb{R}^s,u_2\in\mathbb{R}^s} {\frac{E[u_1^{T}XY^Tu_2]}{{E[u_1^{T}XX^T u_1]}{E[u_2^{T}YY^T u_2]}}}$$
+{\hat{(u)}_1 ,\hat{(u)}_2}=\arg\max_{u_1\in\mathbb{R}^s,u_2\in\mathbb{R}^s} {\frac{E[u_1^{T}XY^Tu_2]}{{E[u_1^{T}XX^T u_1]}{E[u_2^{T}YY^T u_2]}}}$$
 with the constraints $E[{u_1^{T}XX^T u_1}]=1 , E[{u_2^{T}YY^T u_2}]=1$ for uniqueness. The constraints simplify the optimization function to $$
 \arg\max_{u_1\in \mathbb{R}^s,u_2\in \mathbb{R}^s} {E[u_1^{T}XY^Tu_2]}.$$
 
 If the projections are to a pair of $d$-dimensional linear subspaces, the additional pairs of projection vectors can be computed sequentially, with the constraints that the projections along the new directions are uncorrelated with  projections along previous directions. That is, $i^{th}$ pair of directions  that maximize correlation is computed by 
 $$
-{\hat{u}_{1(i)},\hat{u}_{2(i)}}=\arg\max_{u_{1(i)},u_{2(i)}\in\mathbb{R}^s} {E[u_{1(i)}^{T}XY^Tu_{2(i)}]}.$$ subject to constraints $E[{u_{1(i)}^{T}XX^T u_{1(i)}}]=1$ , $E[{u_{2(i)}^{T}YY^T u_{2(i)}}]=1$, $E[{u_{1(i)}^{T}XX^T u_{1(j)}}]=0$,  
-   $ E[{u_{2(i)}^{T}YY^T u_{2(j)}}]=\nolinebreak0$ $\forall \quad  j=1,\ldots,i-1$. For sample CCA, $E[XX^T]$,$E[YY^T]$ and $E[XY^T]$ are replaced with their sample estimates. The direction vectors ${\hat{u}_{1(i)},\hat{u}_{2(i)}}, i=1,\ldots,d $ form the rows of projection matrices which represent the mappings $\mathcal{U}_1$ and $\mathcal{U}_2$. 
+{\hat{(u)}_{1(i)},\hat{(u)}_{2(i)}}=\arg\max_{u_{1(i)},u_{2(i)}\in\mathbb{R}^s} {E[u_{1(i)}^{T}XY^Tu_{2(i)}]}.$$ subject to constraints $E[{u_{1(i)}^{T}XX^T u_{1(i)}}]=1$ , $E[{u_{2(i)}^{T}YY^T u_{2(i)}}]=1$, $E[{u_{1(i)}^{T}XX^T u_{1(j)}}]=0$,  
+   $ E[{u_{2(i)}^{T}YY^T u_{2(j)}}]=\nolinebreak0$ $\forall \quad  j=1,\ldots,i-1$. For sample CCA, $E[XX^T]$,$E[YY^T]$ and $E[XY^T]$ are replaced with their sample estimates. The direction vectors ${\hat{(u)}_{1(i)},\hat{(u)}_{2(i)}}, i=1,\ldots,d $ form the rows of projection matrices which represent the mappings $\mathcal{U}_1$ and $\mathcal{U}_2$. 
 
 
 Note that $s$, the dimension of $X$ and $Y$, is the embedding dimension $d'$  in the CCA approach. 
@@ -501,60 +500,63 @@ The expectation here is that there is a $w^*$ that is optimal for the specific e
 \section{Definition of  $w^{*}$}
 
 Let $\mathbf{F}_m$ be the joint distribution of
-$X_m= \left[
+$X^{(m)}= \left[
  \begin{array}{c}
-X_{1m}\\
-X_{2m}
+X_{1}^{(m)}\\
+X_{2}^{(m)}
 \end{array}
 \right]$ and 
 $\mathbf{F}_u$ be the  joint distribution of
-$X_u= \left[
+$X^{u}= \left[
  \begin{array}{c}
- X_{1u}\\
- X_{2u} 
+ X_{1}^{(u)}\\
+ X_{2}^{(u)} 
 \end{array}
 \right]$
- where   $X_{1m},X_{2m}$ are the random vectors of dimension $d'$ for the matched observation pair and $X_{1u},X_{2u}$ are the random vectors of dimension $d'$ for the unmatched data pair.   The constraint on  $\mathbf{F}_m$ is that  correlation  matrix of $X_{1m},X_{2m}$ is non-zero, while  the constraint on $\mathbf{F}_u$   is that correlation  matrix of $X_{1u},X_{2u}$ is zero.
-
+ where   $X_{1}^{(m)},X_{2}^{(m)}$ are the random vectors of dimension $d'$ for the matched observation pair and $X_{1}^{(u)},X_{2}^{(u)}$ are the random vectors of dimension $d'$ for the unmatched data pair.   The constraint on  $\mathbf{F}_m$ is that  correlation  matrix of $X_{1}^{(m)},X_{2}^{(m)}$ is non-zero, while  the constraint on $\mathbf{F}_u$   is that correlation  matrix of $X_{1}^{(u)},X_{2}^{(u)}$ is zero. 
+ 
+ \begin{comment}
+ For the noisy case introduced in \ref{noise} ,  the random vectors are slightly different. The noisy vectors $\breve{X}_{k}^{(m)}$ and  $\breve{X}_{k}^{(u)}$ are generated from
+ \end{comment}
 Let $\mathcal{T}$ denote  the random variable for a data matrix ($2n\times d'$) for an  i.i.d. sample of  
 $\left[ \begin{array}{c}
-X_{1m}\\
-X_{2m}
+X_{1}^{(m)}\\
+X_{2}^{(m)}
 \end{array}
 \right]$ and let  $\mathbf{T}_{mc}$  denote realization of $\mathcal{T}$ for any Monte Carlo replicate.
 
 
 For the exploitation task at hand, it is assumed that either
 \begin{itemize}
-\item   a sample of $\mathcal{T}$ ($\mathbf{T}_{mc}$) and a sample of $X_m$ and  $X_u$ 
+\item   a sample of $\mathcal{T}$ ($\mathbf{T}_{mc}$) and a sample of $X_{k}^{(m)}$ and  $X_{k}^{(u)}$ 
 $\left(\bm{x_m}=\left[
  \begin{array}{c}
-\bm{x}_{1m}\\
-\bm{x}_{2m}
+\bm{x}_{1}^{(m)}\\
+\bm{x}_{2}^{(m)}
 \end{array}
 \right] ,\bm{x_u}=\left[
  \begin{array}{c}
- \bm{x}_{1u}\\
- \bm{x}_{2u} 
+ \bm{x}_{1}^{(u)}\\
+ \bm{x}_{2}^{(u)} 
 \end{array}
 \right]\right)$ are given
- and  Euclidean distances are computed between  $\bm{x}_{.m}$ and the rows in  $\mathbf{T}_{mc}$  and Euclidean distances between  $\bm{x}_{.u}$ and the rows in  $\mathbf{T}_{mc}$ to form  dissimilarity matrices $\Delta_m$ and $\Delta_u$, or
-\item  values of  dissimilarity matrix-valued function $D$ of  the sample of $X_m$, $X_u$ and $\mathbf{T}_{mc}$: $$
-\mathbf{\Delta_m} = D \left( \left[
+ and  Euclidean distances are computed between  $\bm{x}_{\cdot}^{(m)}$ and the rows in  $\mathbf{T}_{mc}$  and Euclidean distances between  $\bm{x}_{.}^{(u)}$ and the rows in  $\mathbf{T}_{mc}$ to form  dissimilarity matrices $\Delta^{(m)}$ and $\Delta^{(u)}$, or
+\item  values of  dissimilarity matrix-valued function $D$ of  the sample of $X^{(m)}$, $X_u$ and $\mathbf{T}_{mc}$: $$
+\Delta^{(m)}= D \left( \left[
  \begin{array}{c}
 \mathbf{T}_{mc}  \\
-\bm{x}_{1m}\\
-\bm{x}_{2m}\\
+\bm{x}_{1}^{(m)}\\
+\bm{x}_{2}^{(m)}\\
 \end{array}
 \right]
 \right)
 $$
 $$
-\mathbf{\Delta_u}=D \left( \left[
+\Delta^{(u)}=D \left( \left[
  \begin{array}{c}
 \mathbf{T}_{mc}  \\
-\bm{x}_{1u}\\
-\bm{x}_{2u}\\
+\bm{x}_{1}^{(u)}\\
+\bm{x}_{2}^{(u)}\\
 \end{array}
 \right]
 \right)
@@ -562,77 +564,77 @@ $$ are available,
 where the  $(s,t)^{th}$ entry of $D(\cdot)$   ($d_{st}(\cdot)$ in equation \eqref{raw-stress})  is the Euclidean distance between the $s^{th}$ and $t^{th}$ rows of its argument.
 \end{itemize}
 
-Either way,  the dissimilarity matrices are defined to be $\Delta_{m} \left(\left[
+Either way,  the dissimilarity matrices are defined to be $\Delta^{(m)} \left(\left[
 \begin{array}{c}
 \mathcal{T} \\
-X_{1m} \\
-X_{2m} 
+X_{1}^{(m)} \\
+X_{2}^{(m)} 
 \end {array}
 \right]
 \right)$  and 
- $\Delta_{u} \left(\left[
+ $\Delta^{(u)} \left(\left[
 \begin{array}{c}
 \mathcal{T}\\
-X_{1u} \\
-X_{2u}
+X_{1}^{(u)} \\
+X_{2}^{(u)}
 \end {array}
-\right]\right)$ as two matrix-valued random variables $\Delta_{m}:\Omega \rightarrow \mathbf{M}_{n\times n} $,$\Delta_{u}:\Omega \rightarrow \mathbf{M}_{n\times n} $  for the sample  space $(\Omega)$.
+\right]\right)$ as two matrix-valued random variables $\Delta^{(m)}:\Omega \rightarrow \mathbf{M}_{n\times n} $,$\Delta^{(u)}:\Omega \rightarrow \mathbf{M}_{n\times n} $  for the appropriate sample  space $(\Omega)$.
 
- The criterion function for the embedding is $\sigma_W(\cdot) =f_w(D({\cdot}),\Delta)$. All of the random variables following the embedding is dependent on $w$, for the sake of simplicity, it will not be shown in the notation. The embedding for the unmatched pair ${\hat{X}_{1u},\hat{X}_{2u}}$  is 
+ The criterion function for the embedding is $\sigma_W(\cdot) =f_w(D({\cdot}),\Delta)$. All of the random variables following the embedding is dependent on $w$, for the sake of simplicity, it will not be shown in the notation. The embedding for the unmatched pair ${\hat{X}_{1}^{(u)},\hat{X}_{2}^{(u)}}$  is 
  \[
-{\hat{X}_{1u},\hat{X}_{2u}}
-=\argmin_{\acute{X}_{1u}, \acute{X}_{2u}}\left[\min_{\mathbf{\acute{T}}}
+{\hat{X}_{1}^{(u)},\hat{X}_{2}^{(u)}}
+=\argmin_{\acute{X}_{1}^{(u)}, \acute{X}_{2}^{(u)}}\left[\min_{\mathbf{\acute{T}}}
 {f_w\left(
 D\left(
 \left[
 \begin{array}{c}
 \acute{\mathbf{T}} \\
-\acute{X}_{1u} \\
-\acute{X}_{2u}
+\acute{X}_{1}^{(u)} \\
+\acute{X}_{2}^{(u)}
 \end {array}
 \right]
 \right),
-\Delta_{u}
+\Delta^{(u)}
 \right)
 }
 \right]
 \]
-where there is an implicit dependence on $\mathbf{T}$, because $\Delta_{u}$ depends on $\mathbf{T}$. 
+where there is an implicit dependence on $\mathbf{T}$, because $\Delta^{(u)}$ depends on $\mathbf{T}$. 
 A similar expression gives the embedding for the matched pair  
-${\hat{X}_{1m},\hspace{0.5em}\hat{X}_{2m}}=\argmin_{\acute{X}_{1m}, \acute{X}_{2m}}\left[\min_{\mathbf{\acute{T}}}
+${\hat{X}_{1}^{(m)},\hspace{0.5em}\hat{X}_{2}^{(m)}}=\argmin_{\acute{X}_{1}^{(m)}, \acute{X}_{2}^{(m)}}\left[\min_{\mathbf{\acute{T}}}
 {f_w\left(
 D\left(
 \left[
 \begin{array}{c}
 \acute{\mathbf{T}} \\
-\acute{X}_{1m} \\
-\acute{X}_{2m}
+\acute{X}_{1}^{(m)} \\
+\acute{X}_{2}^{(m)}
 \end {array}
 \right]
 \right),
-\Delta_{u}
+\Delta^{(u)}
 \right)
 }
 \right]$.
- Assuming these minima exist and are unique, the mappings $\hat{X}_{1m}:\omega\rightarrow \mathbf{R}^{d'}$,  $\hat{X}_{2m}:\omega\rightarrow \mathbf{R}^{d'}$ , $\hat{X}_{1u}:\omega\rightarrow \mathbf{R}^{d'}$, 
-$\hat{X}_{2u}:\omega\rightarrow \mathbf{R}^{d'}$ are  measurable maps,  $\hat{X}_{1m}$ , $\hat{X}_{2m}$ , $\hat{X}_{1u}$, $\hat{X}_{2u}$ are random vectors. 
+ Assuming these minima exist and are unique, the mappings $\hat{X}_{1}^{(m)}:\omega\rightarrow \mathbf{R}^{d'}$,  $\hat{X}_{2}^{(m)}:\omega\rightarrow \mathbf{R}^{d'}$ , $\hat{X}_{1}^{(u)}:\omega\rightarrow \mathbf{R}^{d'}$, 
+$\hat{X}_{2}^{(u)}:\omega\rightarrow \mathbf{R}^{d'}$ are  measurable maps,  $\hat{X}_{1}^{(m)}$ , $\hat{X}_{2}^{(m)}$ , $\hat{X}_{1}^{(u)}$, $\hat{X}_{2}^{(u)}$ are random vectors. 
 
-Consider the test statistic $\tau=d(\hat{X}_{1.},\hat{X}_{2.})$. Under null hypothesis of matchedness, the distribution of the statistic is governed by the distribution of $\hat{X}_{.m}$, under the alternative it is governed by  $\hat{X}_{.u}$.
+Consider the test statistic $\tau=d(\hat{X}_{1}^{\cdot},\hat{X}_{2}^{\cdot})$. Under null hypothesis of matchedness, the distribution of the statistic is governed by the distribution of $\hat{X}_{1}^{(m)}$ and $\hat{X}_{2}^{(m)}$, under the alternative it is governed by  $\hat{X}_{1}^{(u)}$ and $\hat{X}_{2}^{(u)}$.
 
-Denote by $F_Y$ the   cumulative distribution function of  $Y$ where $Y$ can be  any function of $\hat{X}_m$ or $\hat{X}_u$. 
+Denote by $F_Y$ the   cumulative distribution function of  $Y$ where $Y$ can be  any function of $\hat{X}_{k}^{(m)}$ or $\hat{X}_{k}^{(u)}$.  for $k=\{1,2\}$ 
 
 
 
- Then $$\beta_{\alpha}\left( w\right)=1-F_{d(\hat{X}_{1u},\hat{X}_{2u})}(F_{d(\hat{X}_{1m},\hat{X}_{2m})}^{-1}(1-\alpha)).$$
+ Then $$\beta_{\alpha}\left( w\right)=1-F_{d \left(\hat{X}_{1}^{(u)},\hat{X}_{2}^{(u)}\right)}(F_{d\left(\hat{X}_{1}^{(m)},\hat{X}_{2}^{(m)}\right)}^{-1}(1-\alpha)).$$
 
- Note that all random variables are dependent on $w$. Finally, define $$w^{*}=argmax_w{\beta_{\alpha}\left( w\right)}. $$
+ Note that all random variables are dependent on $w$. Finally, define $$w^{*}=\arg\max_w{\beta_{\alpha}\left( w\right)}. $$
 
 
 Even for  given $\mathbf{F}_u,\mathbf{F}_m$,   $w^*$ must be defined with respect to the value of allowable type I error rate $\alpha$.  For two different $\alpha$ values, it is quite possible that $\beta_{\alpha_1}(w_1)>\beta_{\alpha_1}(w_2)$  and $\beta_{\alpha_2}(w_1)<\beta_{\alpha_2}(w_2)$. This can be observed in results in Section \ref{sec:Simulation Results}.  
 Investigation of some  properties of $w^{*}$  is included in section  \ref{sec:Simulation Results} .
  $w^*$ is defined to be the argmin of  the power function with respect to $w$ and some important questions about $w^*$ are  related to the nature of this function $\beta_{\alpha}\left( w\right)$.
-Note that in a general setting, finding the exact value of $w^*$ is intractable. The estimate $\hat{w}^*$ will be based on noisy evaluations of $\beta(w^*)$.  A Monte Carlo simulation is run in  Section  \ref{sec:Simulation Results} 
-to find the estimate of this function at various values of $w$.
+While finding an analytical expression for the value of $w^*$ is intractable, an estimate $\hat{w}^*$  based on noisy evaluations of $\beta_{\alpha}(w^*)$ can be computed.  A Monte Carlo simulation is run in  Section  \ref{sec:Simulation Results} 
+to find the estimate of $\beta_{\alpha}\left( w\right)$ at various values of $w$ and $\alpha$ .
 
 \begin{comment}
 A closed-form expression for this function will be hard to find  even in the most simple of cases. So consider the estimate from the Monte Carlo simulation $\beta^{(m)}_{\alpha}(w)$ for the estimate computed from $2m$ testing pairs, m matched pairs and m unmatched pairs. In addition, consider an arbitrary element $\omega$ of sample space $\Omega$. By law of large numbers, $\beta^{(m)}_{\alpha}\rightarrow\beta_{\alpha}(w)$ pointwise.  We will omit $w$ from the expressions of the functions. Suppose the test statistic values  are $T_0^{i}$, $T_A^{i}$ $i=1,\ldots,m$  respectively for matched and unmatched test pairs. Note that $\beta^{(m)}_{\alpha}$ can be written as $\sum_{j=1}^m I(T_A^{j}>T_0^{(i)})$ where $T_0^{(i)}$ is the $i=\lceil {m*(1-\alpha)} \rceil^{th}$ order statistic of $T_0^{i},i=1,\ldots,m$. Replacing the indicator function with the unit step function
@@ -655,7 +657,7 @@ To prove differentiability of $\beta_{\alpha}\left( w\right)$ , we refer to Theo
 
  
 \subsection{Continuity of $\beta(\cdot)$} 
- Let $T_0(w)$ and $T_a(w)$ denote the value of the test statistic under null and alternative distributions  for the embedding with $w$ .  %stochastic process whose sample path is  a function of $w$ where the randomness comes from $\Delta_{m}$, $\Delta_{u}$ and %$\mathcal{T}$ . 
+ Let $T_0(w)$ and $T_a(w)$ denote the value of the test statistic under null and alternative distributions  for the embedding with $w$ .  %stochastic process whose sample path is  a function of $w$ where the randomness comes from $\Delta^{(m)}$, $\Delta^{(u)}$ and %$\mathcal{T}$ . 
 Consider $\beta_{\alpha}(\cdot)$ as a function of $w$, which can be written as $P\left[T_a(\cdot)>c_{\alpha}(\cdot)\right]$ where $c_{\alpha}(\cdot)$ is the critical value for level $\alpha$. Instead of  $\beta_{\alpha}(\cdot)$
 
   the area under the curve measure will be shown to be continuous as a surrogate: $$AUC(w)=P\left[T_a(w)>T_0(w)\right]$$ where $T_a(\cdot)$ and $T_0(\cdot)$ can also be regarded as  stochastic processes whose sample paths are continuous functions of $w$ except at a finite number of points in $(0,1)$. By  assuming stochastic continuity of $T_a(w)$ and $T_0(w)$ in the interval $(0,1)$, i.e. assuming the probability of a jump discontinuity of $T_0(w)$ at a particular $w_0$ is 0,  the continuity of $AUC(w)$ will be proven.
@@ -700,8 +702,8 @@ For any $w$, choose $\delta_{\epsilon}$ such that such that both $ Pr\left[T(w+\
 Therefore $ Pr\left[T(w)>0\right]$ is continuous with respect to $w$.
 
 \end{proof}
-Theorem 2.1 in \cite{Norkin1993} states the same theorem : if $T(w,\omega)$ is continuous with respect to $w$ for almost everywhere 
-%all $\omega \in \Omega$, where $\Omega$ is the sample space.
+Theorem 2.1 in \cite{Norkin1993} states the same theorem :  if $T(w,\omega)$ is continuous with respect to $w$  almost everywhere 
+($Pr[\omega:T(w,\omega)\textrm{ is discontinuous with respect to } w]=0$  where $\omega \in \Omega$, and $\Omega$ is the sample space)
 , then $F(x)=Pr\left[T(w)>0\right]$ is continuous.
 
 \begin{cor}{
@@ -712,7 +714,7 @@ Theorem 2.1 in \cite{Norkin1993} states the same theorem : if $T(w,\omega)$ is c
 \end{proof}
 
 
-The main assumption  used in the proof is the stochastic continuity of $T_0(w)$ and $T_a(w)$ .  In the constructed example that is in the detour to follow,  a certain symmetry in the realized configuration is assumed, which results in a discontinuity at a particular  point of $w$. Any change in this symmetry will give a discontinuity at a different $w$. When the probability distribution of the data that leads to the dissimilarities is continuous, it can be argued that the probability of a  jump discontinuity at  a particular $w$ has measure zero which is equivalent to stochastic continuity.
+The main assumption  used in the proof is the stochastic continuity of $T_0(w)$ and $T_a(w)$ .  In the constructed example that is in the detour to follow,  a certain symmetry in the realized configuration is assumed, which results in a discontinuity at a particular  value of $w$. Any change in this symmetry will give a discontinuity at a different $w$, or perhaps remove the discontinuity altogether. When the probability distribution of the data that leads to the dissimilarities is continuous, it can be argued that the probability of a  jump discontinuity at  a particular $w$ has measure zero which is equivalent to stochastic continuity.
 
 
 \begin{comment}
@@ -733,7 +735,9 @@ Note that it is possible to have multiple local minima in the embedding step(see
 Consider five in-sample points in $\mathbb{R}^2$ with locations $X_1=(0,0)$, $X_2=(1,0)$, $X_3=(1,1)$
  and $X_4=(1,0)$, $X_5=(.5,.5)$ and two out-of-sample  points with coordinates $X_6=(1,0)$ and $X_7=(0,1)$.
  \begin{figure}
- \includegraphics{multmin-diag}
+ \centering
+ \includegraphics[scale=0.35]{multmin-diag}
+ \caption{True configuration of $X_{i}$, $i \in {1,\ldots,7}$}
 \label{original-config}
  \end{figure} 
   Suppose $X_6$ is matched with $X_2$ and $X_7$ is matched with $X_4$. 
@@ -746,14 +750,14 @@ Consider five in-sample points in $\mathbb{R}^2$ with locations $X_1=(0,0)$, $X_
 Qualitatively, the three points $X_1$, $X_5$ and $X_3$ form a barrier which the OOS points need to cross  to reach their matched counterparts. 
 
 The MDS criterion function is optimized starting with different initial configurations.   Depending on the initial configuration, the final embedding coordinates of $\hat{X}_6$ might be closer
-    to $X_4$ compared to $X_2$. This is due to a local minimum in the configuration space. Consider the fact that, at the start of optimization, if  the initial coordinates of $\hat{X}_6$ is on the $X_4$ side of the $y=x$ line  inn  $\mathbb{R}^2$ , 
+    to $X_4$ compared to $X_2$. This is due to a local minimum in the configuration space. Consider the fact that, at the start of optimization, if  the initial coordinates of $\hat{X}_6$ is on the $X_4$ side of the $y=x$ line  in  $\mathbb{R}^2$ , 
     it has to cross paths with the embeddings of  ${X}_1,{X}_3,{X}_5$ and it has   nonzero dissimilarities with those points. The same argument can be made for $X_7$. This is  the ``barrier" mentioned that is encountered in the optimization. It is possible to distinguish two kinds of local minima, one where the embedded OOS points $X_6$ and $X_7$ end up in the same side as their respective matched points $X_2$ and $X_4$ (named ``true'' or real config.) and the other where they end up in sides  opposite their matched points (named ``alternative" local min.). The latter corresponds to the case where the OOS points are unable to cross the ``barrier"'. Other configurations such as the ones where $X_6$ and $X_7$  end up in the same side are not local minima, since the original dissimilarity between them is large ($\sqrt{2}$) compared to dissimilarities between other pairs of points and embedding them close would increase raw stress significantly.
     Based on value of $w$, it might be easier to get out of the  ``alternative" local minimum. 
     In addition, depending on $w$ , this  local minimum can be a global minimum. 
     That is, if $w$ is small enough, the configuration where $X_6$ stays on the side of $X_4$ instead of $X_2$ might have a lower stress than the configuration where $X_6$ is near its matched point $X_2$, due to the fact that  contribution of $ D_{ij}-d(X_i,X_j)$ to the raw stress where $(i,j)=(4,6)$  is  multiplied by $1-w$ while every other dissimilarity is multiplied by $w$. 
 		
 		Starting from a small enough $w$ and increasing it until $w$ is arbitrarily close to $1$, there are two $w$ values where important changes in embedding configurations and final stress values occur.
-    The plots in Figures \ref{fig:Finalconfig-MultMin-w-0_1,fig:Finalconfig-MultMin-w-0_5,fig:Finalconfig-MultMin-w-0_8,fig:Finalconfig-MultMin-w-0_81, fig:Finalconfig-MultMin-w-0_84} show the local minimum configurations ${X}_6$(in red circles) and ${X}_7$(in blue plusses) end up in starting from different initial configuration(One red and one blue point for each  initial configuration) The point pairs plotted in the left box are those configurations  where the  ${X}_6$ and ${X}_7$ end up in the side of their matched points (``true'' final configuration). The configurations in the right are those where the points end up in the opposite side of their matched points. The final stress values of the final configurations listed in  \ref{stress-val-table} (the minimum stress value among each kind of local minima) show that around $w=0.5$ the  ``true''-kind local minima   starts having a lower stress value compared to ``alternative''-kind. This is the first $w$ value that corresponds to an important change. Also note that starting around $w=0.8$ in Figure \ref{fig:Finalconfig-MultMin-w-0_8}, all of the $X_5$ and $X_6$  pairs are on the verge of passing throught the barrier and start ending up in the side of their matched points, due to the fact that the barrier starts to become negligible and there are no separate local minima. When $w>0.8$ all of the point pairs end up in  the``real'' configuration \ref{fig:Finalconfig-MultMin-w-0_81}. This is the $w$ value where the other important changes in configurations and stress values occur. Further increasing $w$ changes the final stress value, and  the final embedding configuration moves closer to the original locations of $X_{i}$ in \ref{original-config} \ref{fig:Finalconfig-MultMin-w-0_84}.
+    The plots in Figures \ref{fig:Finalconfig-MultMin-w-0_1}, \ref{fig:Finalconfig-MultMin-w-0_5}, \ref{fig:Finalconfig-MultMin-w-0_8}, \ref{fig:Finalconfig-MultMin-w-0_81} , \ref{fig:Finalconfig-MultMin-w-0_84} show the local minimum configurations ${X}_6$(in red circles) and ${X}_7$(in blue plusses) end up in starting from different initial configuration(One red and one blue point for each  initial configuration) The point pairs plotted in the left box are those configurations  where the  ${X}_6$ and ${X}_7$ end up in the side of their matched points (``true'' final configuration). The configurations in the right are those where the points end up in the opposite side of their matched points. The final stress values of the final configurations listed in  \ref{stress-val-table} (the minimum stress value among each kind of local minima) show that around $w=0.5$ the  ``true''-kind local minima   starts having a lower stress value compared to ``alternative''-kind. This is the first $w$ value that corresponds to an important change. Also note that starting around $w=0.8$ in Figure \ref{fig:Finalconfig-MultMin-w-0_8}, all of the $X_5$ and $X_6$  pairs are on the verge of passing throught the barrier and start ending up in the side of their matched points, due to the fact that the barrier starts to become negligible and there are no separate local minima. When $w>0.8$ all of the point pairs end up in  the``real'' configuration \ref{fig:Finalconfig-MultMin-w-0_81}. This is the $w$ value where the other important changes in configurations and stress values occur. Further increasing $w$ changes the final stress value, and  the final embedding configuration moves closer to the original locations of $X_{i}$ in \ref{original-config} \ref{fig:Finalconfig-MultMin-w-0_84}.
     
 
 
@@ -762,18 +766,19 @@ The MDS criterion function is optimized starting with different initial configur
 \centering
 \includegraphics[scale=0.35]{true-min-w-0_1.pdf}
 
-\label{fig:figure1-1}
+\label{fig:Finalconfig-MultMin-w-0_1_a}
 \end{minipage}
 \hspace{0.5cm}
 \begin{minipage}[b]{0.5\linewidth}
 \centering
 \includegraphics[scale=0.35]{other-min-w-0_1.pdf}
 
-\label{fig:figure1-2}
+\label{fig:Finalconfig-MultMin-w-0_1_b}
 \end{minipage}
 
 \caption{Final configurations for for different $w=0.1$ }
 \label{fig:Finalconfig-MultMin-w-0_1}
+
 
 \end{figure}
 
@@ -785,6 +790,7 @@ The MDS criterion function is optimized starting with different initial configur
 \centering
 \includegraphics[scale=0.35]{true-min-w0_5}
 
+\label{fig:Finalconfig-MultMin-w-0_5_a}
 
 \end{minipage}
 \hspace{0.5cm}
@@ -792,6 +798,7 @@ The MDS criterion function is optimized starting with different initial configur
 \centering
 \includegraphics[scale=0.35]{other-min-w0_5.pdf}
 
+\label{fig:Finalconfig-MultMin-w-0_5_b}
 
 \end{minipage}
 
@@ -804,6 +811,7 @@ The MDS criterion function is optimized starting with different initial configur
 \begin{minipage}[b]{0.5\linewidth}
 \centering
 \includegraphics[scale=0.35]{true-min-w0_8.pdf}
+\label{fig:Finalconfig-MultMin-w-0_8_a}
 
 
 \end{minipage}
@@ -811,6 +819,7 @@ The MDS criterion function is optimized starting with different initial configur
 \begin{minipage}[b]{0.5\linewidth}
 \centering
 \includegraphics[scale=0.35]{other-min-w0_8.pdf}
+\label{fig:Finalconfig-MultMin-w-0_8_a}
 
 
 \end{minipage}
@@ -868,18 +877,45 @@ The MDS criterion function is optimized starting with different initial configur
 
 % latex table generated in R 2.15.1 by xtable 1.7-0 package
 % Sat Jan 05 00:54:38 2013
+
 \begin{table}[ht]
 \begin{center}
-\begin{tabular}{rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr}
+
+\begin{tabular}{r|rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr}
   \hline
- & 0.1 & 0.2 & 0.3 & 0.4 & 0.41 & 0.42 & 0.43 & 0.44 & 0.45 & 0.46 & 0.47 & 0.48 & 0.49 & 0.5 & 0.51 & 0.52 & 0.53 & 0.54 & 0.55 & 0.6 & 0.65 & 0.7 & 0.75 & 0.76 & 0.77 & 0.78 & 0.79 & 0.8 & 0.81 & 0.82 & 0.83 & 0.84 & 0.85  \\ 
+ $w$ & 0.1 & 0.2 & 0.3 & 0.4 & 0.41 & 0.42 & 0.43 & 0.44 & 0.45 & 0.46 & 0.47  \\ 
   \hline
-Local min for real config. & 2.80 & 2.51 & 2.22 & 1.92 & 1.89 & 1.86 & 1.83 & 1.80 & 1.77 & 1.74 & 1.71 & 1.68 & 1.65 & 1.62 & 1.59 & 1.56 & 1.53 & 1.50 & 1.47 & 1.32 & 1.17 & 1.01 & 0.86 & 0.82 & 0.79 & 0.76 & 0.73 & 0.70 & 0.66 & 0.63 & 0.60 & 0.57 & 0.53  \\ 
-  Alternative local min & 0.39 & 0.76 & 1.10 & 1.40 & 1.43 & 1.46 & 1.48 & 1.51 & 1.53 & 1.56 & 1.58 & 1.60 & 1.63 & 1.65 & 1.67 & 1.69 & 1.71 & 1.73 & 1.74 & 1.81 & 1.82 & 1.81 & 1.79 & 1.77 & 1.75 & 1.72 & 1.69 & 1.66 & 1.64 & NA & NA & NA & NA \\ 
+Local min for real config. & 2.80 & 2.51 & 2.22 & 1.92 & 1.89 & 1.86 & 1.83 & 1.80 & 1.77 & 1.74 & 1.71 \\ 
+  Alternative local min & 0.39 & 0.76 & 1.10 & 1.40 & 1.43 & 1.46 & 1.48 & 1.51 & 1.53 & 1.56 & 1.58 \\ 
    \hline
 \end{tabular}
+
+
+\begin{tabular}{r|rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr}
+  \hline
+  $w$ & 0.48 & 0.49 & 0.5 & 0.51 & 0.52 & 0.53 & 0.54 & 0.55 & 0.6 & 0.65 & 0.7 \\ 
+  \hline
+Local min for real config. &  1.68 & 1.65 & 1.62 & 1.59 & 1.56 & 1.53 & 1.50 & 1.47 & 1.32 & 1.17 & 1.01   \\ 
+  Alternative local min &  1.60 & 1.63 & 1.65 & 1.67 & 1.69 & 1.71 & 1.73 & 1.74 & 1.81 & 1.82 & 1.81  \\ 
+   \hline
+\end{tabular}
+
+
+
+\begin{tabular}{r|rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr}
+  \hline
+ $w$ & 0.75 & 0.76 & 0.77 & 0.78 & 0.79 & 0.8 & 0.81 & 0.82 & 0.83 & 0.84 & 0.85  \\ 
+  \hline
+Local min for real config. &  0.86 & 0.82 & 0.79 & 0.76 & 0.73 & 0.70 & 0.66 & 0.63 & 0.60 & 0.57 & 0.53  \\ 
+  Alternative local min &   1.79 & 1.77 & 1.75 & 1.72 & 1.69 & 1.66 & 1.64 & NA & NA & NA & NA \\ 
+   \hline
+\end{tabular}
+
 \end{center}
+
+\label{stress-val-table}
 \end{table}
+
 
 
 \begin{comment}
@@ -963,7 +999,7 @@ $\begin{array}{ccc}
         X_{n1} & \ldots     & X_{nK} \\
     \end{array}
 $
- where each $X_{ik}$ is a random vector of dimension $(p+q \times I(c>0))$ and the conditional distribution  $X_(i.)|\bm{\alpha}_i  $ is specified as an appropriate Multivariate Normal or Dirichlet distribution.
+ where each $X_{ik}$ is a random vector of dimension $(p+q \times I(c>0))$ and the conditional distribution  $X_{i.}|\bm{\alpha}_i  $ is specified as an appropriate Multivariate Normal or Dirichlet distribution.
 \item Dissimilarities are computed and embedded in  Euclidean space  via MDS (followed by a transformation from  $\mathbf{R}^d$ to  $\mathbf{R}^d$ and  projection into $\mathbf{R}^d$, respectively  for P$\circ$M and CCA) . The final embeddings lie in $\mathbb{R}^d$.   Denote this in-sample embedding configuration as   $\hat{\mathbf{T}}$. Note that  if the JOFC method is being used, embedding is carried out with the weighted raw stress function $\sigma_{W}(\cdot)=f_{w}(D(\cdot),M)$ in equation \eqref{fid-comm-tradeoff-func} with a common weight $w$ for commensurability terms and another common weight $1-w$ for fidelity terms, otherwise unweighted raw stress function ($\sigma(\cdot)$) is used as a criterion function for embedding.
 
 \item  $m$ pairs of matched   measurements are generated which are treated as out-of-sample, and 
@@ -1020,7 +1056,8 @@ $
 \label{fig:Dir-c001-power-w}
 \end{figure}
 
-Setting p and q to 5 and 10, respectively, for $n=150$ and $m=150$, the average of the power values for $nmc=150$ Monte Carlo replicates are computed at  different $\alpha$s and are plotted in Figure \ref{fig:MVN-c001-power-w} against $\alpha$ for the Gaussian setting.  Qualititatively similar plots for the Dirichlet setting  are not included for brevity.  The plot in Figure \ref{fig:MVN-c001-power-w} shows that for different values of  $w$, $\beta$-$\alpha$ curves vary significantly.  The conclusion is that the match detection tests with JOFC embedding using specific $w$ values have better performance than other $w$ values in terms of power.  In Figure \ref{fig:MVN-c001-beta-w},  $\beta(w)$ is plotted against $w$ for fixed values of $\alpha$. It is  interesting that the optimal value of $w$ seems to be in the range of $(0.85,1)$ for all settings, which suggests a significant emphasis on commensurability might be  critical for the match detection  task. 
+Setting p and q to 5 and 10, respectively, for $n=150$ and $m=150$, the average of the power values for $nmc=150$ Monte Carlo replicates are computed at  different $\alpha$s and are plotted in Figure \ref{fig:MVN-c001-power-w} against $\alpha$ for the Gaussian setting.  Qualititatively similar plots for the Dirichlet setting  are not included for brevity.  The plot in Figure \ref{fig:MVN-c001-power-w} shows that for different values of  $w$, $\beta$-$\alpha$ curves vary significantly.  The conclusion is that the match detection tests with JOFC embedding using specific $w$ values have better performance than other $w$ values in terms of power.  In Figure
+ \ref{fig:MVN-c001-power-w},  $\beta(w)$ is plotted against $w$ for fixed values of $\alpha$. It is  interesting that the optimal value of $w$ seems to be in the range of $(0.85,1)$ for all settings, which suggests a significant emphasis on commensurability might be  critical for the match detection  task. 
 
 
 
@@ -1399,57 +1436,49 @@ method \cite{ZhuGhodsi}, resulting in d = 6 for this data set.
 \section{Model Selection}
 For the simulations presented up to now, the embedding dimension $d$ was set to 2. This was a convenient choice which allowed us to investigate various aspects of JOFC and competing approaches.
 However,  more care is required in selection of this parameter, since it plays such a big role in performance in general learning settings. The signal dimension was set to $p=10$ and different $d=2,5,7,10,15$ values were used to test the JOFC approach.
-
-
-The following plot of ROC curves\ref{d-ROC} shows the effect of $d$ parameter on the performance of different methods for the Gaussian setting for the noisy case. 
-
-
+The following plots of ROC curves in    \ref{fig:ROC-d} and  \ref{fig:ROC-d-15} shows the effect of $d$ parameter on the performance of different methods for the Gaussian setting for the noisy case. 
 \begin{figure}
  \centering
-        \begin{subfigure}[b]{0.49\textwidth}
-                \centering
-               \includegraphics[scale=0.4]{ROC-d-2.pdf}
+  \captionsetup[subfigure]{labelformat=empty}
+        \begin{subfigure}[b]{0.5\textwidth}        
+               \includegraphics[width=\textwidth]{ROC-d-2.pdf}
                 \caption{d=2}
                 \label{fig:ROC-d-2}
         \end{subfigure}%
-       
-        ~ %add desired spacing between images, e. g. ~, \quad, \qquad etc. 
+         %add desired spacing between images, e. g. ~, \quad, \qquad etc. 
           %(or a blank line to force the subfigure onto a new line)
-        \begin{subfigure}[b]{0.49\textwidth}
-                \centering
-                  \includegraphics[scale=0.4]{ROC-d-5.pdf}
+        \begin{subfigure}[b]{0.5\textwidth}           
+                  \includegraphics[width=\textwidth]{ROC-d-5.pdf}
                 \caption{d=5}
                 \label{fig:ROC-d-5}
-        \end{subfigure} 
-        
-        ~ %add desired spacing between images, e. g. ~, \quad, \qquad etc. 
-          %(or a blank line to force the subfigure onto a new line)
-        \begin{subfigure}[b]{0.48\textwidth}
-                \centering
-               \includegraphics[scale=0.55]{ROC-d-7.pdf}
+        \end{subfigure}      
+        %add desired spacing between images, e. g. ~, \quad, \qquad etc.    %(or a blank line to force the subfigure onto a new line)
+        \begin{subfigure}[b]{0.47\textwidth}             
+               \includegraphics[width=\textwidth]{ROC-d-7.pdf}
                 \caption{d=7}
                 \label{fig:ROC-d-7}
-        \end{subfigure}
-               \qquad
-               \begin{subfigure}[b]{0.48\textwidth}
+        \end{subfigure}          
+               \begin{subfigure}[b]{0.47\textwidth}
                 \centering
-               \includegraphics[scale=0.55]{ROC-d-10.pdf}
+               \includegraphics[width=\textwidth]{ROC-d-10.pdf}
                 \caption{d=10}
                 \label{fig:ROC-d-10}
         \end{subfigure}
-               \qquad
-         \begin{subfigure}{0.48\textwidth}
-                \centering
-               \includegraphics[scale=0.55]{ROC-d-15.pdf}
-                \caption{d=15}
-                \label{fig:ROC-d-15}
-        \end{subfigure}
+         
         \caption{Effect of $d$ parameter on ROC plots}\label{fig:ROC-d}
+        \label{fig:ROC-d}
 
 \end{figure}
+\begin{center}
+\begin{figure}
 
-
-
+                \centering
+               \includegraphics[scale=0.3]{ROC-d-15.pdf}
+                \caption{d=15}
+                \label{fig:ROC-d-15}
+       
+\end{figure}
+\end{center}
 
 
 

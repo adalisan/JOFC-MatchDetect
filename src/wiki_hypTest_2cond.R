@@ -202,19 +202,30 @@
 print(getwd())
 load("./data/wiki.RData")
 
-#load("./data/wiki_adj.RData")
+load("./data/wiki_adj.RData")
 
+
+source("./lib/graph_embedding_fn.R")
+
+
+GE_dice <- C_dice_weighted(en_a)
+GF_dice <- C_dice_weighted(fr_a)
 
 
 N <- 1382
 
 model= "gaussian"
 w.vals = c(0.1,0.2,0.4,0.5,0.8,0.9,0.925,0.95,0.99,0.999)
+w.vals <- c(0.1,0.2,0.4,0.5,0.8,0.9)
 w.val.len <- length(w.vals)
-nmc<-12
+#nmc<-12
+nmc <- 1 
+
+
 d<-6
 size <- seq(0, 1, 0.01)
-oos.use.imputed<-FALSE
+#oos.use.imputed<-FALSE
+oos.use.imputed<-TRUE
 level.mcnemar <- 0.02
 power.nmc <-array(0,dim=c(w.val.len,nmc,length(size)))
 test.samp.size <- 100
@@ -232,7 +243,7 @@ assume.matched.for.oos<-TRUE
 oos.use.imputed<-FALSE
 oos <- TRUE
 verbose <-TRUE
-pre.scaling<-TRUE
+pre.scaling<-FALSE
 
 
 #prescaling
@@ -246,7 +257,8 @@ TF<-TF*s
 
 
 
-par.compute<-TRUE
+#par.compute<-TRUE
+par.compute<-FALSE
 
 run.wiki.JOFC.sim.mc.replicate <- function(m.i,N, test.samp.size, w.val.len, m, TE, TF,
 		n,d, model, oos, Wchoice, separability.entries.w, wt.equalize,
@@ -386,16 +398,30 @@ if(!par.compute){
 
 
 
-
+if (par.compute){
 	
 	JOFC.wiki.res<-parLapply(cl=cl,1:nmc, run.wiki.JOFC.sim.mc.replicate, N = N, test.samp.size = test.samp.size,
-					w.val.len = w.val.len, m = m, TE = TE, TF = TF, n = n, d=d,
+					w.val.len = w.val.len, m = m, TE = GE, TF = GF, n = n, d=d,
 					model = "gaussian", oos = oos, Wchoice = Wchoice,
 					separability.entries.w = separability.entries.w, wt.equalize = wt.equalize,
 					assume.matched.for.oos = assume.matched.for.oos, oos.use.imputed = oos.use.imputed,
 					w.vals = w.vals, size = size, verbose = verbose,  level.mcnemar = level.mcnemar			
 			)
 	
+			
+		}  else {	
+			JOFC.wiki.res<-lapply(1:nmc, run.wiki.JOFC.sim.mc.replicate, N = N, test.samp.size = test.samp.size,
+					w.val.len = w.val.len, m = m, TE = GE, TF = GF, n = n, d=d,
+					model = "gaussian", oos = oos, Wchoice = Wchoice,
+					separability.entries.w = separability.entries.w, wt.equalize = wt.equalize,
+					assume.matched.for.oos = assume.matched.for.oos, oos.use.imputed = oos.use.imputed,
+					w.vals = w.vals, size = size, verbose = verbose,  level.mcnemar = level.mcnemar			
+			)
+		}
+			
+			
+			
+			
 	for (mc.i in 1:nmc){
 		power.nmc[,mc.i,]<- JOFC.wiki.res[[mc.i]]$power.mc
 		
@@ -428,7 +454,7 @@ if(!par.compute){
 # 	  power.nmc[,mc.i,]<- JOFC.wiki.res[[mc.i]]$power.mc
 # 	}   
 	
-save.image(file= paste("./cache/JOFC_Wiki_Exp_HypTest",format(Sys.time(), "%b %d %H:%M:%S"),".RData"))
+save.image(file= paste("JOFC_Wiki_Exp_HypTest",format(Sys.time(), "%b %d %H:%M:%S"),".RData"))
 
 
 
