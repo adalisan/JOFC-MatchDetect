@@ -48,7 +48,7 @@ if (par.compute){
 model <- NULL   
 if ( gauss.sim) {
 model="MVN"
-} elseif {dirichlet.sim} {
+} else if (dirichlet.sim) {
 model="Dirichlet"
 } else{
 stop("invalid model name")}
@@ -154,13 +154,14 @@ bootstrap.res <- with(params, do.call(test.bootstrapped.JOFC,args=c(list(model="
 #  Running simulation function 
 ############################################
 sim.res <- do.call(call.func,args=args.for.func.call)
+
 end.time.g<-Sys.time()
 run.time.g <- end.time.g-begin.time.g
 
 print(run.time.g)
 
 save.image(file= paste("JOFC_MVN_Dir_Sim_",format(Sys.time(), "%b %d %H:%M:%S"),".RData"))
-
+write.csv(sim.res$auc.meas,"auc_meas.txt")
 
 
  #draw.plots(sim.res,"MVN",params,plot.w.vals=1:length(params$w.vals),TRUE,TRUE,FALSE)
@@ -214,6 +215,8 @@ w.val.len <-length(params$w.vals)
 colors.vec[10]<-"black"
 linewd<-3
 lty.i.vec<-c()
+
+par(ps=22)
 for (i in 1:w.val.len){
 	if (plot.w.vals[i]){
 	lty.i <- 1+((i-1)%%10)
@@ -280,7 +283,7 @@ if(!run.in.linux&(!run.for.Sweave)) savePlot(filename=paste("./",fname,".png",co
 
 
 
-
+par(ps=20)
 
 #
 #  Power vs w plotting
@@ -357,6 +360,7 @@ par(lwd=lwd.old)
 
 
 }
+
 draw.plots(sim.res,"MVN",params,plot.w.vals=1:length(params$w.vals),TRUE,TRUE,FALSE)
 
 

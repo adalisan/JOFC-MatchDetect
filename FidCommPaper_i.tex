@@ -1,0 +1,621 @@
+% !TEX TS-program = pdflatex
+% !TEX encoding = UTF-8 Unicode
+
+% This is a simple template for a LaTeX document using the "article" class.
+% See "book", "report", "letter" for other types of document.
+
+\documentclass[11pt]{article} % use larger type; default would be 10pt
+
+%\usepackage[utf8]{inputenc} % set input encoding (not needed with XeLaTeX)
+
+%%% Examples of Article customizations
+% These packages are optional, depending whether you want the features they provide.
+% See the LaTeX Companion or other references for full information.
+
+%%% PAGE DIMENSIONS
+
+\usepackage{geometry} % to change the page dimensions
+\geometry{a4paper} % or letterpaper (US) or a5paper or....
+%\geometry{margins=2in} % for example, change the margins to 2 inches all round
+% \geometry{landscape} % set up the page for landscape
+%   read geometry.pdf for detailed page layout information
+\usepackage{fullpage}
+%\usepackage[top=tlength, bottom=blength, left=llength, right=rlength]{geometry}
+%Edit individual page dimension variables described above, using the \addtolength and \setlength commands. For instance,
+%\oddsidemargin=-1cm
+%\setlength{\textwidth}{6.5in}
+%\addtolength{\voffset}{-5pt}
+
+\usepackage{graphicx} % support the \includegraphics command and options
+
+% \usepackage[parfill]{parskip} % Activate to begin paragraphs with an empty line rather than an indent
+
+%%% PACKAGES
+\usepackage{booktabs} % for much better looking tables
+\usepackage{array} % for better arrays (eg matrices) in maths
+\usepackage{paralist} % very flexible & customisable lists (eg. enumerate/itemize, etc.)
+\usepackage{verbatim} % adds environment for commenting out blocks of text & for better verbatim
+%\usepackage{subfig} % make it possible to include more than one captioned figure/table in a single float
+
+%\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{cite}
+\usepackage{graphicx}
+\usepackage{hyperref,  mathrsfs, bm}
+
+\usepackage{url}
+%\renewcommand{\thesubfigure}{}
+% justifying
+\usepackage{ragged2e}
+
+
+\graphicspath{{./}{./../graphs/}{./graphs/}}
+
+
+\usepackage{amssymb,amsmath,amsthm,amscd}
+
+\usepackage[mathscr]{eucal}
+%\usepackage[dvips]{graphicx}
+%\usepackage{pstricks,pst-grad,pst-plot,pst-node}
+
+
+%\usepackage{pgf}
+
+
+
+%\newpsobject{showgrid}{psgrid}{subgriddiv=1,griddots=2,gridlabels=6pt}
+\renewcommand{\raggedright}{\leftskip=0pt \rightskip=0pt plus 0cm}
+% argmin
+\DeclareMathOperator*{\argmin}{arg\,min}
+
+\newcommand{\myred}{\color{red}}
+\newcommand{\mygreen}{\color{green!50!black}}
+\newcommand{\myblue}{\color{blue}}
+
+\newcommand{\mcX}{\mathcal{X}}
+\newcommand{\mcY}{\mathcal{Y}}
+\newcommand{\mcG}{\mathcal{G}}
+\newcommand{\mcF}{\mathcal{F}}
+
+
+%\usepackage[tiling]{pst-fill}
+\usepackage{epsfig}
+\usepackage{graphicx}
+\usepackage[usenames,dvipsnames]{color}
+
+\usepackage{Sweave}
+\usepackage{tikz}
+\usepackage{pgf}
+
+%%% HEADERS & FOOTERS
+\usepackage{fancyhdr} % This should be set AFTER setting up the page geometry
+\pagestyle{fancy} % options: empty , plain , fancy
+\renewcommand{\headrulewidth}{0pt} % customise the layout...
+\lhead{}\chead{}\rhead{}
+\lfoot{}\cfoot{\thepage}\rfoot{}
+
+%%% SECTION TITLE APPEARANCE
+%\usepackage{sectsty}
+%\allsectionsfont{\sffamily\mdseries\upshape} % (See the fntguide.pdf for font help)
+% (This matches ConTeXt defaults)
+
+%%% ToC (table of contents) APPEARANCE
+\usepackage[nottoc,notlof,notlot]{tocbibind} % Put the bibliography in the ToC
+\usepackage[titles,subfigure]{tocloft} % Alter the style of the Table of Contents
+\renewcommand{\cftsecfont}{\rmfamily\mdseries\upshape}
+\renewcommand{\cftsecpagefont}{\rmfamily\mdseries\upshape} % No bold!
+
+\newtheorem{thm}{Theorem}
+\newtheorem{cor}{Corollary}
+\newtheorem{lem}{Lemma}
+
+
+
+
+
+%%% END Article customizations
+
+%%% The "real" document content comes below...
+
+\title{ Fidelity-Commensurability Tradeoff in Joint Embedding of Disparate Dissimilarities}
+
+
+%input affiliations
+
+
+\author{Sancar Adali\thanks{Johns Hopkins University,
+Department of Applied Mathematics and Statistics,
+100 Whitehead Hall,
+3400 North Charles Street,
+Baltimore, MD 21218-2682} \and Carey E. Priebe\thanks{Johns Hopkins University,
+Department of Applied Mathematics and Statistics,
+100 Whitehead Hall,
+3400 North Charles Street,
+Baltimore, MD 21218-2682}
+}
+ 
+
+% \email{sadali1@jhu.edu}   %optional
+
+% \email{cep@jhu.edu}   %optional
+
+
+\begin{document}
+\maketitle
+\abstract{
+}
+
+
+
+
+\section{Introduction}
+% It is a challenge  to carry out inference on data from  disparate sources  (such as multiple sensors). The multitude  of sensors technology and large numbers of sensors  both  create difficulty and hold promise for efficient inference.
+  We are interested in problems where the data sources  are disparate and require inference methodology that can be used with data residing in heteregenous collection of  spaces.  Some illustrative examples include:  multiple languages for text documents, pairs of images and descriptive captions,  textual contents of Wikipedia articles and  hyperlink graph
+structure of the articles, photos take under different illumination conditions. Since we proceed to do inference starting from dissimilarity representation of data, our methodology may be applicable to any scenario in which multiple dissimilarity measures are available.
+We require only that the training data consists of ``matched" observations in the different spaces. By ``matched'', we mean two articles from different languages are on the same topic, the captions describe the scene in the image, etc.
+
+ \begin{comment}
+ The typical multiple sensor setting is visualized in  Figure ~\ref{fig:fig1}.
+\begin{figure}
+\centering
+\includegraphics[scale=0.75]{gen-model-orig-proj.pdf}
+\caption{Multiple Sensor setting}
+\label{fig:fig1}
+\end{figure}
+\end{comment}
+
+\section{Problem Description}
+In the problem setting considered here, $n$ different objects are measured under $K$ different conditions (corresponding  to $K$ different sensors) using  dissimilarity measures. These will be represented in matrix form as $K$ $n \times n$ matrices $\{\Delta_k,k=1 ,\ldots,K\}$.  In addition,  dissimilarities between  $K$ new measurements/observations  and the previous 
+$n$ objects under $K$ conditions are available.  The inference task is to   test the null hypothesis  that ``these measurements are from the same  object"  (matched) against the alternative hypothesis that ``they are not  from the same  object" (unmatched)~\cite{JOFC}. The test dissimilarities are referred to as  out-of-sample(OOS) dissimilarities.
+  In order to get a data representation where dissimilarities from disparate sources can be compared, the dissimilarities must be mapped to a commensurate metric space where the metric can be used to distinguish between ``matched'' and ``unmatched'' pairs.
+
+
+To embed dissimilarities  $\{\Delta_k,k=1 ,\ldots,K\}$  from different conditions into a commensurate space, the omnibus dissimilarity matrix  $M$ \footnote{a partitioned matrix whose diagonal blocks contain $\{\Delta_k,k=1 ,\ldots,K\}$}  can be embedded in a low-dimensional Euclidean space. Consider, for $K=2$ \footnote{Throughout this paper, it will be assumed,  the number of conditions, $K$, is equal to $2$ for the  simplicity of presentation. The approaches are easily generalizable to $K>2$ conditions.},
+ \begin{equation}
+M=  \left[ \begin{array}{cc}
+         \Delta_1 & L\\
+        L^T  & \Delta_2 
+     \end{array}  \right]     \label{omnibus} 
+\end{equation} where $L$ is a matrix of imputed entries. 
+
+We define the commensurate space to be  $\mathbb{R}^d$ where $d$ is pre-specified\footnote{ The selection of $d$ -- model selection -- is  a task that requires much attention and is  beyond the scope of this article. Discussion of the effect of $d$ on matching performance will be available at a later paper. }. We use multidimensional scaling (MDS) \cite{borg+groenen:1997} to embed  the omnibus matrix into this  space, and obtain $2n$ embedded observations $\{\hat{x}_{ik}; i=1,\ldots,n;k=1,2\}$ \footnote{We will use $x_{ik}$ for the original observation  in $k^{th}$ condition --if it exists--, $\tilde{x}_{ik}$ for the argument of objective function optimized in embedding and  $\hat{x}_{ik}$ for the coordinates of the embedded point. The notation for matrices follow the  same convention. }. Now that the observations are commensurate, it is possible to  compute the test statistic \[
+\tau=d\left(\hat{x}_{i1},\hat{x}_{j2}\right)\label{teststat}
+\] for $i^{th}$ and $j^{th}$ ``objects"' under first and second conditions, respectively.  For ``large" values of $\tau$, the null hypothesis will be rejected. This approach will be referred to as the Joint Optimization of Fidelity and Commensurability (JOFC) approach, for reasons that will be explained. The  out-of-sample extension~\cite{TrossetOOS} for MDS will be used to embed the OOS dissimilarities in the commensurate space.
+\section{Fidelity and Commensurability}
+Regardless of the inference task,  to expect reasonable performance from the embedded data in the commensurate space, 
+%we have to use both the original dissimilarity information in each separate condition \emph{and}  the matchedness of dissimilarities. 
+it is necessary to abide by two criteria: %adhered to:
+
+\begin{itemize}
+\item Fidelity describes how well the mapping to commensurate space preserves the original dissimilarities. The \emph{loss of fidelity} can be measured with the  within-condition \emph{ infidelity error} is given by
+    \[
+\epsilon_{f_{k}} = \frac{1}{{{n}\choose{2}}} \sum_{1 \leq i < j \leq n} (d(\widetilde{\bm{x}}_{ik},\widetilde{\bm{x}}_{jk})-\delta_{ijk})^2
+\] 
+where $\delta_{ijk}$ is the dissimilarity between $i^{th}$ object and $j^{th}$ object where both objects are in the $k^{th}$  condition and $\widetilde{\bm{x}}_{ik}$ is the embedded configuration of the $i^{th}$ object  for the $k^{th}$ condition;  $d(\cdot,\cdot)$ is the Euclidean distance function.
+
+\item Commensurability describes how well the mapping to commensurate space preserves matchedness of matched observations. The \emph{loss of commensurability} can be measured by the between-condition {\em incommensurability error} which is given by
+    \[
+\epsilon_{c_{k_1,k_2}} = \frac{1}{n} \sum_{1 \leq i \leq n;k_1 <k_2} (d(\widetilde{\bm{x}}_{ik_1},\widetilde{\bm{x}}_{ik_2})- { \delta_{iik_1k_2}})^2
+\label{comm-error}
+\]
+ for conditions $k_1$ and $k_2$; $\delta_{iik_1k_2}$  is the dissimilarity between $i^{th}$ object under  conditions   $k_1$ and  $k_2$.
+\end{itemize}
+
+While  the above expressions for  \emph{infidelity} and  \emph{incommensurability} errors  are specific to the joint embedding of disparate dissimilarities, the concepts of fidelity and commensurability are  general enough to be applicable to other dimensionality reduction methods for data from disparate sources. 
+
+ In addition to fidelity and commensurability, there is the \emph{separability} criteria:  dissimilarities between unmatched  observations in different conditions  should be preserved (so that unmatched pairs are not embedded close together).  The error for this criteria can be measured by  $\epsilon_{s_{k_1k_2}} = \frac{1}{{{n}\choose{2}}} \sum_{1 \leq i < j \leq n;k_1 <k_2} (d(\widetilde{\bm{x}}_{ik_1},\widetilde{\bm{x}}_{jk_2})-{ \delta_{k_1k_2}}(\bm{x}_{ik_1},\bm{x}_{jk_2}))^2$ for  conditions   $k_1$ and  $k_2$.
+
+Let us now show how infidelity and incommensurability errors  appear in the objective function. For the joint MDS embedding, the objective function will be the raw stress function 
+\begin{equation}
+\sigma_{W}(\widetilde{X})=\sum_{i\leq j,k_1\leq k_2} {w_{ijk_1k_2}(D_{ijk_1k_2}(\widetilde{X})-M_{ijk_1k_2})^2  }\label{raw-stress}
+\end{equation}
+ where  $ijk_1k_2$ subscript of a partitioned matrix refers to the entry in the $i^{th}$ row and $j^{th}$ column of the sub-matrix in $k_1^{th}$ row partition and $k_2^{th}$ column partition, $W$ is the weight matrix, $\widetilde{X}$ is the configuration matrix\footnote{Each row of the configuration matrix is the coordinate vector of an embedded point}, $D$ is the Euclidean distance function of the rows of its matrix argument.  \emph{Each of the individual terms in the sum \textrm{(\ref{raw-stress})} can be ascribed to fidelity, commensurability or separability}. %\footnote{\delta_{ijk_1k_2} is just a reindexing of M_{st}, k_1,k_2 are row/column indices of the block matrix (i,j)  are  row/column indices of the matrix entry, },
+
+\begin{comment}
+\begin{align}
+\sigma_W(\cdot)  &= & &\sum_{i\leq j,k_1\leq k_2} {w_{ij{k_1}{k_2}}(d_{ij{k_1}{k_2}}(\cdot)-\delta_{ijk_1k_2})^2 }_{term with indices {i,j,k_1,k_2}} \notag\\
+\hspace{3pt} &=& &\underbrace{\sum_{i=j,k_1<k_2}  {w_{ij{k_1}{k_2}}(d_{ij{k_1}{k_2}}(\cdot)-\delta_{ijk_1k_2})^2}}_{Commensurability}  \hspace{10pt}  &  + &\hspace{2.5em} \underbrace{\sum_{i<j,k_1=k_2}  {w_{ij{k_1}{k_2}}(d_{ij{k_1}{k_2}}(\cdot)-\delta_{ijk_1k_2})^2  }  } _{Fidelity}\notag\\
+\hspace{3pt}&+&  &\underbrace{\sum_{i< j,k_1<k_2}  {w_{ij{k_1}{k_2}}(d_{ij{k_1}{k_2}}(\cdot)-\delta_{ijk_1k_2})^2  }  } _{Separability}\label{eq:FidCommSep}\hspace{10pt} .
+\end{align}
+
+\end{comment}
+
+\begin{align}
+\sigma_W(\cdot)  &=  \sum_{i,j,k_1,k_2} \underbrace{{w_{ij{k_1}{k_2}}(D_{ij{k_1}{k_2}}(\cdot)-M_{ijk_1k_2})^2 }}_{term_{i,j,k_1,k_2}}  & \notag\\
+\hspace{3pt} &=  \underbrace{\sum_{i=j,k_1<k_2}  term_{i,j,k_1,k_2}}_{Commensurability}  \hspace{10pt}    +  \underbrace{\sum_{i<j,k_1=k_2}   term_{i,j,k_1,k_2}  } _{Fidelity}
+\hspace{3pt}+  \underbrace{\sum_{i< j,k_1<k_2}  term_{i,j,k_1,k_2}  } _{Separability}\label{eq:FidCommSep}\hspace{10pt} &.
+\end{align}
+
+ The separability error terms will be ignored herein, due to the fact that the between-condition dissimilarities, 
+$\delta_{ijk_1k_2}$ for $i\neq j$, are  not  available \footnote{Due to the fact that data sources are ``disparate", it is not obvious how  a dissimilarity between an object in one condition and another object in another condition  can be computed or  defined in a sensible way.} and it will be easier to focus on just the fidelity-commensurability tradeoff. 
+ %(by setting the associated weights to be 0)
+
+Although  the between-condition dissimilarities of the same object, ${ \delta_{iik_1k_2}}$, are not available,  it is not unreasonable to set these dissimilarities to $0$ for all $i,k_1,k_2$ \footnote{These dissimilarities correspond to  diagonal  entries of the  submatrix $L$ in  the omnibus matrix  M \eqref{omnibus}. }. Setting these diagonal entries to $0$ forces matched observations to be embedded close to each other. Setting $\delta_{iik_1k_2}$ to $0$, the raw stress function can be written as
+\begin{align}
+\sigma_W(\cdot)\hspace{3pt}   
+\hspace{3pt}&=&\underbrace{\sum_{i=j,k_1< k_2}  {w_{ij{k_1}{k_2}}(D_{ij{k_1}{k_2}}(\cdot))^2}}_{Commensurability}  \hspace{10pt}  &  +&\underbrace{\sum_{i< j,k_1=k_2}  {w_{ij{k_1}{k_2}}(D_{ij{k_1}{k_2}}(\cdot)-M_{ijk_1k_2})^2  }  } _{Fidelity}\notag\label{eq:FidCommSep}\hspace{10pt} .
+\end{align}
+This motivates  the naming of the   omnibus embedding approach as Joint Optimization of Fidelity and Commensurability (JOFC).
+
+
+The major question  addressed in this paper is whether, in the tradeoff between fidelity and commensurability, there is a ``sweet spot'':  increases in fidelity (or commensurability) do not result in superior performance for  the inference task, due to the resulting commensurability (or fidelity) loss. 
+
+ The weights in the raw stress function allow us to address this question relatively easily. Let $w \in (0,1)$. Setting the weights ($w_{ijk_1k_2}$)  for the commensurability  and fidelity  terms    to $w$ and $1-w$, respectively,  will allow us to control the relative importance of fidelity and commensurability terms in the objective function.
+
+ Let us denote the raw stress function with these simple weights by $f_w(\widetilde{X},M)$. With simple weighting, when $w=0.5$, all terms in the objective function have the same weights. We will refer to this weighting scheme as \emph{uniform weighting}. Uniform weighting does not necessarily have the best fidelity-commensurability tradeoff in terms of subsequent inference. 
+
+ Previous investigations of the JOFC approach \cite{JOFC} did not consider the effect of non-uniform weighting.
+Our hypothesis is that using non-uniform weighting  in the objective function will allow for superior performance.
+That is, for a given exploitation task there is an optimal $w$, denoted $w^*$, and in general $w^* \neq 0.5$.
+In particular, we consider hypothesis testing, as in \cite{JOFC},
+and we let the area under the ROC curve, $AUC(w)$, be our measure of performance for any $w \in [0,1]$.
+In this case, we show that $AUC(w)$ is continuous, and hence $w^* = \arg\max_{w \in [0,1]} AUC(w)$ exists.
+We demonstrate the potential practical advantage of our weighted generalization of JOFC via simulations.
+
+
+\section{Related Work \label{sec:RelatedWork}}
+There have many efforts toward solving the related problem of ``manifold alignment".``Manifold alignment" seeks to find correspondences between observations from different ``conditions". The setting that is most similar to ours is the semi-supervised setting\cite{Ham2005a}, where a set of correspondences are given and the task is to find correspondences between a new set of points in each condition. In contrast, the hypothesis testing task discussed in this paper is to determine whether any given pair of points is ``matched" or not. The proposed solutions\cite{Wang2008,Zhai2010,3wayNMDS}
+ follow a common approach: they look for a common commensurate or a latent space, such that the representations (possibly projections or embeddings) of the observations in the commensurate space match.
+\begin{comment}
+If the source of dissimilarities  are actually observations that are vectors in Euclidean space,  unless 
+\begin{itemize}
+\item the dissimilarity matrix is the Euclidean distance matrix of the original observations, and, 
+\item the embedding dimension is greater or equal to the dimension of the original observations,
+\end{itemize}
+MDS with raw stress will not result in a perfect reconstruction  of the original observations. Note that the objective of the (joint) embedding is not \emph{perfect} reconstruction, but the best embedding for the exploitation task which is to test whether two sets of dissimilarities are ``matched". What is considered a ``good"'  representation will be dependent on how well the information in original dissimilarities that is relevant to the the match detection task is preserved. Fidelity and commensurability quantify this preservation of information.
+\end{comment}
+
+ 
+\begin{comment}
+ ``Conditions" and ``matched" refer to concepts dependent on the context of the  problem. Conditions could be different modalities of data, e.g., one condition could be  an image of an object, while the other condition could be a text description of the object. ``Matched", in general, means observations of the same object, or realizations of a common concept. 
+ \end{comment}
+
+
+
+
+\section{Definition of  $w^{*}$}
+Consider two OOS embeddings of pairs of dissimilarities, one for a matched pair, $\{y_{1}^{(m)} ,y_{2}^{(m)}\}$
+ and another for an unmatched pair $\{y_{1}^{(u)} ,y_{2}^{(u)}\}$~\footnote{\! $^{(m)}$ is shorthand for ``matched'', $^{(u)}$ is shorthand for ``unmatched''}.
+We embed two dissimilarity matrices, \[
+ \Delta^{(m)} =D \left(\left[
+\begin{array}{c}
+\mathcal{T} \\
+y_{1}^{(m)} \\
+y_{2}^{(m)} 
+\end {array}
+\right]
+\right)
+ \hspace{1em} \textrm { and } \hspace{1em}
+\Delta^{(u)} =D \left(\left[
+\begin{array}{c}
+\mathcal{T}\\
+y_{1}^{(u)} \\
+y_{2}^{(u)}
+\end {array}
+\right]\right) 
+\]
+which are two matrix-valued random variables : $\Delta^{(m)}:\Omega \rightarrow \mathbf{M}_{(2n+2)\times (2n+2)} $,$\Delta^{(u)}:\Omega \rightarrow \mathbf{M}_{(2n+2)\times (2n+2)} $  for the appropriate sample  space $(\Omega)$. $\mathcal{T}$ is a random ($2n \times p$) matrix containing a sample of  $n$ i.i.d.  pairs of  matched observations in $\mathbb{R}^p$.
+
+ The criterion function for the embedding is $\sigma_W(\widetilde{X})$ which can be written as $f_w(\widetilde{X},M)$ for the simple weighting scheme with $w$, and omnibus dissimilarity matrix $M$. The embedding coordinates for the unmatched pair are  ${\hat{y}_{1}^{(u)},\hat{y}_{2}^{(u)}}$ where
+ \[
+{\hat{y}_{1}^{(u)},\hat{y}_{2}^{(u)}}
+=\argmin_{\widetilde{y}_{1}^{(u)}, \widetilde{y}_{2}^{(u)}}\left[\min_{\widetilde{\mathcal{T}}}
+{f_w\left(
+\left[
+\begin{array}{c}
+{\widetilde{\mathcal{T}}} \\
+\widetilde{y}_{1}^{(u)} \\
+\widetilde{y}_{2}^{(u)}
+\end {array}
+\right]
+,
+\Delta^{(u)}
+\right)
+}
+\right].
+\]
+ Note that the in-sample embedding of $\mathcal{T}$ is necessary but irrelevant for the inference task\footnote{\! hence the minimization with respect to $\widetilde{\mathcal{T}}$ is denoted by  $\min$ instead $\argmin$}. 
+ Note also that  all of the random variables following the embedding, such as $\hat{y}_{1}^{(u)}\!$,  is dependent on $w$; for the sake of simplicity, this will not be shown in the notation. 
+
+A similar expression gives the embedding for the matched pair.
+ Assuming the necessary conditions hold for $\hat{y}_{1}^{(m)}\!$, $\hat{y}_{2}^{(m)}\!$, $\hat{y}_{1}^{(u)}\!$ and $\hat{y}_{2}^{(u)}$ to be random vectors, consider the test statistic $\tau$ which equals $d(\hat{y}_{1}^{(m)},\hat{y}_{2}^{(m)})$ under null hypothesis of matchedness and $d(\hat{y}_{1}^{(u)},\hat{y}_{2}^{(u)})$ under alternative. Under null hypothesis, the distribution of the statistic is governed by the distribution of $\hat{y}_{1}^{(m)}$ and $\hat{y}_{2}^{(m)}$, under the alternative it is governed by  the distribution of $\hat{y}_{1}^{(u)}$ and $\hat{y}_{2}^{(u)}$.
+
+Denote  the   cumulative distribution function of  $Y$ by $F_Y$.
+
+ Then, $\beta\left( w,\alpha\right)=1-F_{d \left(\hat{y}_{1}^{(u)},\hat{y}_{2}^{(u)}\right)}(F_{d\left(\hat{y}_{1}^{(m)},\hat{y}_{2}^{(m)}\right)}^{-1}(1-\alpha)).$
+Define the AUC function:  $$AUC(w)=\int_{0}^{1}\! \beta\left( w,\alpha\right)\,\mathrm{d}\alpha \; .$$
+%\footnote{
+Although we might care about optimal $w$ with respect to  $\beta\left( w,\alpha\right)$ (with a fixed type I error rate $\alpha$),  it will be more convenient to define $w^*$ in terms of the AUC function.
+%}
+
+ Finally, define $$w^{*}=\arg\max_w{AUC\left( w\right)}. $$
+
+\begin{comment}
+Given  specific distributions $\mathbf{F}_{ \hat{y}_{k}^{(m)}}$,$\mathbf{F}_{ \hat{y}_{k}^{(u)}}$,   $w^*$ must be defined with respect to the value of allowable type I error rate $\alpha$.  For two different $\alpha$ values, it is quite possible that $\beta_{\alpha_1}(w_1)>\beta_{\alpha_1}(w_2)$  and $\beta_{\alpha_2}(w_1)<\beta_{\alpha_2}(w_2)$. This can be observed in results in Section \ref{sec:Simulation Results}.  
+\end{comment}
+ Some important questions about $w^*$ are  related to the nature of the AUC function.
+While finding an analytical expression for the value of $w^*$ is intractable, an estimate $\hat{w}^*$  based on  estimates of $AUC(w)$ %$\beta_{\alpha}(w^*)$
+ can be computed.  For the Gaussian setting described in \ref{subsec:GaussianSet} , a Monte Carlo simulation is run in  Section  \ref{sec:Simulation Results} to find the estimate of $AUC(w)$ for different $w$ values.
+% $\beta_{\alpha}\left( w\right)$  at various values of $\alpha$ , 
+%which can be used to compute  values .
+
+\begin{comment}
+A closed-form expression for this function will be hard to find  even in the most simple of cases. So consider the estimate from the Monte Carlo simulation $\beta^{(m)}_{\alpha}(w)$ for the estimate computed from $2m$ testing pairs, m matched pairs and m unmatched pairs. In addition, consider an arbitrary element $\omega$ of sample space $\Omega$. By law of large numbers, $\beta^{(m)}_{\alpha}\rightarrow\beta_{\alpha}(w)$ pointwise.  We will omit $w$ from the expressions of the functions. Suppose the test statistic values  are $T_0^{i}$, $T_A^{i}$ $i=1,\ldots,m$  respectively for matched and unmatched test pairs. Note that $\beta^{(m)}_{\alpha}$ can be written as $\sum_{j=1}^m I(T_A^{j}>T_0^{(i)})$ where $T_0^{(i)}$ is the $i=\lceil {m*(1-\alpha)} \rceil^{th}$ order statistic of $T_0^{i},i=1,\ldots,m$. Replacing the indicator function with the unit step function
+\[
+\beta^{(m)}_{\alpha}=\sum_{j=1}^m u(T_A^{j}-T_0^{(i)})
+\]
+
+Instead of this function which is not differentiable with respect to  $T_0^{i}$ and  $T_A^{i}$, consider the ``soft" approximation of this function with the sigmoid function
+\[
+\mathcal{B}_{alpha}^{(m)}=\sum_{j=1}^m \sigma(T_A^{j}-T_0^{(i)})
+\]
+
+Now we can consider the derivative  $\frac{d\mathcal{B}_{\alpha}^{(m)}}{dw}$, which is equal to 
+\[
+\frac{d\mathcal{B}_{\alpha}^{(m)}}{dw}=\sum_{j=1}^m \frac{\partial \sigma(T_A^{j}-T_0^{(i)})}{\partial T_A^{j}} \frac{\partial T_A^{j}}{w}+ \sum_{j=1}^m \frac{\partial \sigma(T_A^{j}-T_0^{(i)})}{\partial T_0^{j}} \frac{\partial T_0^{j}}{\partial w}
+\] if the partial derivatives exist.
+To prove differentiability of $\beta_{\alpha}\left( w\right)$ , we refer to Theorem 5.3.3 in \cite{ElClassAnalysis-5-3-3}, which requires the pointwise convergence of   $\mathcal{B}_{alpha}^{(m)}$   to  $\beta_{\alpha}\left( w\right)$ , that $\frac{d\mathcal{B}_{alpha}^{(m)}}{dw}$ are continuous and that they  converge \emph{uniformly} to a function $g$. Since the sigmoid function $\sigma(\cdot)$ is continously differentiable, we can focus on our attention  on $ \frac{\partial{T_0^{j}}}{\partial{w}}$ and $ \frac{\partial{T_0^{j}}}{\partial{w}}$. We show  that while the embedded configurations of points might not be  continuous everywhere (we present a particular example in \ref{subsubsec:Discontinuity}) $T_0^{j}$ and $T_A^{i}$ is nevertheless continuous with respect to $w$. 
+\end{comment}
+
+
+ 
+\subsection{Continuity of $AUC(\cdot)$} 
+ Let $T_0(w)=d(\hat{y}_{1}^{{(m)}},\hat{y}_{2}^{{(m)}})$ and $T_a(w)=d(\hat{y}_{1}^{(u)},\hat{y}_{2}^{(u)})$ denote the value of the test statistic under null and alternative distributions  for the embedding with the simple weighting $w$.  %stochastic process whose sample path is  a function of $w$ where the randomness comes from $\Delta^{(m)}$, $\Delta^{(u)}$ and %$\mathcal{T}$ . 
+%Consider $\beta_{\alpha}(\cdot)$ as a function of $w$, which can be written as $P\left[T_a(\cdot)>c_{\alpha}(\cdot)\right]$ where $c_{\alpha}(\cdot)$ is the critical value for level $\alpha$. Instead of  $\beta_{\alpha}(\cdot)$  
+The area under the curve measure can be written as: $$AUC(w)=P\left[T_a(w)>T_0(w)\right]$$ where $T_a(\cdot)$ and $T_0(\cdot)$ can also be regarded as  stochastic processes whose sample paths are continuous functions of $w$ except at a finite number of points in $(0,1)$.
+
+
+\begin{thm}\footnote{
+Theorem 2.1 in \cite{Norkin1993} states the same theorem :  if $T(w,\omega)$ is continuous with respect to $w$  almost everywhere 
+($Pr[\omega:T(w,\omega)\textrm{ is discontinuous with respect to } w]=0$  where $\omega \in \Omega$, and $\Omega$ is the sample space)
+, then $F(x)=Pr\left[T(w)>0\right]$ is continuous.}
+Let $T(\cdot)$ be  a stochastic process indexed by $w$ in the interval (0,1). Assume  the process is continuous in probability  (stochastic continuity)   everywhere in the interval  i.e.
+$$ \forall a>0 \quad  \lim_{\delta \rightarrow 0} Pr\left[\left|T(w+\delta)-T(w) \right|>a \right] \rightarrow 0 \quad(*)$$ 
+
+ $\forall w\in (0,1)$.
+
+Then, for any $w>0, \epsilon>0$, there exists $\delta_{\epsilon}$ $$\left| Pr\left[T(w+\delta_{\epsilon})>0 \right]- Pr\left[T(w)>0 \right]\right|<\epsilon .  $$
+
+and 
+
+$Pr \left[ T(w)>0\right]$ is continuous with respect to $w$.
+\end{thm}
+
+\begin{cor}{
+ $AUC(w)=P\left[T_a(w)-T_0(w) >0 \right]$ is continuous with respect to $w$.}
+\end{cor}
+
+Since $AUC(w)$ is continuous with respect to $w$ in $(0,1)$, a global maximum $w^*$ exists. We do not have closed-form expressions for the null and alternative distributions of the test statistic $\tau$ (with $w$ as a parameter), so we cannot provide a rigorous proof of the uniqueness of $w^*$. However, for various data settings, simulations always resulted in \emph{unimodal}  estimates for the AUC function .
+\begin{comment}
+ We will, however, argue for the unimodality of $AUC(w)$ and uniqueness of $w^*$. Consider the limits of the AUC function  as $w\rightarrow 0$ , and as $w\rightarrow 1$ . In the first case, the distribution of $T_0(w)$ and $T_A(w)$ will be increasingly similar, since commensurability errors are being mostly ignored.  As $w\rightarrow 1$, minimizing  the commensurability error becomes extremely important, and both  $T_0(w)$ and $T_A(w)$ becomes extremely peaked around $0$.When $w=1$, both $T_0(w)$ and $T_A(w)$ is 0 with probability 1.
+ So at both ends of $w \in (0,1)$, $AUC(w)$ should be close to $0.5$. As $w$ goes from the endpoints towards any argmax of $AUC$, the   probability ``$T_0(w)$  is small'' increases,  while the probability that ``$T_A(w)$ is just as small'' is not very large. Assuming the probability distributions obey these trends everywhere in $ (0,1)$ , there should be a single $w$ value at which any increase in the probability ``$T_0(w)$  is small'', will be offset by the probability increase in  ``$T_A(w)$ is just as small''.(Therefore no increase the probability $P(T_A(w)>T_0(w))$.
+\end{comment}
+
+\begin{comment}
+First, note that  $\beta(w)$ is continuous with respect to $w$ and locally convex  with respect to embedding coordinates $\hat{y}_{.}$
+\end{comment}
+
+
+
+\subsection{Alternative Methodologies}
+
+Two alternative methodologies exist that correspond roughly to the extreme ends of the range of $w$ values. 
+
+If we are concerned with only the optimization of commensurability with fidelity as secondary priority ($w\approx 1$), Canonical Correlational Analysis (CCA)~\cite{Hardoon2004} --which finds optimally correlated projections of two random vectors-- can be used as an alternative method. Since the projections in CCA is computed  for vectors in finite-dimensional Euclidean space, the given dissimilarities ($\Delta_1,\ldots,\Delta_k$) have to be embedded first. CCA is then  applied to the  embeddings.
+
+ For the optimization of fidelity, the projections to the commensurate space can be found for the two conditions separately  using Principal Components Analysis (PCA).  PCA, like CCA, has to be applied to the embeddings of dissimilarities. Instead of applying PCA to embeddings to get a low-dimensional representation, it is possible to   embed the dissimilarities directly in the low-dimensional space. The equivalence of PCA and Classical Multidimensional Scaling~\cite{CMDS} under certain conditions suggests that this embedding approach is the right analog for PCA. To optimize commensurability as secondary priority, one can then  compute a Procrustes transformation between the two configurations to make them as commensuratte as possible.
+  This $Procrustes \circ MDS$  approach  which we denote by  $P\circ M$ is  analogous to $w\approx 0$ case for JOFC. 
+
+
+
+
+\section{Simulation Results\label{sec:Simulation Results}}
+\subsection{Gaussian setting\label{subsec:GaussianSet}}
+
+  Let $n$ ``objects" be represented  by  $\bm{\alpha}_i \sim^{iid} \mathcal{N}(\bm{0},I_p)$ .  Let the $K=2$ measurements for the $i^{th}$ object under the different conditions be represented  $\bm{x}_{ik}  \sim^{iid} \mathcal{N}(\bm{\alpha_i},\Sigma)$ represent $K=2$ matched measurements (each under a different condition).
+  $\Sigma$ is a positive-definite $p\times p$ matrix whose maximum eigenvalue is   $\frac{1}{r} $. See Figure~\ref{fig:Fig1}.
+  
+ Dissimilarities ($\Delta_1$ and  $\Delta_2$) for the omnibus embedding are the Euclidean distances between the measurements in the same condition.
+ 
+The parameter $r$ controls the variability between ``matched" measurements. If $r$ is large, it is expected that the distance between matched measurements
+$\bm{x}_{i1}$ and $\bm{x}_{i2}$ is stochastically smaller than $\bm{x}_{i1}$ and $\bm{x}_{i'2}$ for $i \neq i'$ ; if r is small, then dissimilarities  between pairs of ``matched"  measurements and 
+``unmatched'' are less distinguishable. Smaller $r$ will make the decision problem harder and will lead to higher rate of errors or tests with smaller AUC measure.
+%power for fixed type I error rate $\alpha$.
+
+    \begin{figure}
+	\begin{center}
+    \includegraphics[scale=0.55]{MVN_alpha_r_multiple_sancar.pdf}
+    \caption{For the  Gaussian setting (Section \ref{subsec:GaussianSet}), the $\bm{\alpha_i},$ are denoted by black points and the $\bm{x}_{ik}$ are denoted by red and blue points respectively.}
+\label{fig:Fig1}
+	\end{center}
+  \end{figure}
+
+% - given the embedded configuration $X$ of the 
+%training observations and the augmented dissimilarity matrix that includes dissimilarities between test observations and %the training observations, and dissimilarities in between the training observations, oos-embedding consists of embedding
+%the test points into  the existing configuration so as to be as consistent as possible with these dissimilarities (the distances %between points are as close as possible to the dissimilarities as measured by the criterion function). 
+\subsection{Simulation\label{subsec:sim}}
+
+We generate the training data of matched sets of measurements (instantiation of $\mathcal{T}$) according to  the Gaussian setting. Dissimilarity representations are computed from pairwise Euclidean distances of these measurements. We also generate a set of matched pairs and unmatched pairs of measurements for testing with the same distribution. Following the out-of-sample embedding of the dissimilarities test pairs (computed via by one of the three P$\circ $M, CCA and JOFC approaches), we compute test statistics  for matched and unmatched pairs. This allows us to compute the empirical power  at different $\alpha$ (Type I error rate) values and the empirical AUC measure.
+
+
+\begin{figure}[h]
+     \centering
+\includegraphics[scale=0.35]{MVN-FC-Tradeoff-OOS-c0.pdf}
+\caption{$\beta$ vs $\alpha$  for different $w$ values }
+\label{fig:MVN-c0-power-alpha}
+\end{figure}
+
+\begin{figure}[h]
+  %\captionsetup[subfigure]{subrefformat=parens,labelformat=parens}
+      \centering
+         \includegraphics[scale=0.35]{OOSMVN-power-w-c0.pdf}
+\caption{$\beta$ vs $w$ plot for different $\alpha$ values }
+\label{fig:MVN-c0-power-w}
+      
+
+  \end{figure}
+
+\begin{comment}
+
+\begin{figure}
+ \centering
+  %\captionsetup[subfigure]{subrefformat=parens,labelformat=parens}
+       
+        \begin{subfigure}[]{0.45\textwidth}        
+           \includegraphics[scale=0.35]{MVN-FC-Tradeoff-OOS-c0.pdf}
+\caption{$\beta$ vs $\alpha$  for different $w$ values }
+\label{fig:MVN-c0-power-alpha}
+        \end{subfigure}%        
+         \begin{subfigure}[]{0.45\textwidth}  
+         \includegraphics[scale=0.95]{OOSMVN-power-w-c0.pdf}
+\caption{$\beta$ vs $w$ plot for different $\alpha$ values }
+\label{fig:MVN-c0-power-w}
+         \end{subfigure}%
+          
+  \caption {ROC curves and $\beta$ vs $w$ plots for simulation experiments}
+  \end{figure}
+	
+\end{comment}	
+	
+
+
+The signal  and noise dimensions ($p$ and $q$) were chosen as 5 and 10, respectively.  For $nmc=150$ Monte Carlo replicates,  $n=150$ matched training pairs and $m=150$ matched and unmatched test pairs (generated according to the Gaussian setting) were generated. Using the resulting test statistic values for matched and unmatched test pairs, the AUC measure was computed for different $w$ values along with the average of the power($\beta$) values at  different $\alpha$s. The plot in Figure \ref{fig:MVN-c0-power-alpha} shows the  $\beta$-$\alpha$ curves for different values of  $w$. In Figure
+ \ref{fig:MVN-c0-power-w},  $\beta(w)$ is plotted against $w$ for fixed values of $\alpha$.  
+The average AUC measure for these $nmc=150$ MC replicates are  in  Table \ref{tab:AUCW}.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{rrrrrrrrrrr}
+  \hline
+$w$ & 0.1 & 0.4 & 0.5 & 0.8 & 0.85 & 0.9 & 0.925 & 0.95 & 0.99 & 0.999 \\ 
+  \hline
+AUC & 0.811 & 0.822 & 0.834 & 0.886 & 0.896 & 0.902 & 0.902 & 0.898 & 0.849 & 0.782 \\ 
+   \hline
+\end{tabular}
+\caption{average AUC($w$) for $nmc=150$ MC replicates}
+	\label{tab:AUCW}
+\end{table}
+
+
+The histogram in 	\ref{fig:ArgMaxWAUCW} shows   for how many  MC replicates a  $w$ value had the highest $AUC$ measure.
+\begin{figure}[h]
+	\centering
+	
+		\includegraphics[scale=0.15]{auc_argmax_hist.pdf}
+	
+	\caption{Histogram of $\arg\max_w AUC(w)$ for $nmc=150$ replicates}
+	\label{fig:ArgMaxWAUCW}
+\end{figure}
+
+
+ %It is  interesting that the optimal value of $w$ seems to be in the range of $(0.85,1)$ for this setting, which suggests a significant emphasis on commensurability might be  critical for the match detection  task. 
+%Simulations with other values for  the embedding dimension $d$  resulted in $w^*$ estimates closer to $0.5$. 
+
+
+
+
+
+\begin{comment}
+\begin{figure}
+\includegraphics[scale=0.35]{OOS-MVN-power-w-c0.pdf}
+\caption{$\beta$ vs $w$ plot for fixed $\alpha$ values for the Gaussian setting (noiseless case)}
+\label{fig:MVN-c0-beta-w}
+\end{figure}
+
+
+\begin{figure}
+\includegraphics[scale=0.65]{OOSMVN-power-w-c001.pdf}
+\caption{Power ($\beta$) vs $w$ plot for fixed Type I error ($\alpha$) values for the Gaussian setting (noisy case)}
+\label{fig:MVN-c001-beta-w}
+\end{figure}
+
+
+
+Note that in Figure \ref{fig:MVN-c001-power-w} for $\alpha=0.05$, $\beta_{\alpha=0.05}(w=0.99)\geq\beta_{\alpha=0.05}(w=0.5)$. However, for $\alpha=0.3$, $\beta_{\alpha=0.3}(w=0.99)\leq\beta_{\alpha=0.3}(w=0.5)$. This justifies our comment that  $w^{*}$  must be defined with respect to $\alpha$.
+
+
+\begin{figure}
+\includegraphics[scale=0.35]{OOS-Dirichlet-power-w-c0.pdf}
+\caption{$\beta$ vs $w$ plot for fixed $\alpha$ values for the Dirichlet setting(noiseless case)}
+\label{fig:fig7}
+\end{figure}
+
+\begin{figure}
+\includegraphics[scale=0.35]{OOS-Dirichlet-power-w-c0-01.pdf}
+\caption{$\beta$ vs $w$ plot for fixed $\alpha$ values for the Dirichlet setting(noisy case)}
+\label{fig:fig8}
+\end{figure}
+\end{comment}
+
+
+
+Note that   the estimate of the optimal $w^{*}$ has  an AUC measure higher than  that of $w$=0.5 (uniform weighting). This finding was confirmed using data generated 
+%in different settings, such as  the Dirichlet setting (introduced in \cite{JOFC}) and
+according to  the Gaussian setting with different set of parameters.
+
+\begin{comment}
+
+
+
+\section{Model Selection}
+For the simulations presented up to now, the embedding dimension $d$ was set to 2. This was a convenient choice which allowed us to investigate various aspects of JOFC and competing approaches.
+However,  more care is required in selection of this parameter, since it plays such a big role in performance in general learning settings. The signal dimension was set to $p=10$ and different $d=2,5,7,10,15$ values were used to test the JOFC approach.
+The following plots of ROC curves in    \ref{fig:ROC-d} and  \ref{fig:ROC-d-15} shows the effect of $d$ parameter on the performance of different methods for the Gaussian setting for the noisy case. 
+\begin{figure}
+ \centering
+ % \captionsetup[subfigure]{labelformat=empty}
+        \begin{subfigure}[b]{0.5\textwidth}        
+               \includegraphics[width=\textwidth]{ROC-d-2.pdf}
+                \caption{d=2}
+                \label{fig:ROC-d-2}
+        \end{subfigure}%
+         %add desired spacing between images, e. g. ~, \quad, \qquad etc. 
+          %(or a blank line to force the subfigure onto a new line)
+        \begin{subfigure}[b]{0.5\textwidth}           
+                  \includegraphics[width=\textwidth]{ROC-d-5.pdf}
+                \caption{d=5}
+                \label{fig:ROC-d-5}
+        \end{subfigure}      
+        %add desired spacing between images, e. g. ~, \quad, \qquad etc.    %(or a blank line to force the subfigure onto a new line)
+        \begin{subfigure}[b]{0.47\textwidth}             
+               \includegraphics[width=\textwidth]{ROC-d-7.pdf}
+                \caption{d=7}
+                \label{fig:ROC-d-7}
+        \end{subfigure}          
+               \begin{subfigure}[b]{0.47\textwidth}
+                \centering
+               \includegraphics[width=\textwidth]{ROC-d-10.pdf}
+                \caption{d=10}
+                \label{fig:ROC-d-10}
+        \end{subfigure}
+        
+          \begin{subfigure}[b]{0.47\textwidth}
+             \centering
+               \includegraphics[scale=0.3]{ROC-d-15.pdf}
+                \caption{d=15}
+                \label{fig:ROC-d-15}
+                        \end{subfigure}
+         
+        \caption{Effect of $d$ parameter on ROC plots}\label{fig:ROC-d}
+        \label{fig:ROC-d}
+
+\end{figure}
+
+
+\end{comment}
+
+\section{Conclusion}
+ The tradeoff between Fidelity and Commensurability and the relation to the weighted raw stress criterion for MDS were both investigated with simulations .
+   For  hypothesis testing as the exploitation task, the three approaches were compared in terms of testing power.
+    The results indicate that when doing a joint optimization, one should consider an optimal compromise point between Fidelity and Commensurability,
+       which corresponds to an optimal weight $w^*$ of the weighted raw stress criterion in contrast to the uniform weighting 
+        for omnibus matrix embedding. 
+        
+
+
+\bibliographystyle{plain}
+\bibliography{priebe-thesis-JOFC}
+
+
+
+\end{document}
