@@ -1,0 +1,2556 @@
+\documentclass[12pt,xcolor]{article}
+
+\setlength{\oddsidemargin}{-.4in} \setlength{\topmargin}{-.5in}
+\setlength{\textwidth}{7.1in} \setlength{\textheight}{9.2in}
+
+%\usepackage[none,bottom,dark]{draftcopy}
+\usepackage{amssymb,amsmath,amsthm,bm}
+\usepackage{url}
+\usepackage[numbers]{natbib}
+\usepackage{graphicx}
+\usepackage[mathscr]{eucal}
+\usepackage[OT2,T1]{fontenc}
+\usepackage{verbatim}
+
+\newcommand{\mygreen}{\color{green!50!black}}
+\newcommand{\myblue}{\color{blue!50!black}}
+\newcommand{\myred}{\color{red!50!black}}
+\newcommand{\mycolor}{\color{red}{c}\color{blue}{o}\color{green}{l}\color{orange}{o}\color{cyan}{r}}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{definition}{Definition}[section]
+\newtheorem{proposition}{Proposition}[section]
+\newtheorem{lemma}{Lemma}[section]
+
+\newcommand{\argmax}{\ensuremath{\arg\max}}
+\newcommand{\argmin}{\ensuremath{\arg\min}}
+\newcommand{\logodds}{\ensuremath{\mbox{log odds}}}
+\newcommand{\Pos}{\ensuremath{\mbox{Pos}}}
+\newcommand{\Neg}{\ensuremath{\mbox{Neg}}}
+\newcommand{\Star}{\ensuremath{\mbox{star}}}
+\newcommand{\Error}{\ensuremath{\mbox{Error}}}
+\newcommand{\diag}{\ensuremath{\mbox{diag}}}
+\newcommand{\degrees}{\ensuremath{\mbox{degrees}}}
+\newcommand{\1}{\ensuremath{\mbox{{\bf 1}}}}
+
+\newcommand{\mA}{\mathcal{A}}
+\newcommand{\mD}{\mathcal{D}}
+\newcommand{\mK}{\mathcal{K}}
+\newcommand{\mC}{\mathcal{C}}
+\newcommand{\mM}{\mathcal{M}}
+\newcommand{\mN}{\mathcal{N}}
+\newcommand{\mT}{\mathcal{T}}
+\newcommand{\mI}{\mathcal{I}}
+\newcommand{\mX}{\mathcal{X}}
+\newcommand{\mY}{\mathcal{Y}}
+\newcommand{\mZ}{\mathcal{Z}}
+\newcommand{\mF}{\mathcal{F}}
+\newcommand{\mP}{\mathcal{P}}
+
+%\newcommand{\pom}{\ensuremath{{p}\circ{m}}}
+\newcommand{\Real}{\mathbb{R}}
+\newcommand{\iid}{\stackrel{iid}{\sim}}
+
+\begin{document}
+
+\title{Manifold Matching:\\Joint Optimization of Fidelity and Commensurability}
+
+\author{
+Carey E.\ Priebe\footnote{
+Corresponding Author: Department of Applied Mathematics and Statistics,
+Johns Hopkins University, Baltimore, MD 21218-2682 ; \mbox{ cep@jhu.edu }.
+This work is partially supported by
+National Security Science and Engineering Faculty Fellowship (NSSEFF),
+Air Force Office of Scientific Research (AFOSR),
+Office of Naval Research (ONR),
+Johns Hopkins University Human Language Technology Center of Excellence (JHU HLT COE),
+and the American Society for Engineering Education (ASEE) Sabbatical Leave Program.
+%and the U.S.\ Navy In-house Laboratory Independent Research (ILIR) Program.
+%Target publication outlet: special issue of \text{http://imstat.org/bjps/} dedicated to the 7thMDA.
+%Manuscript due date: January 15, 2011.
+%Subject:   Special Issue of the BJPS dedicated to the 7thMDA
+%From:   maresias@ime.usp.br
+%Date:   Tue, September 21, 2010 1:33 am
+%$http://imstat.org/bjps/mansub.html$ by January 15th, 2011.
+}, Johns Hopkins University\\
+David J.\ Marchette, Naval Surface Warfare Center\\
+Zhiliang Ma, Johns Hopkins University\\
+Sancar Adali, Johns Hopkins University
+%Donniell E.\ Fishkind, JHU
+}
+
+\maketitle
+
+\abstract{
+Fusion and inference from multiple and massive disparate data sources -- the
+requirement for our most challenging data analysis problems and the goal of our most
+ambitious statistical pattern recognition methodologies -- has many and varied
+aspects which are currently the target of intense research and development. One aspect of the
+overall challenge is manifold matching -- identifying embeddings of multiple
+disparate data spaces into the same low-dimensional space where joint inference can
+be pursued. We investigate this manifold matching task from the perspective of
+jointly optimizing the fidelity of the embeddings and their commensurability with
+one another, with a specific statistical inference exploitation task in mind. Our
+results demonstrate when and why our joint optimization methodology is superior to
+either version of separate optimization. The methodology is illustrated with
+simulations and an application in document matching.
+}
+
+\section{Introduction}
+
+\subsection{Motivation}
+
+Let $(\Xi,\mF,\mP)$ be a probability space,
+i.e., $\Xi$ is a sample space, $\mF$ is a sigma-field,
+and $\mP$ is a probability measure.
+Consider $K$ measurable spaces $\Xi_1,\cdots,\Xi_K$ 
+and measurable maps $\pi_k:\Xi \to \Xi_k$.
+Each $\pi_k$ induces a probability measure $\mP_k$ on $\Xi_k$.
+We wish to identify a measurable metric space $\mX$
+(with distance function $d$)
+and measurable maps $\rho_k: \Xi_k \to \mX$,
+inducing probability measures $\widetilde{\mP}_k$ on $\mX$,
+so that for $[x_1,\cdots,x_K]' \in \Xi_1 \times \cdots \times \Xi_K$
+we may evaluate distances $d(\rho_{k_1}(x_{k_1}),\rho_{k_2}(x_{k_2}))$ in $\mX$.
+See Figure 1.
+
+Given $\xi_1,\xi_2 \iid \mP$ in $\Xi$,
+%For any distinct $\xi_1,\xi_2 \in \Xi$,
+we may reasonably hope that the random variable
+$d(\rho_{k_1}\circ\pi_{k_1}(\xi_1),\rho_{k_2}\circ\pi_{k_2}(\xi_1))$
+is stochastically smaller than the random variable
+$d(\rho_{k_1}\circ\pi_{k_1}(\xi_1),\rho_{k_2}\circ\pi_{k_2}(\xi_2))$.
+That is, matched measurements 
+$\pi_{k_1}(\xi_1),\pi_{k_2}(\xi_1)$
+representing a single point $\xi_1$ in $\Xi$
+are mapped closer to each other than are
+unmatched measurements 
+$\pi_{k_1}(\xi_1),\pi_{k_2}(\xi_2)$
+representing two different points in $\Xi$.
+This property allows inference to proceed in the common representation space $\mX$.
+
+However, 
+we do not observe $\xi \in \Xi$;
+we also do not observe the $x_k = \pi_k(\xi) \in \Xi_k$ directly,
+nor do we have knowledge of the maps $\pi_k$.
+But suppose we have access to functions 
+$\delta_k:\Xi_k \times \Xi_k \to \mathbb{R}_+ = [0,\infty)$
+such that $\delta_k( \pi_k(\xi_1) , \pi_k(\xi_2) )$
+represents the ``dissimilarity'' of outcomes $\xi_1$ and $\xi_2$
+under map $\pi_k$.
+We propose to use sample dissimilarities for matched data in the disparate spaces $\Xi_k$
+to simultaneously learn maps $\rho_k$ which allow for a powerful test of matchedness
+in the common representation space $\mX$.
+
+\begin{figure}[h]
+  \begin{center}
+    \includegraphics[page=1, scale=4.25]{9}
+    \caption{Maps $\pi_k$ induce disparate data spaces $\Xi_k$ from ``object space'' $\Xi$.
+    Manifold matching involves using matched data $\{\bm{x}_{ik}\}$
+    to simultaneously learn maps $\rho_1,\ldots,\rho_K$
+    from disparate spaces 
+    $\Xi_1,\ldots,\Xi_K$
+	to a common ``representation space'' $\mX$, for subsequent inference.}\label{fig:mm}
+  \end{center}
+  \end{figure}
+
+
+\subsection{Problem Formulation}
+
+Consider $n$ objects each measured under $K$ different conditions,
+$$\bm{x}_{i1} \sim \cdots \sim \bm{x}_{ik} \sim \cdots \sim\bm{x}_{iK},\ i = 1, \ldots, n,$$
+where $\bm{x}_{i1} \sim \cdots \sim \bm{x}_{ik} \sim \cdots \sim \bm{x}_{iK}$
+denotes $K$ matched measurements 
+$\pi_1(\xi_i),\cdots,\pi_K(\xi_i)$
+representing a single object $\xi_i \in \Xi$,
+where $\Xi$ denotes the ``object space''.
+The assumption of $K$ {\em different} conditions implies that
+$\bm{x}_{ik} \in \Xi_k$
+where the spaces $\Xi_1,\cdots,\Xi_K$ cannot be assumed to be similar.
+We are given $K$ new measurements $\{\bm{y}_k\}_{k=1}^K,\ \bm{y}_k \in \Xi_k$.
+The question under consideration is:
+Does the collection $\{\bm{y}_k\}_{k=1}^K$ also correspond to matched measurements representing a single object measured under the $K$ conditions?
+
+We use the $\Xi$ notation to remind the reader that the spaces $\Xi_k$ cannot be assumed to be standard finite-dimensional Euclidean spaces.
+We do assume that each space $\Xi_k$ comes with a within-condition dissimilarity $\delta_k$ --
+a hollow, symmetric function from $\Xi_k \times \Xi_k$ to $\mathbb{R}_+$ --
+through which the matched data $\{\bm{x}_{ik}\}$ yields $n \times n$ dissimilarity matrices $\Delta_k$, $k=1,\cdots,K$.
+For new measurements $\{\bm{y}_k\}_{k=1}^K$ we have available for each $k$ the within-condition dissimilarities
+$\delta_k(\bm{y}_{k}, \bm{x}_{ik}) , \ i = 1, \ldots, n$.
+
+Remark 1: The $\bm{x}_{ik}$ and $\bm{y}_{k}$ are introduced mainly for symbolic purposes;
+the corresponding data may not be available or may be too complex to use directly,
+and we proceed from the dissimilarities.
+
+The specific statistical inference exploitation task we consider throughout most of this article is hypothesis testing.
+Our goal, simplified for the case $K=2$, is to determine whether $\bm{y}_{1}$ and $\bm{y}_{2}$ are a match.
+That is, $$H_0: \bm{y}_{1} \sim \bm{y}_{2} \ \text{ versus } \ H_A: \bm{y}_{1} \nsim \bm{y}_{2},$$
+or equivalently,
+$$H_0: \bm{y}_{1}=\pi_1(\xi) , \bm{y}_{2}=\pi_2(\xi) \ \text{ versus } \ H_A: \bm{y}_{1}=\pi_1(\xi) , \bm{y}_{2}=\pi_2(\xi') \mbox{ ~ for ~ } \xi \neq \xi' \in \Xi.$$
+(We control the probability of missing a true match.)
+
+\subsection{Manifold Matching}
+
+We define {\em manifold matching}
+as simultaneous manifold learning and manifold alignment --
+identifying embeddings of multiple disparate data sources into the same low-dimensional space
+where joint inference can be pursued.
+Figure \ref{fig:mm} depicts our framework.
+Conditional distributions are induced by maps $\pi_k$ from ``object space'' $\Xi$.
+Our assumption is that the conditional spaces $\Xi_k$ are {\em not} commensurate.
+For example, if the elements of $\Xi$ are individual people, then a photograph in image space $\Xi_1$
+and a biographical sketch in text document space $\Xi_2$ are not to be directly compared.
+Indeed, our fundamental premise defining {\em disparate} data sources is that
+the various $\Xi_k$ cannot profitably be treated as replicates of the same kind of space.
+Rather, the various spaces are different not just in degree but in kind.
+Each dissimilarity $\delta_k$ has been tailored for application to $\Xi_k$,
+and it is inappropriate to apply $\delta_{k}$ on $\Xi_k \times \Xi_{k'}$ for $k' \neq k$.
+This distinguishes our {\em data fusion} from conventional multivariate analysis.
+
+In Figure \ref{fig:mm},
+matched points $\{\bm{x}_{ik}\}$ are used to simultaneously learn appropriate maps $\rho_k$
+taking the disparate data from the various $\Xi_k$ into a common representation space $\mathcal{X}$.
+These maps are then applied to $\{\bm{y}_k\}_{k=1}^K$
+yielding $\widetilde{\bm{y}}_k = \rho_k(\bm{y}_k)$,
+whence (for $K=2$) we use $T=d(\widetilde{\bm{y}}_1,\widetilde{\bm{y}}_2)$
+as our test statistic and reject for $T$ ``large''.
+
+Remark 2: Our convention is to use the ``~$\widetilde{\cdot}$~'' notation for points in the target space $\mathcal{X}$,
+contrasted with no tilde for points in the original $\Xi_k$ spaces.
+
+%Remark 3: We use $d$ for both the dimension of the target space $\mathcal{X} = \mathbb{R}^d$
+%and for the distance function in that space; we believe no confusion will ensue for the attentive reader.
+
+Remark 3: We will throughout consider the special case of $\mathcal{X} = \mathbb{R}^m$
+for some pre-specified target dimension $m$.
+The fundamentally important and challenging task of choosing the target dimension --
+{\em model selection} -- will be considered only as a confounding issue in this paper;
+$m$ is a nuisance parameter which must be selected but whose selection is beyond the scope of this manuscript.
+
+\subsection{What are these ``conditions'' and what does ``matched'' mean?}
+
+As suggested above,
+one example of ``conditions'' involves
+photographs $\{\bm{x}_{i1}\}$
+and biographical sketches $\{\bm{x}_{i2}\}$,
+with ``matched'' $\bm{x}_{i1} \sim \bm{x}_{i2}$
+meaning that the photograph $\bm{x}_{i1}$ and the biographical sketch $\bm{x}_{i2}$
+are of the same person.
+
+Other illustrative examples include:
+a general image \& caption scenario,
+with ``matched'' meaning that they go together;
+multiple languages for text documents, with ``matched'' meaning on the same topic;
+multiple modalities for photographs
+(e.g., indoor lighting vs outdoor lighting,
+two cameras of different quality, or
+passport photos and airport surveillance photos),
+with ``matched'' meaning of the same person;
+Wikipedia text document and Wikipedia hyperlink structure,
+with ``matched'' meaning of the same document.
+More generally, our framework may be applicable to any scenario in which multiple dissimilarity measures are applied to the objects at hand.
+
+Fundamentally, ``matched'' means whatever the training data say it means.
+%It is what it is.
+We know it when we see it --
+or, perhaps more accurately, we know {\em un}matched when we see it; see Figure \ref{fig:notmatched}.
+Consider, for instance, an example of
+multiple languages for text documents, with ``matched'' meaning on the same topic.
+Given English and French Wikipedia documents with the matching provided by Wikipedia itself,
+``matched'' means ``on the same topic.''
+But of course the Wikipedia documents are not direct translations of one another,
+and documents in different languages on the same topic may have significant conceptual differences
+due to cultural differences, etc.
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[scale=0.85]{welsh-english.jpg}
+\caption{
+An example of ``not matched'' for multi-lingual text documents.
+The English is clear enough to lorry drivers --- but the Welsh reads
+``I am not in the office at the moment. Send any work to be translated.''
+(See \protect\url{http://news.bbc.co.uk/2/hi/uk_news/wales/7702913.stm};
+permission obtained from \protect\url{http://www.golwg360.com/Hafan/default.aspx}.)
+}\label{fig:notmatched}
+\end{center}
+\end{figure}
+
+\subsection{Dirichlet Setting}\label{section:dirichlet}
+
+While the matched training data ultimately determine what ``matched'' means,
+in order to provide a clear mathematical characterization of matchedness
+we consider an illustrative Dirichlet setting.
+This setting is clearly overly simplified, but it invokes some aspects of
+the foregoing example of multiple languages for text documents.
+
+  Let
+  $S^p =\{\bm{x} \in \mathbb{R}^{p+1}_+: \sum_{\ell=1}^{p+1} x_{\ell} = 1\}$
+  be the standard $p$-simplex.
+  We consider here the case $\Xi_1 = S^p$ and $\Xi_2 = S^p$ --
+   the two spaces are, in fact, commensurate in this case, for illustration.
+   Let $\bm{\gamma}_i \iid Dirichlet(\1)$ represent $n$ ``objects'' or ``topics''.
+   Let $X_{ik} \iid Dirichlet(r\bm{\gamma}_i+\1)$ represent document $i$ in language $k$.
+  (Since the $X_{ik}$ take their value in $S^p$, we can think of them as modelling
+  (normalized) word count histograms with $p+1$ distinct words.
+  $\Xi_1 = \Xi_2 = S^p$ suggests a simplified 1-1 word correspondence model.
+  A permutation $\sigma$
+  indicating that the 1-1 word correspondence is unknown
+  may be applied to the dimensions of one space
+  with no alteration to our illustration.)
+In this case, $r$ controls what it means to be matched
+-- e.g., document translation quality analogy.
+If $r$ is large (highly accurate translations), then matched documents $X_{i1}$ and $X_{i2}$
+will be probabilistically more similar than $X_{i1}$ and $X_{i'2}$ for $i \neq i'$;
+if $r$ is small (rough translations), then ``matched'' doesn't mean much.
+Indeed, the limiting case of $r \to \infty$ (point masses) yields ``matched'' means ``identical''
+while $r=0$ (recall that $Dirichlet(\1)$ is uniform on the simplex) yields ``matched'' means ``no relationship''.
+  Figure \ref{fig:dirichlet}, with $p=2$, provides an illustration wherein matched means quite a lot.
+A real data version of this setting with multiple documents per topic
+is depicted in Figure \ref{fig:MingSun1},
+where three Linguistic Data Consortium (LDC) Enron email message topic classes
+are projected into the simplex $S^2$ via
+Fisher's Linear Discriminant composed with Latent Semantic Analysis (FLD$\circ$LSA)
+(see, e.g., \cite{Berry_2003,Berry_2007,TextMining}).
+
+  \begin{figure}[h]
+    \begin{center}
+      \includegraphics[scale=1.2]{Dirichlet_gamma_r_10.pdf}
+    %\includegraphics[scale=0.8]{Dirichlet_alpah_r_10.pdf}
+    \caption{Illustrative Dirichlet setting wherein
+    $X_{ik} \iid Dirichlet(r\bm{\gamma}_i+\1)$ represent documents $i=1,\ldots,n=10$ in languages $k=1,\ldots,K=2$ in the standard 2-simplex $S^2$.
+  The parameter $r$ controls the meaning of matchedness --
+the similarity of matched documents $X_{i1}$ and $X_{i2}$
+compared to unmatched documents $X_{i1}$ and $X_{i'2}$ for $i \neq i'$.
+    }\label{fig:dirichlet}
+  \end{center}
+\end{figure}
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[scale=0.72]{proj_200lsi_3lda_32to3_all_pick7_13_15}
+ % Projection_200LSA_3LDA_32to3_all_pick7_13_15}
+\caption{An example considering the FLD$\circ$LSA projection into $S^2$ of multiple
+Enron email messages identified with three Linguistic Data Consortium (LDC) topics.
+The three colored scatterplots -- yellow, red, purple -- represent documents from the three topics;
+the green dots represent the topic means.
+We see that ``matched'', meaning ``on the same topic'', does mean something quite like $Dirichlet(r\bm{\gamma}_{topic}+\1)$ in this case
+(but the variability ``$r$'' may be topic-dependent).
+}\label{fig:MingSun1}
+\end{center}
+\end{figure}
+
+\subsection{Related Work}
+
+The 2006 David Hand polemic \cite{citeulike:3480824}
+argued persuasively that a fundamental issue in statistical inference research and development
+-- perhaps {\em the} fundamental issue --
+is robustness in the face of test data drawn from a distribution {\em not} the same
+as the distribution from which the training data are drawn.
+The disparate information fusion described above --
+combining multiple spaces with different characteristics --
+provides a setting for investigation of related issues.
+The recent survey \cite{TransferSurvey} considers a wide range of examples and methodologies addressing this phenomenon
+in terms of {\it transfer learning}, {\it domain adaptation}, {\it multitask learning}, etc.
+The recent special issue \cite{5714387} 
+is devoted entirely to dimensionality reduction via subspace and submanifold learning.
+The majority of this article considers the Neyman-Pearson hypothesis testing setting,
+which provides clarity through the most straightforward of inference tasks.
+In Section \ref{section:classification} we briefly consider a {\em ranking} task.
+%in which training data exists in disparate spaces but test observation $\{\bm{y}_{k^*}\}$
+%will be observed in space $\Xi_{k^*}$ wherein no training data for the collection of classes of interest is available.
+
+Our dissimilarity-centric approach is motivated by
+the 2005 Pekalska and Duin book \cite{1197035} on the dissimilarity representation for pattern recognition
+and the far-reaching success of multidimensional scaling methodologies \cite{T52,T58,CC01,BG05}
+
+Combining information from disparate data sources when the information in the various spaces
+is fundamentally incommensurate --
+%is deemed to be {\em orthogonal} as opposed to {\em parallel} as in this manuscript --
+%that is, a separate collection of useful features with very different information can be extracted from each space
+that is, a separate collection of useful features can be extracted from each space
+but their interpoint geometry precludes profitable alignment in a common space --
+is considered via Cartesian product space embedding in \cite{Maetal-JoC}.
+
+%Preliminary jofc paper: MMP QMDNS2010 \cite{MMP-QMDNS}
+Preliminary development of our joint optimization methodology presented herein,
+as well as an application to {\em classification} tasks,
+is presented in \cite{MMP-QMDNS}.
+
+\subsection{Summary}
+
+In Section 2 we frame the problem as an optimization problem,
+and lay the groundwork for the methodologies proposed in Section 3.
+Section 4 illustrates the methodologies with instructive
+simulations that illustrate characteristic behavior;
+in particular, a simulation involving Dirichlet random variables
+sets the stage for the experimental examples on text documents presented in Section 5.
+Finally, Section 6 provides discussion and suggestions for several areas of continuing research.
+%as well as discussion of some of the important issues not addressed in this work.
+
+\section{Fidelity and Commensurability}
+
+As suggested in Figure \ref{fig:mm}, our goal is to identify
+maps $\rho_k$ taking $\Xi_k$ to $\mathbb{R}^m$ (for some pre-specified $m$)
+such that (for $K=2$) the power of the test,
+$P[d(\widetilde{\bm{y}}_1,\widetilde{\bm{y}}_2)>c_{\alpha} | H_A: \bm{y}_{1} \nsim \bm{y}_{2}]$,
+is large, where the critical value $c_{\alpha}$ is determined by the null distribution of the test statistic
+and the allowable Type I error level $\alpha$.
+
+We proceed using $\ell_2$ error for convenience and simplicity;
+clearly there is ample reason to consider other error criteria for particular applications.
+%Similarly, we consider the case $K=2$.
+Similarly, we will assume symmetric dissimilarities $\delta_k$.
+
+The available matched points $\{\bm{x}_{ik}\}$ are used to identify appropriate maps $\rho_k$.
+Fidelity is how well the mapping $\bm{x}_{ik} \mapsto \widetilde{\bm{x}}_{ik}$ preserves original dissimilarities.
+The within-condition squared {\em fidelity error} is given by
+    $$\epsilon^2_{f_{k}} = \frac{1}{{{n}\choose{2}}} \sum_{1 \leq i < j \leq n} (d(\widetilde{\bm{x}}_{ik},\widetilde{\bm{x}}_{jk})-\delta_k(\bm{x}_{ik},\bm{x}_{jk}))^2$$
+for each $k$.
+If the fidelity error is large, then it is likely that the mapping does not capture aspects of
+original data that may be needed for inference.
+
+On the other hand, even if all fidelity errors are small,
+inference may fail if
+$d(\widetilde{\bm{y}}_1,\widetilde{\bm{y}}_2)$ is large
+under the ``matched'' null hypothesis
+$H_0: \bm{y}_{1} \sim \bm{y}_{2}$.
+Commensurability is how well the mappings preserve matchedness;
+the between-condition squared {\em commensurability error} is given by
+    $$\epsilon^2_{c_{k_1k_2}} = \frac{1}{n} \sum_{1 \leq i \leq n} (d(\widetilde{\bm{x}}_{ik_1},\widetilde{\bm{x}}_{ik_2})- \delta_{k_1k_2}(\bm{x}_{ik_1},\bm{x}_{ik_2}))^2.$$
+Alas, $\delta_{k_1k_2}$ does not exist -- we have no dissimilarity on $\Xi_{k_1} \times \Xi_{k_2}$.
+However, the concept of ``matchedness'' suggests that it might be reasonable to set $\delta_{k_1k_2}(\bm{x}_{ik_1},\bm{x}_{ik_2}) = 0$ for all $i,k_1,k_2$,
+in which case the commensurability error is the mean squared distance between
+matched points -- the same criterion optimized by the Procrustes matching employed below.
+
+There is also between-condition squared {\em separability error} given by
+    $$\epsilon^2_{s_{k_1k_2}} = \frac{1}{{{n}\choose{2}}} \sum_{1 \leq i < j \leq n} (d(\widetilde{\bm{x}}_{ik_1},\widetilde{\bm{x}}_{jk_2})- \delta_{k_1k_2}(\bm{x}_{ik_1},\bm{x}_{jk_2}))^2.$$
+However, it is less clear how to identify a reasonable stand-in for the $\delta_{k_1k_2}$ terms in this expression.
+We will return to this issue when presenting our joint optimization inference methodology proposal in Section \ref{section:omnibus} below.
+
+If all these errors are small -- and if the target dimensionality is low enough
+so that estimation variance does not dominate (see e.g.\ \cite{jdm00} Section 3 and \cite{DGL} Figure 12.1) --
+then successful inference in the target space may be achievable.
+The idea of the joint optimization method proposed in this manuscript (Section \ref{section:omnibus})
+is to attempt to minimize all three of these errors simultaneously.
+
+\section{Inference Methodologies}
+
+In this section we present three methodologies for performing our manifold matching inference --
+one which focuses on fidelity and is based on multidimensional scaling
+and Procrustes matching, one which focuses on commensurability and is based on canonical correlation analysis,
+and then our proposal for joint optimization of fidelity and commensurability.
+
+Before proceeding, we briefly review multidimensional scaling, Procrustes matching, and canonical correlation analysis.
+
+Multidimensional scaling (MDS) takes an $n \times n$ dissimilarity matrix $\Delta=[\delta_{ij}]$
+and produces a configuration of $n$ points $\widetilde{\bm{x}}_1,\ldots,\widetilde{\bm{x}}_n$ in a target metric space endowed with distance function $d$
+such that the collection $\{d(\widetilde{\bm{x}}_i,\widetilde{\bm{x}}_j)\}$ agrees as closely as possible with the original $\{\delta_{ij}\}$
+under some specified error criterion; see for instance \cite{T52,T58,CC01,BG05}.
+For example, $\ell_2$ (also known as ``raw stress'') MDS minimizes
+$\sum_{1 \leq i < j \leq n} (d(\widetilde{\bm{x}}_{i},\widetilde{\bm{x}}_{j})-\delta_{ij})^2$.
+
+Out-of-sample embedding is used throughout this paper -- given a configuration $\{\widetilde{\bm{x}}_i\}_{i=1}^n$
+of the training observations
+and dissimilarities between test observations and the training observations, the test points are embedded
+into the existing configuration so as to be as $\ell_2$-consistent as possible with these dissimilarities.
+This out-of-sample embedding can be one at a time, or jointly if the dissimilarities among multiple test observations are also available.
+Trosset and Priebe \cite{TP-CSDA-2008-oos} present the out-of-sample methodology appropriate for classical MDS embeddings.
+We use raw stress embeddings herein, and the appropriate corresponding out-of-sample methodology is presented in \cite{MPoos}.
+
+Procrustes matching \cite{procrustes1,procrustes2,procrustes3,procrustes4}
+takes two matched collections $\widetilde{X}_1$ and $\widetilde{X}^{\prime}_2$ of $n$ points in $\mathbb{R}^m$
+and finds the rigid motion transformation which optimally aligns the two collections.
+For example, $\ell_2$ Procrustes minimizes the Frobenius norm $\|\widetilde{X}_1 - \widetilde{X}^{\prime}_2Q\|_F$ over all $m \times m$ matrices $Q$ such that $Q^TQ = I$.
+(We assume the dissimilarities have been scaled so that a
+scaling is not required in the Procrustes mapping.
+Thus Q defines a rigid motion mapping $\widetilde{X}^{\prime}_2$ ``onto'' $\widetilde{X}_1$.
+We address this issue briefly in Section 6.)
+
+
+Canonical correlation analysis (CCA) takes a collection $X_1$ of $n_1$ points in $\mathbb{R}^{m_1}$
+and a collection $X_2$ of $n_2$ points in $\mathbb{R}^{m_2}$
+and finds the pair of linear maps $U_1:\mathbb{R}^{m_1} \to \mathbb{R}$ and $U_2:\mathbb{R}^{m_2} \to \mathbb{R}$
+which maximizes the correlation between $\widetilde{X}_1=U_1(X_1)$ and $\widetilde{X}_2=U_2(X_2)$.
+Performing $m$ iterations of this procedure in the successive orthogonal subspaces yields a
+CCA procedure which maps to $\mathbb{R}^m$. See, for instance, \cite{Hotelling1936,Mardia1980,Hardoon2004}.
+
+Let us now consider these tools as building blocks for manifold matching inference.
+
+\subsection{Procrustes $\circ$ MDS}
+
+Multidimensional scaling yields low-dimensional embeddings.
+That is, $\Delta_1 \mapsto \widetilde{X}_1$ and $\Delta_2 \mapsto \widetilde{X}^{\prime}_2$
+yields $n \times m$ configurations. % $X_1$ and $X_2$.
+Procrustes$(\widetilde{X}_1, \widetilde{X}^{\prime}_2)$ yields
+$$Q^* = \argmin_{Q^TQ = I} \|\widetilde{X}_1 - \widetilde{X}^{\prime}_2Q\|_F.$$
+Given $\delta_k(\bm{y}_{k}, \bm{x}_{ik}) , \ i = 1, \ldots, n$ for $k=1,2$,
+out-of-sample embedding of the test data gives $\bm{y}_1 \mapsto \widetilde{\bm{y}}_1, \ \bm{y}_2 \mapsto \widetilde{\bm{y}}'_2$
+where the embedded points are chosen so that their distances to $\widetilde{\bm{x}}_{ik}$ agree as closely as possible with the available dissimilarities.
+Using the rigid motion transformation obtained in the Procrustes step,
+both $\widetilde{\bm{y}}_1$ and $\widetilde{\bm{y}}_2 = ((\widetilde{\bm{y}}'_2)^T Q^*)^T$ are in $\mathbb{R}^m$ with same
+coordinate system.
+Thus inference may proceed by rejecting for large values of $d(\widetilde{\bm{y}}_1,\widetilde{\bm{y}}_2)$.
+We dub this separate embedding approach 
+``Procrustes composed with multidimensional scaling'', or ``{\it p}$\circ${\it m}''.
+
+From an inspection of the raw stress multidimensional scaling criterion function,
+it follows immediately that the $\Delta_k \mapsto \widetilde{X}_k$ mappings minimize fidelity error.
+Thus we have established the following result:
+\\
+
+  Theorem 1: {\it p}$\circ${\it m} optimizes fidelity {\em without regard for commensurability}.
+\\
+
+That is, the maps $\rho_k$ are identified separately, with no concern for whether
+the commensurability optimization in
+the Procrustes step will be able to provide a good alignment.
+
+\subsection{Canonical Correlation}
+
+Since canonical correlation begins with Euclidean data,
+the first step of this methodology necessarily involves multidimensional scaling.
+This appears similar to Procrustes $\circ$ MDS above,
+but in this case no attempt is made to achieve meaningful dimensionality reduction.
+Multidimensional scaling yields high-dimensional embeddings, $\Delta_1 \mapsto X_1'$ and $\Delta_2 \mapsto X_2'$,
+but in this case these maps are to the highest-dimensional space possible, $\mathbb{R}^{n-1}$ in general.
+Canonical correlation finds linear maps to $\mathbb{R}^m$, $U_1: X_1' \mapsto \widetilde{X}_1$ and $U_2: X_2' \mapsto \widetilde{X}_2$, to maximize correlation.
+Again, out-of-sample embedding yields $(n-1)$-dimensional points
+$\bm{y}_1 \mapsto {\bm{y}}'_1, \ \bm{y}_2 \mapsto {\bm{y}}'_2$.
+Then $\widetilde{\bm{y}}_1 = U_1^T {\bm{y}}'_1$ and $\widetilde{\bm{y}}_2 = U_2^T {\bm{y}}'_2$ can be directly compared.
+An investigation of the correlation criterion function shows that
+the CCA maps $U_1$ and $U_2$ minimize commensurability error, subject to linearity.
+Thus there is no need for Procrustes in this case,
+and once again inference may proceed:
+%   are in $\mathbb{R}^d$ with same coordinate system (i.e., they are commensurate).
+reject for large values of $d(\widetilde{\bm{y}}_1,\widetilde{\bm{y}}_2)$.
+We dub this approach ``{\it cca}''.
+
+From the equivalence of the correlation objective function and commensurability error, we have established the following result:
+\\
+
+  Theorem 2: {\it cca} optimizes commensurability {\em without regard for fidelity}.
+\\
+
+That is, the maps $\rho_k$ are identified jointly, but with no concern for fidelity of the individual embeddings
+(beyond linearity).
+
+\subsection{Omnibus Embedding}\label{section:omnibus}
+
+In response to the optimization objectives of the two methodologies presented above --
+one considering fidelity only and the other considering commensurability only --
+we develop an omnibus embedding methodology explicitly focused on the joint optimization of fidelity and commensurability.
+
+\begin{figure}[h]
+  \begin{center}
+    \includegraphics[scale=1.6]{M3b.pdf}
+    \caption{Depiction of the $2n \times 2n$ omnibus dissimilarity matrix $M$, including imputed dissimilarities
+    $W=[\delta_{12}(\bm{x}_{i1},\bm{x}_{j2})]$ and out-of-sample test data $\bm{y}_{1}, \bm{y}_{2}$.}\label{fig:M}
+  \end{center}
+  \end{figure}
+
+Under the ``matched'' assumption, we {\em impute} dissimilarities $W = [\delta_{12}(\bm{x}_{i1},\bm{x}_{j2})]$
+to obtain a $2n \times 2n$ {\em omnibus dissimilarity matrix} $M$. See Figure \ref{fig:M},
+which depicts $M$ as a block matrix consisting of the $n \times n$ dissimilarities matrices $\Delta_1$ and $\Delta_2$ on
+the diagonal and $W$ as the $n \times n$ off-diagonal block.
+(This generalizes immediately to $K>2$.)
+As discussed above,
+it seems reasonable under $H_0$ to set the diagonal elements $\delta_{k_1k_2}(\bm{x}_{ik_1},\bm{x}_{ik_2})$ of $W$ to zero.
+(Notice, however, that
+$\delta_{k_1k_2}(\bm{x}_{ik_1},\bm{x}_{ik_2})=0$ for $k_1 \neq k_2$
+is not necessarily ``truth.'' For instance, the Dirichlet setting of Section \ref{section:dirichlet} with $r < \infty$
+would have non-zero elements for $diag(W)$. Still, this ``shrinkage'' of $diag(W)$ to zero seems reasonable.)
+As for the off-diagonal elements of $W$, we argue that either leaving them as missing data
+unused in the subsequent optimization or letting $W=(\Delta_1 + \Delta_2)/2$ are reasonable suggestions;
+we will return to this imputation issue later.
+Once we have settled on $W$, our approach considers MDS embedding of $M$ as $2n$ points in $\mathbb{R}^{m}$ --
+zeros on the diagonal of $W$ act to force matched points to be embedded near each other.
+It is clear that raw stress MDS applied to $M$ has as its objective function precisely
+$\epsilon^2_{f_{1}}$ + $\epsilon^2_{f_{2}}$ + $\epsilon^2_{c_{12}}$ + $\epsilon^2_{s_{12}}$.
+If $diag(W)=0$ and the off-diagonal elements are treated as missing and ignored in the optimization,
+then this objective function reduces to a consideration of just fidelity and commensurability.
+
+  Let $u_{i1} = \delta_1(\bm{y}_{1}, \bm{x}_{i1})$ and $v_{i2} = \delta_2(\bm{y}_{2}, \bm{x}_{i2})$.
+  Under $H_0$, impute $v_{i1} = \delta_{12}(\bm{y}_1,\bm{x}_{i2})$ and $u_{i2} = \delta_{12}(\bm{y}_2,\bm{x}_{i1})$
+  via $\bm{v}_1 = \bm{u}_2 = (\bm{u}_1 + \bm{v}_2)/2$.
+  Out-of-sample embedding of $(\bm{u}_1^T, \bm{v}_1^T)^T$ and $(\bm{u}_2^T, \bm{v}_2^T)^T$ yields $\widetilde{\bm{y}}_1$ and $\widetilde{\bm{y}}_2$.
+  Reject for large values of $d(\widetilde{\bm{y}}_1,\widetilde{\bm{y}}_2)$.
+We dub this omnibus embedding approach for joint optimization of fidelity and commensurability ``{\it jofc}''.
+
+Obviously, the choice of $W$ is key for this joint optimization.
+Also, note that weights can be incorporated into the MDS optimization criterion;
+this weighting can become quite elaborate,
+but in its simplest form it yields a more general tradeoff between fidelity and commensurability via $\omega (\epsilon^2_{f_{1}} + \epsilon^2_{f_{2}})$ + $(1-\omega) \epsilon^2_{c_{12}}$.
+
+\section{Illustrative Simulation}
+
+In this section we present an illustrative Dirichlet simulation
+which helps to elucidate when and why our joint optimization methodology is superior to
+either version of separate optimization.
+
+\subsection{Dirichlet Product Model}
+
+We describe a probability model with parameters $p,q,r,a$, and $K$.
+
+%Let $\Xi_k = S^p \times S^q$, $k=1,2$.
+Let $\Xi_k = S^{p+q}$, $k=1,2$.
+Here the simplex $S^p$ encodes ``signal'' and
+the simplex $S^q$ encodes ``noise''.
+That is, on $S^p$ we let $\bm{\gamma}_i \iid Dirichlet(\1)$
+and mutually independent $X^1_{ik} \sim Dirichlet(r\bm{\gamma}_i+\1)$
+(signal, as in Section \ref{section:dirichlet})
+while on $S^q$ we let $X^2_{ik} \iid Dirichlet(\1)$ (pure noise).
+For $a \in [0,1]$, let $X_{ik} = [(1-a) X^1_{ik} , a X^2_{ik}]$ --
+the concatenation of (weighted) signal and noise dimensions.
+The resultant distribution for $(X_{i1},\cdots,X_{iK})$ is denoted by $F_{p,q,r,a,K}$,
+and $F_{p,q,r,a,K|\bm{\gamma}_1,\cdots,\bm{\gamma}_n}$ denotes the distribution conditional on the location of the $\bm{\gamma}_i$.
+
+\subsection{Testing}
+
+For each of $n_{mc}$ Monte Carlo replicates ($n_{mc}=1000$ in the simulations), we generate $n$ matched pairs
+according to the Dirichlet product model distribution $F_{p,q,r,a,K=2}$
+by first generating $\bm{\gamma}_1,\ldots,\bm{\gamma}_n$
+and then, conditional on the collection $\{\bm{\gamma}_i\}$, generating the matched pair $(X_{i1},X_{i2})$.
+Embeddings are defined for each of the three competing methodologies
+based on this matched training data.
+For each test datum under $H_0$, one new $\bm{\gamma}$ is generated,
+a matched pair is generated, out-of-sample embedding is performed,
+and the statistic $T=d(\widetilde{\bm{y}}_1,\widetilde{\bm{y}}_2)$ is calculated;
+this is repeated $s$ times independently ($s=1000$ in the simulations)
+and the critical value $c_{\alpha}$ for the allowable Type I error level $\alpha$
+is determined based on the Monte Carlo estimate of null distribution of $T$.
+Then {\em un}matched pairs are generated, out-of-sample embedding is performed,
+and the statistic $T$ is calculated for test data under $H_A$;
+this provides an estimate of the conditional power
+$P[d(\widetilde{\bm{y}}_1,\widetilde{\bm{y}}_2)>c_{\alpha} | H_A,\bm{\gamma}_1,\ldots,\bm{\gamma}_n]$.
+
+We perform $n_{mc}$ Monte Carlo replicates to integrate out the $\bm{\gamma}_1,\ldots,\bm{\gamma}_n$,
+yielding comparative power estimates.
+We also investigate conditional power for particular collections $\{\bm{\gamma}_i\}$,
+in order to better understand
+precisely when and why our joint optimization methodology is superior to
+either version of separate optimization.
+
+\subsection{Results}
+
+Figure \ref{fig:simrocD} presents results
+from our Dirichlet product model. $K=2$, with $p=3,q=3,r=100,a=0.1$.
+The target dimension is $m=2$. We use $n=100$.
+The allowable Type I error level $\alpha$ is plotted against power $\beta = P[d(\widetilde{\bm{y}}_1,\widetilde{\bm{y}}_2)>c_{\alpha} | H_A]$.
+The results are based on $n_{mc}=1000$ Monte Carlo replicates with $s=1000$;
+the differences in the curves are statistically significant.
+In this case, {\em jofc} with $W=(\Delta_1 + \Delta_2)/2$ is superior to both {\it p}$\circ${\it m} and {\em cca}.
+
+\begin{figure}[h]
+\begin{center}
+  \includegraphics[height=12cm, width=14.4cm,angle=0]{fig-6}
+%\includegraphics[height=7.5cm, width=9cm,angle=0]{suprious_correlation_ROC}
+\caption{
+Dirichlet product model
+simulation results
+plotting the Type I error level $\alpha$ against power $\beta = P[d(\widetilde{\bm{y}}_1,\widetilde{\bm{y}}_2)>c_{\alpha} | H_A]$,
+indicating that {\em jofc} is superior to both {\it p}$\circ${\it m} and {\em cca}. See text for description.
+}\label{fig:simrocD}
+\end{center}
+\end{figure}
+
+\subsection{Analysis}
+
+The Dirichlet product model
+is designed specifically to illustrate when and why {\em jofc} is superior to both {\it p}$\circ${\it m} and {\em cca}
+in terms of fidelity and commensurability.
+
+If $q$ is large with respect to the target dimensionality $m$,
+then with high probability {\em cca} will identify a $m-$dimensional subspace in the ``noise'' simplex $S^q$ with spurious correlation.
+This phenomenon requires only that $a>0$.
+In this event, the out-of-sample embedding will produce arbitrary $\widetilde{\bm{y}}_1$ and $\widetilde{\bm{y}}_2$,
+even under $H_0$.
+Thus the null distribution of the test statistic will be inflated by these spurious correlations.
+If the allowable Type I error level is smaller than the probability of inflation,
+then the power of the {\em cca} method will be negatively affected.
+
+If $a$ is small and $m \leq p$, then with high probability the $m-$dimensional subspaces identified by the MDS step
+will come from the ``signal'' simplex $S^p$.
+If $m<p$, then with positive probability, these two subspaces,
+identified separately in {\it p}$\circ${\it m},
+will be geometrically incommensurate (see Figure \ref{fig:incomm}).
+Thus the null distribution of the test statistic will be inflated by these incommensurate cases.
+If the allowable Type I error level $\alpha$ is smaller than the probability of inflation,
+then the power of the {\it p}$\circ${\it m} method will be negatively affected.
+
+  \begin{figure}
+  \begin{center}
+    \includegraphics[height=13.2cm, width=15.84cm,angle=0]{ZMfacetprojections3d.pdf}
+    \caption{Idealization of the incommensurability phenomenon:
+    for a symmetric collection $\{\bm{\gamma}_1,\bm{\gamma}_2,\bm{\gamma}_3,\bm{\gamma}_4\}$ in the simplex $S^3$,
+    all four of the facet projections have the same fidelity and are geometrically incommensurable with one another.}\label{fig:incomm}
+  \end{center}
+  \end{figure}
+
+For large $q$ and small $a$, the two phenomena described above occur in the same model.
+The {\it jofc} method is not susceptible to either phenomenon:
+incorporating fidelity into the objective function obviates the spurious correlation phenomenon, and
+incorporating commensurability into the objective function obviates the geometric incommensurability phenomenon.
+Thus we can establish that,
+for a range of Dirichlet product model distributions, {\em jofc} is superior to both {\it p}$\circ${\it m} and {\em cca}.
+\\
+
+Theorem 3: Let $m \in \{1,\cdots,\min\{p-1,q\}\}$, $a \in (0,1/2)$, and $r \in (0,\infty)$.
+Then for large $q$, small $a$, and large $r$,
+there exists allowable Type I error level $\alpha > 0$
+such that the Dirichlet product model distribution $F_{p,q,r,a,K=2}$ with target dimensionality $m$
+yields power $\beta_{jofc} > \max\{\beta_{\protect{{\it p}\circ{\it m}}},\beta_{cca}\}$,
+where power $\beta = P[d(\widetilde{\bm{y}}_1,\widetilde{\bm{y}}_2)>c_{\alpha} | H_A]$
+for the various testing methodologies {\em jofc}, {\it p}$\circ${\it m}, and {\em cca}.
+\\
+
+Proof:
+Let $b_1$ denote the probability that {\em cca}
+suffers from the spurious correlation phenomenon,
+and let $b_2$ denote the probability that {\it p}$\circ${\it m}
+suffers from the geometric incommensurability phenomenon.
+Then $q \gg p$ implies that {\em cca} suffers from the spurious correlation phenomenon
+with high probability and thus $b_1 \approx 1$ and $\beta_{cca} \approx \alpha$.
+For $a \approx 0$ and $r$ sufficiently large,
+{\em jofc} and {\it p}$\circ${\it m} identify approximately the same embeddings
+{\em except} for the cases in which
+ {\it p}$\circ${\it m} suffers from the incommensurability phenomenon.
+ Thus the null distribution of $T=d(\widetilde{\bm{y}}_1,\widetilde{\bm{y}}_2)$ for {\em jofc} is approximately point mass at zero
+while the null distribution of $T$ for {\it p}$\circ${\it m} has $b_2$ mass $\gg 0$.
+Hence $\alpha \approx b_2/2$ yields
+$\beta_{jofc} \approx 1$
+while $\beta_{\protect{{\it p}\circ{\it m}}} \approx 1/2$.$_\blacksquare$
+\\
+%If $\alpha < \min\{b_1,b_2\}$,
+%then the critical values for
+%{\it p}$\circ${\it m} and {\it cca} are
+%are determined entirely by the deleterious phenomena
+%and $\beta_{jofc} > \max\{\beta_{\protect{{\it p}\circ{\it m}}},\beta_{cca}\}$.
+
+Delving into our simulation results via investigation of conditional power
+$P[d(\widetilde{\bm{y}}_1,\widetilde{\bm{y}}_2)>c_{\alpha} | H_A,\bm{\gamma}_1,\ldots,\bm{\gamma}_n]$,
+it is apparent that the superiority of {\em jofc}
+is indeed due to occurrences of the phenomena described above --
+individual Monte Carlo replicates (particular selections of the $\{\bm{\gamma}_i\}$, essentially)
+are identified in which the spurious correlation phenomenon causes poor performance for {\it cca}
+or the incommensurability phenomenon causes poor performance for {\it p}$\circ${\it m}
+but in which {\em jofc} is unaffected.
+
+We note that the Dirichlet product model introduced here as an aid in understanding
+when and why {\em jofc} is superior to both {\it p}$\circ${\it m} and {\em cca}
+does in fact (loosely) model general high-dimensional real data scenarios:
+many dimensions consisting mostly of noise along with a few signal dimensions.
+
+\subsection{Gaussian Model}
+
+A Gaussian model, analogous to the Dirichlet product model investigated above,
+is constructed here to provide a sense of the generality of models
+with many dimensions consisting mostly of noise along with a few signal dimensions.
+
+We consider $p$-dimensional means $\bm{\mu}_{i}\iid\mathcal{N}\left(\vec{0},I_p\right)$, $i=1,\cdots,n$,
+analogous to the $\bm{\gamma}_i$ from the Dirichlet model.
+Matchedness arises from independent $X^1_{ik} \sim\mathcal{N}\left(\bm{\mu}_{i},r^{-1}I_p\right)$, $i=1,\ldots,n$, $k=1,\ldots K$,
+for $r \in (0,\infty)$;
+as $r$ increases, the degree of matchedness increases.
+As before, we have $q$-dimensional ``noise'' vectors
+$X^2_{ik} \iid \mathcal{N}\left(\vec{0},I_{q}\right)$.
+Again, for $a \in [0,1]$, $X_{ik} = [(1-a) X^1_{ik} , a X^2_{ik}]$
+represents the concatenation of (weighted) signal and noise dimensions.
+As with the Dirichlet product model,
+both the spurious correlation phenomenon
+and the geometric incommensurability phenomenon are present in this Gaussian model.
+%The meaning of matchedness in our Gaussian model
+%is parameterized by $r \in (0,\infty)$ and
+%is determined by the $p \times p$ positive definite covariance matrix $\Sigma(r)$;
+%the largest eigenvalue of $\Sigma(r)$ is set to unity and
+%the remaining $p-1$ eigenvalues are set to $1/r$.
+
+\begin{comment}
+  The \dots
+In this case, the parameter $r$ controlling the degree of matchedness of the matched pairs
+specifies the largest eigenvalue of $\Sigma$;
+the remaining $p-1$ eigenvalues are independent and identically distributed Uniform$(0,r)$.
+We consider means $\mu_{i}\iid\mathcal{N}\left(\vec{0},\Sigma\right)$, $i=1,\cdots,n$,
+analogous to the $\bm{\gamma}_i$ from the Dirichlet model.
+Matchedness arises from $X^1_{ik} \sim\mathcal{N}\left(\mu_{i},I_{p}\right)$, $i=1,\ldots,n$, $k=1,\ldots K=2$.
+As $r$ increases, the degree of matchedness increases since the covariance
+matrix for $X^1_{ik}|\mu_i$ (the identity matrix $I_{p}$) remains fixed
+while the maximum eigenvalue of $\Sigma$ increases with $r$.
+For the spurious correlation phenomenon, $q$-dimensional ``noise'' vectors
+$X^2_{ik}$ are generated iid $\mathcal{N}\left(\vec{0},I_{q}\right)$.
+Again, for $a \in [0,1]$, $X_{ik} = [(1-a) X^1_{ik} , a X^2_{ik}]$
+represents the concatenation of (weighted) signal and noise dimensions.
+\end{comment}
+
+Figure \ref{fig:simrocG} presents simulation results for this Gaussian model,
+entirely analogous to those depicted in Figure \ref{fig:simrocD}.
+
+\begin{comment}
+\subsubsection{Sancar's}
+
+For each replicate of the simulation, $mc=1,\ldots N$
+
+A positive-definite matrix $\Sigma$ is randomly generated for the
+covariance matrix. $r$ (the parameter that controls the matchedness
+of the pairs) is the largest eigenvalue of this matrix, the rest of
+the eigenvalues are generated from uniform distribution $Unif\left(0,r\right)$
+\[
+\Sigma:\sigma_{1,\ldots p-1}\left(\Sigma\right)\sim Unif\left(0,r\right);\sigma_{p}\left(\Sigma\right)=r\]
+
+
+$T=M+2L$ topic/common means are randomly generated from $\mathcal{N}\left(\vec{0},\Sigma\right)$
+distribution
+
+\[
+\mu_{t}\sim\mathcal{N}\left(\vec{0},\Sigma\right);t=1,\ldots T\]
+
+
+$K=2$ matched points are generated from
+
+\[
+a_{ti}\sim\mathcal{N}\left(\mu_{t},I_{p}\right);t=1,\ldots T;i=1,\ldots K\]
+
+
+As $r$ increases, the degree of matchedness increases since the covariance
+matrix for $a_{ti}$ is always identity matrix,$I_{p}$,while the
+max. eigenvalue of $\Sigma$ increases
+
+For spurious correlation phenomenon, $q$-dimensional vector is generated(where
+$q=p$. This was the most obvious(to me) way of generating the covariance
+matrix for the noise dimension).
+
+\[
+b_{ti}\sim\mathcal{N}\left(\vec{0},I_{p}+\Sigma\right);t=1,\ldots T;i=1,\ldots K\]
+
+
+Then, feature vectors are $x_{ti}=\left[a_{ti}\: b_{ti}\right]\in\mathbb{R}^{p+q}$
+
+The first $M$ matched K-tuples(pairs when $K=2$) are the training
+set,$x_{it}$;$t=M+1,\ldots,M+L$ pairs are the matched test set,
+and $x_{ti},\{t=M+1,\ldots,M+L;i=1\}\cup\{t=M+L+1,\ldots,M+2L;i=2\}$
+are the unmatched data set.
+\end{comment}
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[height=12cm, width=14.4cm,angle=0]{fig-8}
+%\includegraphics[height=7.5cm, width=9cm,angle=0]{SancarGaussianModel/SA.png}
+\caption{
+Gaussian model
+simulation results
+plotting the Type I error level $\alpha$ against power $\beta = P[d(\widetilde{\bm{y}}_1,\widetilde{\bm{y}}_2)>c_{\alpha} | H_A]$,
+indicating {\em jofc} is superior to both {\it p}$\circ${\it m} and {\em cca},
+entirely analogous to those presented for the Dirichlet product model in Figure \ref{fig:simrocD}.
+}\label{fig:simrocG}
+\end{center}
+\end{figure}
+
+\section{Experimental Results}
+
+\subsection{Testing}\label{section:testing}
+
+A collection of documents $\{\bm{x}_{i1}\}_{i=1}^n$ are collected from the English Wikipedia,
+corresponding to the directed 2-neighborhood of the document ``Algebraic Geometry.''
+This yields $n=1382$ and, through Wikipedia's own 1-1 correspondence,
+the associated French documents $\{\bm{x}_{i2}\}_{i=1}^n$.
+For dissimilarity matrices $\Delta_k$, $k=1,2$, we use the Lin \& Pantel discounted mutual information \cite{LinPantel1,LinPantel2}
+and cosine dissimilarity $\delta_k(\bm{x}_{ik},\bm{x}_{jk}) = 1-(\bm{x}_{ik} \cdot \bm{x}_{jk})/(\|\bm{x}_{ik}\|_2 \|\bm{x}_{jk}\|_2)$.
+
+Our results are obtained by repeatedly randomly holding out four documents -- two matched pairs --
+and identifying the embeddings via {\em cca}, {\it p}$\circ${\it m}, and {\em jofc}
+based on the remaining $n=1380$ matched pairs.
+The two sets of held-out matched pairs are used as $\bm{y}_{1}$ and $\bm{y}_{2}$,
+via out-of-sample embedding, to estimate the null distribution of the
+test statistic $T=d(\widetilde{\bm{y}}_1,\widetilde{\bm{y}}_2)$.
+This allows us to estimate critical values for any specified Type I error level.
+Then the two sets of held-out {\em un}matched pairs are used as $\bm{y}_{1}$ and $\bm{y}_{2}$,
+via out-of-sample embedding, to estimate power.
+Target dimensionality $m$
+is determined by the Zhu and Ghodsi automatic dimensionality selection method \cite{ZhuGhodsi},
+resulting in $m=6$ for this data set.
+
+Figure \ref{fig:exproc} plots the allowable Type I error level against power.
+These experimental results indicate that {\em jofc} is superior to both {\it p}$\circ${\it m} and {\em cca},
+and are entirely analogous to the simulation results presented above.
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[height=12cm, width=14.4cm,angle=0]{figure9}
+%\includegraphics[height=7.5cm, width=9cm,angle=0]{wiki_ROC_noOOS}
+\caption{
+Experimental results on English/French Wikipedia documents
+plotting the Type I error level $\alpha$ against power $\beta = P[d(\widetilde{\bm{y}}_1,\widetilde{\bm{y}}_2)>c_{\alpha} | H_A]$,
+indicating {\em jofc} is superior to both {\it p}$\circ${\it m} and {\em cca}.
+See text for description.
+}\label{fig:exproc}
+\end{center}
+\end{figure}
+
+\subsection{Ranking}\label{section:classification}
+
+Here we consider a {\em ranking} task
+in which matched training data exists in disparate spaces $\Xi_1$ and $\Xi_2$,
+but test observation $\bm{y}_{2}$
+will be observed in space $\Xi_{2}$.
+% wherein no training data for the collection of classes of interest is available.
+The task is to find the match for $\bm{y}_{2}$
+amongst a candidate collection $\mC = \{\bm{y}_{11}, \cdots, \bm{y}_{z1}\} \subset \Xi_1$
+of $z>1$ possibilities.
+Using the training set of matched observations,
+we identify the embeddings via {\em cca}, {\it p}$\circ${\it m}, and {\em jofc},
+and out-of-sample embedding then yields $\widetilde{\bm{y}}_{2}$
+and $\widetilde{\mC} = \{\widetilde{\bm{y}}_{11}, \cdots, \widetilde{\bm{y}}_{z1}\}$.
+%Then $\widehat\widetilde\bm{y}_{1}(\bm{y}_2)
+% = \arg\min_{\widetilde\bm{y}_{1} \in \widetilde\mC} d(\widetilde\bm{y}_{1},\widetilde\bm{y}_{2})$.
+The {\em rank} $r^*$ of the one true match to $\bm{y}_{2}$
+amongst the candidate collection $\mC$
+in terms of $\{d(\widetilde{\bm{y}}_{\zeta1},\widetilde{\bm{y}}_{2})\}_{\zeta=1}^z$
+is our measure of performance;
+$r^* = 1$ represents perfect performance,
+$r^* = z/2$ represents chance, and
+$r^* = z$ is the worst possible.
+
+%We use Minimum Reciprocal Rank (minRR) as our criterion.
+%In your evaluation, it is a random variable,
+%and we are using mean(minRR) or median(minRR) --
+%actually, testing $H_0: location_{jofc}(minRR) = location_{pom}(minRR)$.
+
+For this experiment we consider a different collection of Wikipedia documents:
+all English/Persian (Farsi) matched pairs
+(matched, again, through Wikipedia's own 1-1 correspondence)
+for which both documents in the pair contain
+at least 500 total words and at least 100 distinct words.
+There are 2448 such pairs.
+(The word-count restrictions are to ensure that the documents are legitimate articles,
+rather than ``stubs'' -- place-holders for future articles on the topic.)
+
+\begin{comment}
+\subsubsection{djm}
+
+The classification task is a small extension of the
+hypothesis test. We are given a collection of documents in
+language E, and a single document in language F. The task is to
+find the matched document -- ``find the perp in the line-up''.
+This task could be approached through a series of hypothesis tests,
+with the associated multiple comparisons issues. Instead, we
+approach it as a classification task.
+
+The procedure is thus: 1) using a training set of matched documents
+define the embedding procedure as in the hypothesis testing case;
+2) embed the target E documents and the single probe F document;
+3) compute the distances between the probe and the targets, and
+determine the rank of the matching E document. This rank is then
+the measure of performance -- small values mean the procedure works.
+
+This isn't quite the usual classification task. In a sense, we still
+have a single class for each document -- corresponding to the matched
+document in the other language. This is the same basic set-up as
+we have considered throughout this paper.
+
+One use-case for this is a situation in which a limited number of
+linguists are available to translate documents. Given a new document,
+the decision to exert the effort to translate the document can be made
+by whether the document matches an already translated one, or matches a
+document on a topic of particular interest.
+
+For this experiment we consider a different collection of Wikipedia
+documents: all English/Persian (Farsi) pairs (matched as in the
+algebraic geometry experiment) where both documents in the pair contain
+at least 500 words, and at least 100 distinct words. There are
+2448 such pairs. The word-count restrictions are to ensure that the
+documents are legitimate articles, rather than ``stubs'' -- place-holders
+for future articles on the topic. As with the algebraic geometry experiment
+``matched'' means a link from the English to the Farsi, and a link back,
+as Wikipedia defines these links.
+
+The new data set was chosen for several reasons. Unlike the English/French
+pairing, the English/Farsi cultures are quite different, and so
+it is reasonable to assume that articles on the same topic may differ
+in content quite a bit. This makes this a particularly challenging
+problem. Also, while we know quite a bit about how to process English
+and French we (the authors of this paper) know very little about how to
+process Farsi. Thus we cannot take advantage of clever natural language
+processing tricks (we cannot stem Farsi -- although such stemmers may
+exist, we have not tried to obtain them; we do not have a stop-word list
+in Farsi --
+a list of common, content free words, as we do in English and French;
+we do not have part-of-speech parsers, etc.).
+
+a paragraph about the results once I get the exact pictures we will use.
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[height=7cm, width=6cm,angle=0]{paired10}
+\caption{
+Comparative reciprocal rank experimental results indicating {\em jofc} is superior to {\it p}$\circ${\it m}. See text for description.
+}\label{fig:exppaired}
+\end{center}
+\end{figure}
+
+\end{comment}
+
+Figures \ref{fig:rawz} and \ref{fig:rawdiffz} present notched boxplot experimental results
+wherein we repeatedly hold out $z=1000$ matched pairs from the training set.
+(Recall that non-overlapping notches implies a statistically significant difference of means.)
+Figure \ref{fig:rawz} depicts $r^*$ as a function of target dimension $m$
+for {\em jofc} (gray) and {\it p}$\circ${\it m} (white).
+Performance improves for both methods as $m$ increases from 5 to 25, with {\em jofc} superior.
+Performance levels off after $m=30$
+(and degrades significantly for $m>50$).
+Figure \ref{fig:rawdiffz} depicts difference in ranks,
+$r^*_{\protect{{\it p}\circ{\it m}}} - r^*_{\protect{\it jofc}}$;
+differences greater than 0 indicate {\em jofc} superiority.
+
+\begin{comment}
+\begin{figure}[h]
+\begin{center}
+\includegraphics[height=7cm, width=6cm,angle=0]{raw}
+\caption{
+Comparative rank experimental results depicting
+the {\em rank} $r^*$ of the one true match
+as a function of target dimension $d$.
+(For each $d \in \{5,10,15,\cdots,50\}$, there are two boxplots.)
+These results indicate that {\em jofc} (gray) is superior to {\it p}$\circ${\it m} (white) on this data set.
+With $z=1000$, both methods perform much better than chance ($r^*=z/2$),
+although performance does not achieve perfection ($r^*=1$).
+See text for description.
+}\label{fig:raw}
+\end{center}
+\end{figure}
+\end{comment}
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[height=12cm, width=14.4cm,angle=0]{rawz}
+\caption{
+Comparative rank experimental results
+depicting the rank $r^*$
+of the one true match to test observation $\bm{y}_{2}$
+amongst the candidate collection $\mC$
+in terms of $\{d(\widetilde{\bm{y}}_{\zeta1},\widetilde{\bm{y}}_{2})\}_{\zeta=1}^z$
+as a function of target dimension $m$.
+For each $m \in \{5,10,15,\cdots,50\}$, there are two boxplots.
+These results indicate that {\em jofc} (gray) is superior to {\it p}$\circ${\it m} (white) on this data set.
+With $z=1000$, both methods perform much better than chance ($r^*=z/2$),
+although performance does not achieve perfection ($r^*=1$).
+See text for description.
+}\label{fig:rawz}
+\end{center}
+\end{figure}
+
+\begin{comment}
+\begin{figure}[h]
+\begin{center}
+\includegraphics[height=7cm, width=6cm,angle=0]{rawdiff}
+\caption{
+Comparative reciprocal rank experimental results indicating {\em jofc} is superior to {\it p}$\circ${\it m}. See text for description.
+}\label{fig:rawdiff}
+\end{center}
+\end{figure}
+\end{comment}
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[height=12cm, width=14.4cm,angle=0]{rawdiffz}
+\caption{
+Comparative rank experimental results
+depicting difference in ranks
+$r^*_{\protect{{\it p}\circ{\it m}}} - r^*_{\protect{\it jofc}}$;
+differences greater than 0 indicate {\em jofc} superiority.
+See text for description.
+}\label{fig:rawdiffz}
+\end{center}
+\end{figure}
+
+\section{Discussion and Conclusions}
+
+We have presented a complete methodological core
+for manifold matching via joint optimization of fidelity and commensurability
+and comprehensive comparisons with either version of separate optimization.
+Continuing research includes comparison with other standard competing methodologies,
+variations and generalizations of our omnibus embedding methodology,
+and further theoretical developments.
+
+Here we discuss a few of the most pressing issues.
+
+\subsubsection*{$K>2$ Conditions}
+
+It is straightforward to generalize the omnibus dissimilarity matrix $M$ to the case of $K>2$ conditions.
+
+\begin{comment}
+djm:
+It is straightforward ... conditions. There also exist generalized Procrustes
+methods that could be used for the separate embedding methodology. Still, there
+are many questions that arise in expanding to $K>2$: for example,
+should all dissimilarities
+be treated equally -- perhaps $W_{ij}=\lambda_{ij}\Delta_i+(1-\lambda_{ij})\Delta_j$
+with not all $\lambda_{ij}=\frac{1}{2}$ should be considered (see below for more
+on imputation of $W$). Also, there may be
+merit in considering a tensor approach rather than a matrix. That is, instead of
+filling the omnibus matrix with $W_{ij}$ matrices between pairs of dissimilarities,
+a $K$ dimensional array might be utilized in some manner that allows for combinations
+of more than two dissimilarities at once.
+\end{comment}
+
+\subsubsection*{Pre-Scaling the $\Delta_k$}
+
+The {\em scale} of the various dissimilarities has been assumed to be consistent.
+For Dirichlet data, this assumption is warranted;
+however, pre-scaling of the $\Delta_k$ prior to constructing $M$ is imperative for the general case.
+
+\subsubsection*{MDS Objective}
+
+Our omnibus embedding methodology can be employed with MDS criteria other than raw stress;
+the $\ell_2$ criterion provides direct correspondence to fidelity and commensurability.
+Weighted $\ell_2$ is straightforward.
+Other MDS minimization objectives have been studied in depth,
+and should in particular circumstances provide superior performance.
+
+\subsubsection*{Imputation of $W$}
+
+It seems reasonable under $H_0$ to set the diagonal elements $\delta_{k_1k_2}(\bm{x}_{ik_1},\bm{x}_{ik_2})$ of $W$ to zero.
+Recall, however, that this is not necessarily ``truth;''
+the Dirichlet setting of Section \ref{section:dirichlet} with $r < \infty$
+would have non-zero elements for $diag(W)$.
+Still, this shrinkage of $diag(W)$ to zero seems reasonable.
+However, there may be cases for which imputing non-zero values would be appropriate;
+for example, if information is available suggesting that some matchings are unreliable,
+then it might be advantageous to use larger values for these matchings.
+
+As for the off-diagonal elements of $W$, we have argued that either leaving them as missing data
+unused in the subsequent optimization or letting $W=(\Delta_1 + \Delta_2)/2$ are reasonable suggestions.
+We believe that more elaborate imputation should provide superior performance.
+%For example, shrinking the off-diagonals in a manner consistent with the shrinkage of $diag(W)$ to zero appears promising.
+In particular, it seems clear that choosing $\lambda\in[0,1]$
+and setting $W=\lambda\Delta_1+(1-\lambda)\Delta_2$ or
+$W=(\lambda\Delta_1^2+(1-\lambda)\Delta_2^2)^{1/2}$
+will be preferable in certain circumstances.
+%Clearly, other imputation strategies are possible, and investigation thereof should prove fruitful.
+
+\begin{comment}
+djm:
+After the last sentence:
+Other functions $f(\Delta_1,\Delta_2)$ could be investigate for imputation:
+$\min$ and $\max$ are obvious suggestions. Also, one might consider trying to
+impute the diagonal with something other than $0$. While there is a good rationale
+for using $0$'s, there may be use-cases where imputing other values would be
+appropriate. For example, if one knows something about the pairings that implies
+that some pairings are better than others, and hence one might infer that
+some of the ``poor'' pairings
+could profitably gain from larger diagonal values in $W$.
+\end{comment}
+
+\subsubsection*{Model Selection: The Choice of Target Dimensionality $m$}
+
+We have assumed throughout that $\mathcal{X} = \mathbb{R}^m$
+for some pre-specified target dimension $m$.
+First, we note that, in general, embedding into target spaces other than Euclidean is possible
+and sometimes productive.
+More pressing is the necessity, in many applications, for data-driven choice of target dimension.
+This is in general a vexing model selection task -- the bias-variance trade-off.
+Of course, $m=1$ generally induces significant model bias
+and $m=n-1$ generally admits excessive estimation variance,
+as characterized in \cite{DGL} Figure 12.1.
+Many dimensionality selection methods based on the principle of diminishing returns in terms of variance explained
+are available -- in Section \ref{section:testing} we made use of the method proposed in \cite{ZhuGhodsi},
+and in \ref{section:classification} we presented results as a function of $m$.
+A dimensionality selection methodology specifically designed for use with our omnibus embedding methodology is of significant interest.
+
+%%%Rosangela!!!
+One illustrative point in this regard is that the general commensurate-space approach considered throughout
+this article -- for all three approaches {\em jofc}, {\it p}$\circ${\it m}, and {\em cca} --
+adds a further complication with respect to identification of optimal target dimension:
+the optimal target dimension $m_k^*$ for the various $\Delta_k$ will not the be same.
+This adds to the degree of difficulty in designing methods for identifying
+the optimal common-space target dimension $m^*$.
+
+\subsubsection*{Learning the $\pi_k$}
+
+We have assumed that the maps $\pi_k$ from object space $\Xi$
+to the conditional spaces $\Xi_k$ are fixed (see Figure \ref{fig:mm}).
+Indeed, $\Xi$ and the $\pi_k$ have been treated as notional only.
+In some circumstances, it may be possible to use performance analyses
+to glean information concerning the induced conditional distributions
+and profitably adjust the $\pi_k$, in a manner analogous to fusion frames \cite{FF}.
+
+\subsubsection*{{\em Fast} Omnibus Embedding}
+
+Out-of-sample embedding of test data precludes re-learning the mappings for each inference.
+More importantly,
+it is straightforward to make a version of our omnibus embedding methodology fast ($O(n)$).
+Making an {\em effective} fast version requires numerous methodological choices
+for various stages of {\em jofc}.
+
+\subsubsection*{Commensurability Error vs Hausdorff Distance on $G_{p,m}$}\label{section:Gr}
+
+%Additional investigations concerning the superiority of {\em jofc} to $\pom$
+%due to the incommensurability phenomenon involve the
+%relationship between commensurability error and Hausdorff distance on the Grassmannian Manifold.
+
+In the simple setting of Euclidean spaces $\Xi_k$,
+the {\it p}$\circ${\it m} methodology yields two elements of the Grassmann space $G_{p,m}$ of $m$-dimensional subspaces of $\Real^{p}$.
+This space is a manifold under the Hausdorff distance
+$2\sin(\theta/2)$, where $\theta$ is the canonical angle between subspaces \cite{1103435}.
+%\cite{1103435} = Li Qiu and Yanxia Zhang and Chi-Kwong Li (2005)
+Under special conditions the Hausdorff distance between {\it p}$\circ${\it m}'s two subspaces and
+the commensurability error between their respective embeddings are closely related.
+
+See Figure \ref{fig:grass} for a first example, from the Dirichlet product model simulation presented in
+Figure \ref{fig:simrocD}. Each point in Figure \ref{fig:grass} represents a Monte Carlo replicate.
+We note that the Hausdorff distance between {\it p}$\circ${\it m}'s two subspaces and
+the commensurability error between their respective embeddings are strongly correlated.
+Furthermore, the red points represent replicates for which the conditional power
+$P[d(\widetilde{\bm{y}}_1,\widetilde{\bm{y}}_2)>c_{\alpha} | H_A,\bm{\gamma}_1,\ldots,\bm{\gamma}_n]$ is low --
+predominantly those replicates for which Hausdorff distance and commensurability error are large.
+This demonstrates the effect of the incommensurability phenomenon on {\it p}$\circ${\it m}.
+The {\em jofc} embeddings are not subject to this deleterious phenomenon.
+
+Additional investigations concerning the superiority of {\em jofc} to {\it p}$\circ${\it m}
+due to the incommensurability phenomenon involve this relationship between Hausdorff distance and commensurability error.
+Significantly more involved investigations are required when,
+as is the case for proper text document analysis, one uses a more appropriate dissimilarity
+(Hellinger distance, or more generally $\alpha$-divergence) on the simplex.
+
+  \begin{figure}[h]
+  \begin{center}
+    \includegraphics[height=12cm, width=14.4cm,angle=0]{hausdorff_vs_commensurability_error2.pdf}
+   % dirichlet_sqrt-commensurability_vs_grassmannian_power-2.pdf
+    \caption{Commensurability error and Hausdorff distance on the Grassmannian Manifold
+    for our Dirichlet product model simulation (Figure \ref{fig:simrocD}).
+    Strong correlation is evident.
+    Furthermore, the red points represent replicates for which the conditional power
+	$P[d(\widetilde{\bm{y}}_1,\widetilde{\bm{y}}_2)>c_{\alpha} | H_A,\bm{\gamma}_1,\ldots,\bm{\gamma}_n]$
+    is low --
+    predominantly those replicates for which Hausdorff distance and commensurability error are large.}\label{fig:grass}
+  \end{center}
+  \end{figure}
+
+\subsubsection*{Three-Way MDS}
+
+Three-way MDS (see, for instance, \cite{BG05})
+addresses a problem superficially similar to joint optimization of fidelity and commensurability,
+in which a single configuration and two transformation matrices
+are identified from two dissimilarity matrices $\Delta_1,\Delta_2$.
+It may be of interest to compare and contrast our omnibus embedding methodology
+with various instantiations of three-way MDS -- particularly the identity model
+presented in \cite{CH93}.
+
+\subsection{Conclusions}
+
+In conclusion,
+we have presented an omnibus embedding methodology
+for joint optimization of fidelity and commensurability
+that allows us to address the manifold matching problem
+by jointly identifying embeddings of multiple spaces into a common space.
+Such a joint embedding facilitates statistical inference
+in a wide array of disparate information fusion applications.
+We have investigated this methodology in the context of simple statistical inference tasks,
+and compared and contrasted with competing fidelity-only and commensurability-only
+methodologies, demonstrating the superiority of our joint optimization.
+
+We have focused on a simple setting and simple choices for various methodological options.
+Many variations and generalizations are possible,
+but the presentation here provides the core methodological instantiation.
+
+\bibliographystyle{unabuser}
+\bibliography{jofcR1}
+
+
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\documentclass[t,compress,xcolor]{beamer}
+% \documentclass[handout]{beamer} % To print handout
+\usepackage{verbatim}
+\usepackage{multirow}
+
+\usetheme{Singapore}
+\usecolortheme{lily}
+\usefonttheme[onlymath]{serif}
+\usepackage{graphicx}
+\usepackage{hyperref, amsmath, mathrsfs, bm}
+\usepackage[hang,nooneline]{subfigure}
+\usepackage{url}
+\renewcommand{\thesubfigure}{}
+% justifying
+\usepackage{ragged2e}
+
+\usepackage{amssymb,amsmath,amsthm,amscd}
+\usepackage{url}
+\usepackage[mathscr]{eucal}
+%\usepackage[dvips]{graphicx}
+\usepackage{pstricks,pst-grad,pst-plot,pst-node}
+
+\usepackage{pgf}
+
+\newpsobject{showgrid}{psgrid}{subgriddiv=1,griddots=2,gridlabels=6pt}
+\renewcommand{\raggedright}{\leftskip=0pt \rightskip=0pt plus 0cm}
+% argmin
+\DeclareMathOperator*{\argmin}{arg\,min}
+
+\newcommand{\myred}{\color{red}}
+\newcommand{\mygreen}{\color{green!50!black}}
+\newcommand{\myblue}{\color{blue}}
+
+\newcommand{\mcX}{\mathcal{X}}
+\newcommand{\mcY}{\mathcal{Y}}
+\newcommand{\mcG}{\mathcal{G}}
+\newcommand{\mcF}{\mathcal{F}}
+
+\usepackage{pstricks,pst-node}
+\usepackage[tiling]{pst-fill}
+\usepackage{epsfig}
+\usepackage{graphicx}
+\usepackage{color}
+
+\usepackage{fancyhdr}
+
+\newenvironment{changemargin}[2]{%
+\begin{list}{}{%
+\setlength{\topsep}{0pt}%
+\setlength{\leftmargin}{#1}%
+\setlength{\rightmargin}{#2}%
+\setlength{\listparindent}{\parindent}%
+\setlength{\itemindent}{\parindent}%
+\setlength{\parsep}{\parskip}%
+}%
+\item[]}{\end{list}}
+
+\setbeamertemplate{navigation symbols}{} %gets rid of navigation symbols
+\setbeamertemplate{footline}[frame number] % but still want a frame number
+\beamertemplateshadingbackground{blue!5}{yellow!10}
+
+%\pgfdeclareimage[width=1.5cm]{ams-logo}{AMSlogo}
+%\logo{\pgfuseimage{ams-logo}}
+
+\begin{document}
+
+\begin{frame}
+\begin{center}
+\vspace*{-0.1 in}
+%\title
+%{\footnotesize{\mygreen 2010 SIAM Annual Meeting\\Minisymposia in memory of Dennis Healy and his scientific vision}}
+%{\footnotesize{\mygreen 7th Conference on Multivariate Distributions with Applications}}
+%{\footnotesize{\mygreen 7th Conference on Multivariate Distributions with Applications}}
+%\\
+
+\vspace*{0.15 in}
+
+%\subtitle
+{\myblue\LARGE{Manifold Matching:\\
+\vspace*{0.1 in}
+Joint Optimization \\ of \\ Fidelity \& Commensurability\\}}
+
+\vspace*{0.2 in}
+
+Carey E. Priebe
+\\
+
+Department of Applied Mathematics \& Statistics \\
+Johns Hopkins University
+\\
+
+\vspace*{0.3 in}
+
+{\myred September 23, 2010}
+% Belo Horizonte
+\end{center}
+\end{frame}
+
+
+%\begin{frame}
+%  \titlepage
+%  % \setcounter{framenumber}{0}
+%\end{frame}
+
+
+
+\begin{frame}
+  %\frametitle{Exploitation Task: Classification}
+  \vspace*{-2em}
+  \hspace*{-4.75em}
+    \includegraphics[scale=0.3]{cep-mm-monterey3.jpg}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Collaborators}
+  \begin{center}
+    David J.\ Marchette\\
+    Zhiliang Ma\\
+    Sancar Adali\\
+    Donniell E.\ Fishkind\\
+%    Michael E. Trosset\\
+    \&c.\\
+
+    --------------------\\
+
+\vspace*{1 in}
+{\myblue Support}:
+AFOSR, NSSEFF, ONR, HLTCOE, ASEE\\
+  \end{center}
+  %\begin{figure}[tbp]
+    %\centering
+    %\subfigure[\scriptsize{Nam H. Lee}]
+    %{\includegraphics[height=1in]{NAM.jpg}}\qquad \qquad \qquad
+    %\subfigure[\scriptsize{Youngser Park}]
+    %{\includegraphics[height=1in]{YP020507.pdf}}
+  %\end{figure}
+\end{frame}
+
+
+
+
+\begin{frame}
+  \frametitle{Problem Formulation}
+  \[
+  \text{Given } \bm{x}_{i1} \sim \cdots \sim \bm{x}_{ik} \sim \cdots
+  \sim\bm{x}_{iK}, \ i = 1, \ldots, n
+  \]
+  \begin{itemize}
+  \item<2-> $n$ objects are each measured under $K$ different conditions
+  \item<2-> $\bm{x}_{i1} \sim \cdots \sim \bm{x}_{ik} \sim \cdots \sim \bm{x}_{iK}$
+    \\denotes $K$ matched feature vectors \\representing a single object $O_i$
+  \item<2-> $\bm{x}_{ik} \in \Xi_k$
+  \item<3-> $K$ \alert{new} measurements $\{\bm{y}_k\}_{k=1}^K,\ \bm{y}_k \in \Xi_k$
+  \end{itemize}
+  \uncover<4->{
+  \begin{block}{Question}
+    \alert{Are $\{\bm{y}_k\}_{k=1}^K$ matched feature vectors representing a
+        single object measured under $K$ conditions?}
+  \end{block}}
+\end{frame}
+
+
+
+\begin{frame}
+  \frametitle{Hypotheses}
+  \vspace*{\fill}
+  \begin{itemize}
+    \item[]<1->%\uncover<2->
+    {\hspace{6em}$
+      \begin{array}{cccc}
+        & \Xi_1 & \cdots & \Xi_K\\
+        \text{Object} ~ O_1 & \bm{x}_{11} & \sim \cdots \sim & \bm{x}_{1K} \\
+        \vdots & \vdots & \vdots & \vdots \\
+        %\text{Object} ~ O_i & \bm{x}_{i1} & \sim \cdots \sim & \bm{x}_{iK} \\
+        %\vdots & \vdots & \vdots & \vdots \\
+        \text{Object} ~ O_n & \bm{x}_{n1} & \sim \cdots \sim & \bm{x}_{nK}
+      \end{array}
+      $}
+    \vspace{1em}
+  \item<2-> Each space $\Xi_k$ comes with a dissimilarity $\delta_k$, \\yielding dissimilarity matrices $\Delta_1,\cdots,\Delta_K$
+
+  \item<3-> Given new measurements $\{\bm{y}_k\}_{k=1}^K$\\ we can obtain within-condition dissimilarities
+    \[\hspace{-6em}
+    \delta_k(\bm{y}_{k}, \bm{x}_{ik}) , \ i = 1, \ldots, n, \ k = 1, \ldots, K
+    \]
+  \item<4-> Goal ($K=2$): determine whether $\bm{y}_{1}$ and $\bm{y}_{2}$ are a match
+  \item[]<5->
+    \[\hspace{-2em}
+    H_0: \bm{y}_{1} \sim \bm{y}_{2} \ \text{ versus } \ H_A: \bm{y}_{1} \nsim \bm{y}_{2}
+    \]
+    \begin{center}
+      \hspace{-2em} (we control the probability of missing a true match)
+    \end{center}
+  \end{itemize}
+  \vspace*{\fill}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{what are these ``conditions'' \\and\\ what does it mean to be ``matched''}
+  \vspace*{\fill}
+  \begin{itemize}
+    \item<1-> let condition be language for a text document,\\ and ``matched'' mean ``on the same topic''\\
+    \item<1-> let condition be modality for a photo,\\ and ``matched'' mean ``of the same person''\\
+    \item[]<1-> \hspace*{0.1 in}-- indoor lighting vs outdoor lighting\\
+    \item[]<1-> \hspace*{0.1 in}-- two cameras of different quality\\
+    \item[]<1-> \hspace*{0.1 in}-- passport photos and airport surveillance photos\\
+    \item<1-> let condition 1 be wiki text document \\and condition 2 be wiki hyperlink structure\\
+    \item<1-> let condition 1 be text document \\and condition 2 be photo\\
+    \item<1-> $\ldots$ or just a single space with multiple dissimilarities\\
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{(not matched)}
+  \vspace{-1em}
+  \begin{center}
+    \includegraphics[scale=0.8]{welsh-english.jpg}
+  \end{center}
+  \begin{changemargin}{-1cm}{-1cm}
+    \centering
+      The English is clear enough to lorry drivers --- but the Welsh reads
+      \\
+      \alert{``I am not in the office at the moment. Send any work to be translated.''}
+  \end{changemargin}
+  {\center \small{$\scriptstyle{<}$\url{http://news.bbc.co.uk/2/hi/uk_news/wales/7702913.stm}$\scriptstyle{>}$}
+}
+\end{frame}
+
+
+
+\begin{frame}
+\frametitle{Manifold Matching I}
+    \begin{center}
+    %Neighborhoods $\mathcal{N}_j$ capture infidelity/incommensurability.
+        %\includegraphics[scale=0.15]{1008091440_01.jpg}
+        Conditional distributions are induced by maps $\pi_k$\\ from ``object space'' $\Xi$\\
+        %\includegraphics[scale=0.125]{1008091713_01.jpg}\\
+  \begin{center}
+    \includegraphics[page=1, scale=1.5]<1>{7}
+    \includegraphics[page=2, scale=1.5]<2>{7}
+  \end{center}
+%        \includegraphics[scale=0.125]{f1.jpg}\\
+        Conditional spaces $\Xi_k$ are {\em not} commensurate\\
+%        \uncover<2->{\vspace*{-2.3 in}\includegraphics[scale=0.125]{f2.jpg}}\\
+    \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Dirichlet Setting}
+
+  Let $S^p$ be the standard $p$-simplex in $\mathbb{R}^{p+1}$\\
+  \vspace*{0.1 in}
+  Let $\Xi_1 = S^p$ and $\Xi_2 = S^p$\\
+   (but the fact that the two spaces are the same\\ is unknown to the algorithms ...)\\
+  \vspace*{0.1 in}
+  Let $\alpha_i \sim^{iid} Dirichlet(1)$ represent $n$ ``objects'' or ``topics''\\
+  Let $X_{ik} \sim^{iid} Dirichlet(r\alpha_i+1)$ represent $K$ languages (WCHs)\\
+  \vspace*{0.1 in}
+  \uncover<2->{
+  \hspace*{0.1 in}$\bullet$ $r$ controls ``what it means to be matched''\\
+  \hspace*{0.3 in}(document variability \& translation quality analogy)
+    \begin{center}
+    \includegraphics[scale=0.55]{Dirichlet_alpha_r_multiple.pdf}
+  \end{center}
+  }
+\end{frame}
+
+\begin{frame}
+\frametitle{Manifold Matching II}
+    \begin{center}
+    %Neighborhoods $\mathcal{N}_j$ capture infidelity/incommensurability.
+        %\includegraphics[scale=0.15]{1008091440_01.jpg}
+        Matched points are used to define maps $\rho_k$\\ to the same space $\mathcal{X}$ (with distance $d$)\\
+        %\includegraphics[scale=0.125]{1008091713_01.jpg}\\
+%        \includegraphics[scale=0.125]{f3.jpg}\\
+  \begin{center}
+    \includegraphics[page=1, scale=1.5]<1>{9}
+    \includegraphics[page=2, scale=1.5]<2>{9}
+  \end{center}
+        Reject for $d(\widetilde{\bm{y}}_1,\widetilde{\bm{y}}_2)$ ``large''\\
+%        \uncover<2->{\vspace*{-2.3 in}\includegraphics[scale=0.125]{f4.jpg}}\\
+    \end{center}
+    % could make d=0 for all training ... map everything to zero. but ...
+\end{frame}
+
+    \begin{frame}
+  \frametitle{canonical correlation}
+  \vspace*{\fill}
+  \begin{itemize}
+  \item<1-> Multidimensional scaling yields high-dimensional embeddings:\\ $\Delta_1 \mapsto X_1'$ and $\Delta_2 \mapsto X_2'$
+  \item<1-> Canonical correlation finds $U_1: X_1' \mapsto X_1$ and $U_2: X_2' \mapsto X_2$\\ to maximize correlation
+  %\item<1-> Canonical correlation embeds $\Delta_1 \mapsto X_1$ and $\Delta_2 \mapsto X_2$\\
+  %by finding $U_1, U_2$ to maximize correlation
+  \item<1-> Out-of-sample embedding: $\bm{y}_1 \mapsto {\bm{y}}'_1, \ \bm{y}_2 \mapsto {\bm{y}}'_2$
+  \item<1-> Both $\widetilde{\bm{y}}_1 = U_1^T {\bm{y}}'_1$ and $\widetilde{\bm{y}}_2 = U_2^T {\bm{y}}'_2$ are in $\mathbb{R}^d$\\ with same
+    coordinate system (i.e., they are commensurate)
+  \item<1-> Reject for $d(\widetilde{\bm{y}}_1,\widetilde{\bm{y}}_2)$ ``large''
+  \end{itemize}
+  \vspace*{\fill}
+\end{frame}
+
+    \begin{frame}
+  \frametitle{procrustes $\circ$ mds}
+  \vspace*{\fill}
+  \begin{itemize}
+%  \item<1-> Let $D_E$ and $D_F$ denote the generalized dissimilarity matrices
+%    based on English and French Wikipedias (i.e., $D \in \{G, T\}$)
+  \item<1-> Multidimensional scaling yields low-dimensional embeddings:\\ $\Delta_1 \mapsto X_1$ and $\Delta_2 \mapsto X_2$
+  \item<1-> Procrustes$(X_1, X_2)$ yields $$Q^* = \argmin_{Q^TQ = I} \|X_1 - X_2Q\|_F$$
+  \item<1-> Out-of-sample embedding: $\bm{y}_1 \mapsto \widetilde{\bm{y}}_1, \ \bm{y}_2 \mapsto \widetilde{\bm{y}}'_2$
+  \item<1-> Both $\widetilde{\bm{y}}_1$ and $\widetilde{\bm{y}}_2 = Q^* \widetilde{\bm{y}}'_2$ are in $\mathbb{R}^d$\\ with same
+    coordinate system (i.e., they are commensurate)
+  \item<1-> Reject for $d(\widetilde{\bm{y}}_1,\widetilde{\bm{y}}_2)$ ``large''
+  \end{itemize}
+  \vspace*{\fill}
+\end{frame}
+
+\begin{frame}
+\frametitle{fidelity \& commensurability}
+%Each $\Xi_k$ comes with a dissimilarity $\delta_k$ (symmetric \& pre-scaled).\\
+%We map all $nK$ points to the same space (with distance $d$).\\
+\vspace*{0.05 in}
+
+Fidelity is how well the mapping preserves original dissimilarities;
+\\
+our within-condition {\em fidelity error} is given by
+    $$\epsilon_{f_{k}} = \frac{1}{{{n}\choose{2}}} \sum_{1 \leq i < j \leq n} (d(\widetilde{\bm{x}}_{ik},\widetilde{\bm{x}}_{jk})-\delta_k(\bm{x}_{ik},\bm{x}_{jk}))^2.$$
+
+Commensurability is how well the mapping preserves matchedness;
+\\
+our between-condition {\em commensurability error} is given by
+    $$\epsilon_{c_{k_1k_2}} = \frac{1}{n} \sum_{1 \leq i \leq n} (d(\widetilde{\bm{x}}_{ik_1},\widetilde{\bm{x}}_{ik_2})-{\myred \delta_{k_1k_2}}(\bm{x}_{ik_1},\bm{x}_{ik_2}))^2.$$
+
+Alas, ${\myred \delta_{k_1k_2}}$ does not exist;
+however, our story seems to suggest that it might be reasonable to let ${\myred \delta_{k_1k_2}}(\bm{x}_{ik_1},\bm{x}_{ik_2}) = 0$ for all $i,k_1,k_2$.
+\\
+\vspace*{0.05 in}
+NB: There is also between-condition {\em separability error} given by
+    $$\epsilon_{s_{k_1k_2}} = \frac{1}{{{n}\choose{2}}} \sum_{1 \leq i < j \leq n} (d(\widetilde{\bm{x}}_{ik_1},\widetilde{\bm{x}}_{jk_2})-{\myred \delta_{k_1k_2}}(\bm{x}_{ik_1},\bm{x}_{jk_2}))^2.$$
+
+\end{frame}
+
+
+
+
+\begin{frame}
+  \frametitle{Methodological Comparison}
+  \vspace*{\fill}
+  \begin{itemize}
+  \item<1-> {\bf canonical correlation} optimizes commensurability \\{\em without regard for fidelity}\\
+  \item<1-> {\bf procrustes $\circ$ mds} optimizes fidelity \\{\em without regard for commensurability}\\
+  \vspace*{\fill}
+  \item<2-> compare: {\myred joint optimization of fidelity \& commensurability} \dots\\
+  \end{itemize}
+  \vspace*{\fill}
+\end{frame}
+
+
+% #7: our M approach
+\begin{frame}
+  \frametitle{Omnibus Embedding Approach}
+  \vspace*{\fill}
+  \begin{center}
+    \includegraphics[scale=0.8]{M3b.pdf}
+  \end{center}
+  \begin{itemize}
+  \item<1-> Under ``matched'' assumption, \\{\myblue impute} dissimilarities ${\myred \delta_{12}}(\bm{x}_{i_11},\bm{x}_{i_22})$
+    %$W=(D_E + D_F)/2$
+    \\to obtain an {\em omnibus dissimilarity matrix} $M$
+  \item<1-> Embed $M$ as $2n$ points in $\mathbb{R}^{d}$
+  \item<1-> Let $u_{i1} = \delta_1(\bm{y}_{1}, \bm{x}_{i1})$ and $v_{i2} = \delta_2(\bm{y}_{2}, \bm{x}_{i2})$
+  \item<1-> Under $H_0:\ \bm{y}_{1} \sim \bm{y}_{2}$,\\ {\myblue impute} $v_{i1} = {\myred \delta_{12}}(\bm{y}_1,\bm{x}_{i2})$ and $u_{i2} = {\myred \delta_{12}}(\bm{y}_2,\bm{x}_{i1})$ % (u_1 + v_2)/2$
+  \item<1-> Out-of-sample embedding of $(u_1^T, v_1^T)^T$ and $(u_2^T, v_2^T)^T$\\ yields $\widetilde{\bm{y}}_1$ and $\widetilde{\bm{y}}_2$
+  \end{itemize}
+  %\vspace{-1em}
+  \vspace*{\fill}
+\end{frame}
+
+
+
+\begin{frame}
+  \frametitle{Simulation Results}
+  \framesubtitle{ROC curves: $\bm{\beta}$ against $\bm{\alpha$}}
+  \vspace{-3em}
+  \begin{center}
+  \begin{figure}
+    \includegraphics[height=5cm, width=6cm,angle=0]{suprious_correlation_ROC.pdf}
+%    \caption{    }
+  \end{figure}
+  Simulation results indicate that \\{\bf joint optimization of fidelity \& commensurability} \\via omnibus embedding approach \\is (for this case) \\superior to {\bf canonical correlation } and {\bf procrustes$\circ$mds}
+  \end{center}
+  %\vspace{-1em}
+  %\begin{itemize}
+  %\item<1-> {\bf joint optimization of fidelity \& commensurability} (via omnibus embedding approach) is superior to {\bf canonical correlation } and {\bf procrustes$\circ$mds}
+  %\item<1-> $T$ (green) is generally superior to $G$ (red) for small $\alpha$
+  %\item<1-> Fusion (black) is generally superior to either $T$ or $G$ alone
+  %\end{itemize}
+  %NB: write up this fusion stuff, too!!!!!
+\end{frame}
+\begin{comment}
+Subject:   Re: induce spurious correlation
+From:   "Zhiliang Ma" <zhiliang.ma@gmail.com>
+Date:   Mon, June 14, 2010 2:24 am
+
+n=100, p=3, d=2, r=100, c=0.1, q=3.
+(embedding dim for cca is p+q=6, for pom and jofc is d)
+\end{comment}
+
+
+
+\begin{frame}
+  \frametitle{Spurious Correlation Phenomenon}
+  \vspace*{\fill}
+  %\begin{center}
+%  \begin{figure}
+%    \includegraphics[height=5cm, width=6cm,angle=0]{dirichlet_log-commensurability_vs_grassmannian_power-2.pdf}
+%    \caption{    }
+%  \end{figure}
+Let $\Xi_k = S^{p+q} = S^p \times S^q$;\\
+$S^p$ encodes ``signal'' and
+$S^q$ encodes ``noise''\\
+  \vspace*{0.1 in}
+
+On $S^p$, let $\alpha_i \sim^{iid} Dirichlet(1)$ and $X^1_{ik} \sim^{iid} Dirichlet(r\alpha_i+1)$\\ (signal, as before)\\
+  \vspace*{0.1 in}
+
+On $S^q$, let $X^2_{ik} \sim^{iid} Dirichlet(1)$\\ (pure noise)\\
+  \vspace*{0.1 in}
+
+For $c \in [0,1]$, let $X_{ik} = [(1-c) X^1_{ik} , c X^2_{ik}]$
+  \vspace*{0.1 in}
+
+  %\end{center}
+  \end{frame}
+
+
+
+\begin{frame}
+  \frametitle{Incommensurability Phenomenon I}
+  \begin{center}
+  \begin{figure}
+    \includegraphics[height=7.5cm, width=9cm,angle=0]{ZMfacetprojections3d.pdf}
+%    \caption{    }
+  \end{figure}
+  \end{center}
+  \end{frame}
+
+
+\begin{frame}
+  \frametitle{Incommensurability Phenomenon II}
+  \begin{center}
+  \begin{figure}
+    \includegraphics[height=7.5cm, width=9cm,angle=0]{dirichlet_sqrt-commensurability_vs_grassmannian_power-2.pdf}
+%    \caption{    }
+  \end{figure}
+  \end{center}
+  \end{frame}
+
+
+\begin{frame}
+  \frametitle{Experimental Data}
+    \framesubtitle{Wikipedia Documents}
+  \vspace*{\fill}
+
+  \begin{itemize}
+  \item<1-> Wikipedia is a free, multilingual encyclopedia project
+  \item<1-> 13 million articles (2.9 million in the English Wikipedia) have been written
+    collaboratively by volunteers around the world
+  \item<1-> A Wikipedia document has information regarding
+    \begin{itemize}
+    \item[$\scriptstyle{\blacktriangleright}$]<1-> textual content of the document
+    \item[$\scriptstyle{\blacktriangleright}$]<1-> links in the document to other documents
+    \end{itemize}
+
+  \item<1-> Consider a subset of English and French Wikipedias that are 1-1
+    correspondent
+  \item<1-> We take the (directed) 2-neighborhood of the document \alert{``Algebraic
+    Geometry''} in the English Wikipedia, with the associated documents in the
+    French Wikipedia ($n=1382$)
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Experimental Results}
+  \framesubtitle{ROC curves: $\bm{\beta}$ against $\bm{\alpha$}}
+  \vspace{-3em}
+  \begin{center}
+  \begin{figure}
+    \includegraphics[height=5cm, width=6cm,angle=0]{wiki_ROC_noOOS.pdf}
+%    \caption{    }
+  \end{figure}
+  Experimental results indicate that \\{\bf joint optimization of fidelity \& commensurability} \\via omnibus embedding approach \\is (for this case) \\superior to {\bf canonical correlation } and {\bf procrustes$\circ$mds}
+  \end{center}
+  %\vspace{-1em}
+  %\begin{itemize}
+  %\item<1-> {\bf joint optimization of fidelity \& commensurability} (via omnibus embedding approach) is superior to {\bf canonical correlation } and {\bf procrustes$\circ$mds}
+  %\item<1-> $T$ (green) is generally superior to $G$ (red) for small $\alpha$
+  %\item<1-> Fusion (black) is generally superior to either $T$ or $G$ alone
+  %\end{itemize}
+  %NB: write up this fusion stuff, too!!!!!
+\end{frame}
+
+
+\begin{frame}
+  %\frametitle{Exploitation Task: Classification}
+  \vspace*{-2em}
+  \hspace*{-4.75em}
+    \includegraphics[scale=0.3]{cep-mm-monterey3.jpg}
+  \begin{center}
+  \vspace*{-4.1 in}
+  {\bf\it\myblue\Large Exploitation Task: Classification}
+  \end{center}
+\end{frame}
+
+
+
+
+\begin{frame}
+  \frametitle{Integrated Sensing and Processing}
+% djm's ISP "joint optimization" slide:
+\setlength{\unitlength}{0.33cm}
+\begin{pgfpicture}{0cm}{0cm}{10cm}{7cm}
+         \color{lightgray}
+         \pgfmoveto{\pgfxy(1.5,4.0)}
+         \pgflineto{\pgfxy(4.5,2.0)}
+         \pgflineto{\pgfxy(4.0,2.0)}
+         \pgflineto{\pgfxy(5.0,1.0)}
+         \pgflineto{\pgfxy(6.0,2.0)}
+         \pgflineto{\pgfxy(5.5,2.0)}
+         \pgflineto{\pgfxy(3.5,4.0)}
+         \pgflineto{\pgfxy(1.5,4.0)}
+         \pgffill
+
+         \pgfmoveto{\pgfxy(8.5,4.0)}
+         \pgflineto{\pgfxy(6.5,4.0)}
+         \pgflineto{\pgfxy(4.5,2.0)}
+         \pgflineto{\pgfxy(5.5,2.0)}
+         \pgflineto{\pgfxy(8.5,4.0)}
+         \pgffill
+         \pgfstroke
+
+         \color{black}
+         \pgfputat{\pgfxy(5.0,0.5)}{\pgfbox[center,center]{$\mathbb{R}^d$}}
+         \pgfputat{\pgfxy(5.0,3.0)}{\pgfbox[center,center]{$W$}}
+
+ \pgfputat{\pgfxy(2.0,2.25)}{\pgfbox[center,center]{$\mathbb{R}^{d_1}$}}
+
+ \pgfputat{\pgfxy(3.0,2.25)}{\pgfbox[center,center]{$\mathbb{R}^{d_2}$}}
+
+ \pgfputat{\pgfxy(7.0,2.25)}{\pgfbox[center,center]{$\mathbb{R}^{d_{K-1}}$}}
+
+ \pgfputat{\pgfxy(8.0,2.25)}{\pgfbox[center,center]{$\mathbb{R}^{d_K}$}}
+         \pgfputat{\pgfxy(2.0,4.25)}{\pgfbox[center,center]{$\Xi_1$}}
+         \pgfputat{\pgfxy(3.0,4.25)}{\pgfbox[center,center]{$\Xi_2$}}
+         \pgfputat{\pgfxy(7.0,4.25)}{\pgfbox[center,center]{$\Xi_{K-1}$}}
+         \pgfputat{\pgfxy(8.0,4.25)}{\pgfbox[center,center]{$\Xi_K$}}
+         \pgfputat{\pgfxy(5.0,4.25)}{\pgfbox[center,center]{$\cdots$}}
+         \pgfputat{\pgfxy(5.0,6.25)}{\pgfbox[center,center]{$\Xi$}}
+
+         \pgfnodecircle{X}[virtual]{\pgfxy(5.0,6.1)}{.05cm}
+         \pgfnodecircle{X1}[virtual]{\pgfxy(2.0,4.1)}{.05cm}
+         \pgfnodecircle{X2}[virtual]{\pgfxy(3.0,4.1)}{.05cm}
+         \pgfnodecircle{Xk1}[virtual]{\pgfxy(7.0,4.1)}{.05cm}
+         \pgfnodecircle{Xk}[virtual]{\pgfxy(8.0,4.1)}{.05cm}
+         \pgfnodecircle{X1u}[virtual]{\pgfxy(2.0,4.4)}{.05cm}
+         \pgfnodecircle{X2u}[virtual]{\pgfxy(3.0,4.4)}{.05cm}
+         \pgfnodecircle{Xk1u}[virtual]{\pgfxy(7.0,4.4)}{.05cm}
+         \pgfnodecircle{Xku}[virtual]{\pgfxy(8.0,4.4)}{.05cm}
+         \pgfnodecircle{R1}[virtual]{\pgfxy(2.0,2.4)}{.05cm}
+         \pgfnodecircle{R2}[virtual]{\pgfxy(3.0,2.4)}{.05cm}
+         \pgfnodecircle{Rk1}[virtual]{\pgfxy(7.0,2.4)}{.05cm}
+         \pgfnodecircle{Rk}[virtual]{\pgfxy(8.0,2.4)}{.05cm}
+         \pgfnodecircle{R1u}[virtual]{\pgfxy(2.0,2.0)}{.05cm}
+         \pgfnodecircle{R2u}[virtual]{\pgfxy(3.0,2.0)}{.05cm}
+         \pgfnodecircle{Rk1u}[virtual]{\pgfxy(7.0,2.0)}{.05cm}
+         \pgfnodecircle{Rku}[virtual]{\pgfxy(8.0,2.0)}{.05cm}
+         \pgfnodecircle{R0}[virtual]{\pgfxy(5.0,0.7)}{.05cm}
+         \pgfsetendarrow{\pgfarrowtriangle{2pt}}
+         \pgfnodeconnline{X1}{R1}
+         \pgfnodeconnline{X2}{R2}
+         \pgfnodeconnline{Xk1}{Rk1}
+         \pgfnodeconnline{Xk}{Rk}
+         \pgfnodeconnline{R1u}{R0}
+         \pgfnodeconnline{R2u}{R0}
+         \pgfnodeconnline{Rk1u}{R0}
+         \pgfnodeconnline{Rku}{R0}
+         \pgfnodeconnline{X}{X1u}
+         \pgfnodeconnline{X}{X2u}
+         \pgfnodeconnline{X}{Xk1u}
+         \pgfnodeconnline{X}{Xku}
+
+         \pgfmoveto{\pgfxy(4.75,0.5)}
+         \pgfcurveto{\pgfxy(-0.5,2)}{\pgfxy(-0.5,4)}{\pgfxy(4.75,6.25)}
+         \pgfstroke
+         \pgfputat{\pgfxy(0.5,3.)}{\pgfbox[center,center]{ISP}}
+         \pgfputat{\pgfxy(1.8,3.)}{\pgfbox[center,center]{$\rho_1$}}
+         \pgfputat{\pgfxy(2.8,3.)}{\pgfbox[center,center]{$\rho_2$}}
+         \pgfputat{\pgfxy(6.9,3.)}{\pgfbox[center,center]{$\rho_{K-1}$}}
+         \pgfputat{\pgfxy(7.8,3.)}{\pgfbox[center,center]{$\rho_K$}}
+
+
+ \pgfputat{\pgfxy(3.0,5.0)}{\pgfbox[center,center]{$\pi_1(\theta_1)$}}
+
+ \pgfputat{\pgfxy(4.0,5.0)}{\pgfbox[center,center]{$\pi_2(\theta_2)$}}
+
+ \pgfputat{\pgfxy(5.8,5.0)}{\pgfbox[center,center]{$\pi_{K-1}(\theta_{K-1})$}}
+
+ \pgfputat{\pgfxy(7.75,5.0)}{\pgfbox[center,center]{$\pi_K(\theta_K)$}}
+
+
+ \pgfputat{\pgfxy(3.5,6.0)}{\pgfbox[center,center]{$\Delta(\theta)$}}
+
+         \pgfsetendarrow{\pgfarrowtriangle{4pt}}
+         \pgfmoveto{\pgfxy(5.5,6.25)}
+         \pgfcurveto{\pgfxy(11,5.0)}{\pgfxy(11,2.0)}{\pgfxy(5.5,0.5)}
+         \pgfstroke
+         \pgfputat{\pgfxy(9.25,3.0)}{\pgfbox[center,center]{MM}}
+         \color{red}
+         \pgfputat{\pgfxy(9.25,2.25)}{\pgfbox[center,center]{Fidelity}}
+
+ \pgfputat{\pgfxy(9.25,1.1)}{\pgfbox[center,center]{Commensurability}}
+         \pgfputat{\pgfxy(8.75,0.5)}{\pgfbox[center,center]{Separability}}
+         \color{black}
+
+         \pgfputat{\pgfxy(3.4,1.2)}{\pgfbox[center,center]{$T_1$}}
+         \pgfputat{\pgfxy(4.0,1.4)}{\pgfbox[center,center]{$T_2$}}
+         \pgfputat{\pgfxy(6.0,1.4)}{\pgfbox[center,center]{$T_{K-1}$}}
+         \pgfputat{\pgfxy(6.6,1.2)}{\pgfbox[center,center]{$T_K$}}
+\end{pgfpicture}
+\end{frame}
+
+
+% #12: kronecker quote
+\begin{frame}
+  \frametitle{Kronecker Quote}
+  \vspace*{\fill}
+  \begin{center}
+    {\large ``The wealth of your practical experience \\ with sane and interesting
+      problems \\ will give to mathematics \\
+      a new direction and a new impetus.''} \\
+  \end{center}
+  \begin{changemargin}{-1cm}{+0cm}
+  $\begin{array}[http]{ccc}
+    \includegraphics[scale=0.18]{Leopold_Kronecker.pdf} &
+    \begin{minipage}[h]{19.3em}
+      \text{\small -- Leopold Kronecker to Hermann von Helmholtz --}\\
+      \vspace{7em}
+    \end{minipage} &
+      \includegraphics[scale=0.24]{hermannvonhelmhotz.pdf}
+  \end{array}$
+\end{changemargin}
+\vspace*{\fill}
+\end{frame}
+
+\end{document}
+
+
+
+\begin{frame}
+  \frametitle{Wikipedia Documents}
+  \vspace*{\fill}
+
+  \begin{itemize}
+  \item<1-> Wikipedia is a free, multilingual encyclopedia project
+  \item<1-> 13 million articles (2.9 million in the English Wikipedia) have been written
+    collaboratively by volunteers around the world
+  \item<1-> A Wikipedia document has information regarding
+    \begin{itemize}
+    \item[$\scriptstyle{\blacktriangleright}$]<1-> textual content of the document
+    \item[$\scriptstyle{\blacktriangleright}$]<1-> links in the document to other documents
+    \end{itemize}
+  \item<1->  For a Wikipedia subset consisting of $n$ documents, we consider
+    \begin{itemize} \vspace{-1em}
+    \item[$\scriptstyle{\blacktriangleright}$]<1-> $T = $ Dissimilarity matrix from textual content
+    \item[$\scriptstyle{\blacktriangleright}$]<1-> $G = $ Dissimilarity matrix from graph structure
+    \end{itemize}
+  \end{itemize}
+  \vspace*{\fill}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Two Wikipedias}
+  \framesubtitle{--- Implicit Translation ---}
+  \vspace*{\fill}
+
+  \begin{itemize}
+  \item<1-> Consider a subset of English and French Wikipedias that are 1-1
+    correspondent
+  \item<1-> We take the (directed) 2-neighborhood of the document \alert{``Algebraic
+    Geometry''} in the English Wikipedia, with the associated documents in the
+    French Wikipedia ($n=1382$)
+    \vspace{0.6em}
+  \item[]<1->\uncover<2->{\hspace{6em}$
+      \begin{array}{cccc}
+        & \bm{E} & & \bm{F}\\
+        \text{Topic}_1 & \bm{x}_{11} & \sim & \bm{x}_{12} \\
+        \vdots & \vdots & & \vdots \\
+        \text{Topic}_i & \bm{x}_{i1} & \sim & \bm{x}_{i2} \\
+        \vdots & \vdots & & \vdots \\
+        \text{Topic}_n & \bm{x}_{n1} & \sim & \bm{x}_{n2}
+      \end{array}
+      $}
+    \vspace{1em}
+  \item<2->Dissimilarity Matrices: $T_E,\ T_F,\ G_E,\ G_F$
+  \end{itemize}
+  \vspace*{\fill}
+\end{frame}
+
+% #4: hypotheses H0 & HA
+\begin{frame}
+  \frametitle{Hypotheses}
+  \vspace*{\fill}
+  \begin{itemize}
+  \item<1-> Given two new documents $\bm{y}_{1}$ (English) and $\bm{y}_{2}$
+    (French)
+  \item<1-> Dissimilarities between new and known documents
+    \[\hspace{-3em}
+    \delta_T(\bm{y}_{1}, \bm{E}) \text{ and } \delta_T(\bm{y}_{2},
+    \bm{F})
+    \]
+    \[\hspace{-3em}
+    \delta_G(\bm{y}_{1}, \bm{E}) \text{ and } \delta_G(\bm{y}_{2}, \bm{F})
+    \]
+  \item<1-> Goal: determine whether a match is present between $\bm{y}_{1}$ and
+    $\bm{y}_{2}$ (i.e., whether they are \alert{on the same topic})
+  \item[]<2->
+    \[\hspace{-2em}
+    H_0: \bm{y}_{1} \sim \bm{y}_{2} \ \text{ versus } \ H_A: \bm{y}_{1} \nsim \bm{y}_{2}
+    \]
+    \begin{center}
+      \hspace{-2em} (we control the probability of missing a true match)
+    \end{center}
+  \end{itemize}
+  \vspace*{\fill}
+\end{frame}
+
+% #5: our framework figure, a la JoC Fig 1:
+
+%  G_E \_ X_G
+%  G_F /      \
+%              cartesian product -> inference
+%  T_E \_ X_T /
+%  T_F /
+
+\begin{frame}
+  \frametitle{Framework}
+  \vspace*{\fill}
+  \vspace{2em}
+  \begin{center}
+    \hspace{2em}\includegraphics[scale=1.3]{framework.pdf}
+  \end{center}
+  \vspace*{\fill}
+\end{frame}
+
+% #6: Procrustes approach
+\begin{frame}
+  \frametitle{(Strawman) Procrustes Approach}
+  \vspace*{\fill}
+  \begin{itemize}
+  \item<1-> Let $D_E$ and $D_F$ denote the generalized dissimilarity matrices
+    based on English and French Wikipedias (i.e., $D \in \{G, T\}$)
+  \item<1-> Classical multidimensional scaling: $D_E \rightarrow X_E,\ D_F \rightarrow X_F$
+  \item<1-> Procrustes$(X_E, X_F)$ yields $Q^*$, i.e., $$Q^* = \argmin_{Q^TQ = I} \|X_E - X_FQ\|_F$$
+  \item<1-> Out-of-sample embedding: $\bm{y}_1 \mapsto \widetilde{\bm{y}}_E, \ \bm{y}_2 \mapsto \widetilde{\bm{y}}_F$
+  \item<1-> Both $\widetilde{\bm{y}}_E$ and $Q^* \widetilde{\bm{y}}_F$ are in $\mathbb{R}^d$ with same
+    coordinate system \\ (i.e., they are commensurate)
+  \item<1-> $d(\widetilde{\bm{y}}_E,Q^* \widetilde{\bm{y}}_F) > c$
+  yields
+  ``reject''
+  \end{itemize}
+  \vspace*{\fill}
+\end{frame}
+
+% #7: our M approach
+\begin{frame}
+  \frametitle{Our $\bm{W}$ Approach}
+  \vspace*{\fill}
+  \begin{itemize}
+  \item<1-> We impute the dissimilarities between $\bm{E}$ and $\bm{F}$ by
+    $W=(D_E + D_F)/2$ to obtain one omnibus dissimilarity matrix $M$
+  \item<1-> We then embed $M$ as $2n$ points in $\mathbb{R}^{d}$
+  \item<1-> Let $u_1 = \delta(\bm{y}_{1}, \bm{E})$ and $v_2 = \delta(\bm{y}_{2},
+    \bm{F})$
+  \item<1-> Under $H_0:\ \bm{y}_{1} \sim \bm{y}_{2}$, we impute $v_1 = u_2 =
+    (u_1 + v_2)/2$
+  \item<1-> Out-of-sample embedding is used to embed $(u_1^T, v_1^T)^T$
+    and \\ $(u_2^T, v_2^T)^T$
+  \end{itemize}
+  \vspace{-1em}
+  \begin{center}
+    \includegraphics[scale=0.8]{M3.pdf}
+  \end{center}
+  \vspace*{\fill}
+\end{frame}
+
+% #8: our fusion
+\begin{frame}
+  \frametitle{Fusion}
+  \vspace*{\fill}
+  \begin{itemize}
+  \item<1-> Ideally, textual content and graph structure contain complementary
+    information so that their fusion leads to superior power in testing compared
+    to either textual content or graph structure alone
+  \item<1-> We achieve fusion by combining the embeddings obtained via the Cartesian product
+  \begin{center}
+    \hspace{2em}\includegraphics[scale=0.9]{framework.pdf}
+  \end{center}
+  \item<1-> Distances in the embedding product space are then computed and
+    examined to test the presence of a match
+  \end{itemize}
+  \vspace*{\fill}
+\end{frame}
+
+% #9: ROC result figure
+\begin{frame}
+  \frametitle{ROC Curves}
+  \framesubtitle{$\bm{\beta}$ against $\bm{\alpha$}}
+  \vspace{-3em}
+  \begin{center}
+    \includegraphics[height=7cm, width=6cm,angle=-90]{power_combine_link_text_average_procrustes}
+  \end{center}
+  \vspace{-1em}
+  \begin{itemize}
+  \item<1-> $W$-approach (solid) is generally superior to $P$-approach
+  \item<1-> $T$ (green) is generally superior to $G$ (red) for small $\alpha$
+  \item<1-> Fusion (black) is generally superior to either $T$ or $G$ alone
+  \end{itemize}
+\end{frame}
+
+% #10: betahat_alpha=0.05 result
+\begin{frame}
+  \frametitle{$\bm{\beta}_{\bm{\alpha=0.05}}$}
+  \vspace*{\fill}
+  \begin{itemize}
+  \item<1-> $\hat{\beta}_{W\text{-}fusion} =0.560$ \\
+    correctly eliminating $56\%$ of the false matches via $W$-fusion\\
+  \item<1-> $\hat{\beta}_{P\text{-}G} = 0.135$, $\hat{\beta}_{P\text{-}T} =
+    0.379$, $\hat{\beta}_{P\text{-}fusion} = 0.338$
+  \item<1-> $\hat{\beta}_{W\text{-}G} = 0.403$, $\hat{\beta}_{W\text{-}T} = 0.468$, $\hat{\beta}_{W\text{-}fusion} =0.560$
+  \item<1-> Wilcoxon signed-rank tests on the powers based on 200 Monte Carlo
+    replicates show that $\hat{\beta}_{W\text{-}fusion}$ improvement is statistically significant
+  \end{itemize}
+  \vspace*{\fill}
+\end{frame}
+
+% #11: conclusion slide
+\begin{frame}
+  \frametitle{Conclusion}
+  \vspace*{\fill}
+  \begin{itemize}
+  \item<1-> Fusion of multiple data sources can result in
+    superior performance in statistical inference
+  \item<1-> Disparate data sources can be unified via dissimilarity embeddings,
+    whence fusion can be achieved
+  \item<1-> Embedding an omnibus dissimilarity matrix is a favorable alternative
+    to traditional Procrustes analysis on separate embeddings\\
+    \uncover<2->{
+    \begin{center}
+    {\em Theorem: P is {\myred $\omega \rightarrow 0$} limit of W=(NA+diag(0)).}\\
+    }
+    \uncover<3->{
+    $$\sum_{1 \leq i < j \leq n} (d_{ij}(X) - \delta_{ij})^2 ~ + \sum_{n+1 \leq i < j \leq 2n} (d_{ij}(X) - \delta_{ij})^2$$\\$$ + ~ {\myred \omega} \sum_{1 \leq i \leq n ; j=i+n} (d_{ij}(X))^2$$
+    \end{center}
+    }
+  \end{itemize}
+  %\vspace{3em}
+  \begin{center}
+%    \uncover<4->{\alert{$\scriptstyle{<}$\url{www.cis.jhu.edu/~zma/zmisi09.html}$\scriptstyle{>}$}}
+  \end{center}
+  \vspace*{\fill}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{}
+  \vspace*{-2em}
+  \hspace*{-4.75em}
+  %\begin{center}
+    \includegraphics[scale=0.3]{cep-mm-monterey3.jpg}
+  %\end{center}
+\end{frame}
+
+
+
+\begin{frame}
+ \frametitle{}
+%\section*{Setup}
+Let
+\begin{align*}
+  (X,Y,Z) &\sim F_{XYZ}, \\
+  Y:\Omega &\rightarrow {\myred J} \cup {\myblue \widetilde{J}}, \\
+  Z:\Omega &\rightarrow \{0,1\}, \\
+  X|Z\text{=}z :\Omega & \rightarrow \Xi_z.
+%\end{align*}
+%\begin{align*}
+%  {\myred g_{z}} : \Xi_{z} \times {\myred \mathcal{T}_{z}} & \rightarrow {\myred J},\\
+%  {\myblue \widetilde{g}_{z}} : \Xi_{z} \times {\myblue
+%    \widetilde{\mathcal{T}}_{z}} & \rightarrow {\myblue \widetilde{J}}.
+\end{align*}
+
+Available training data:
+  \begin{align*}
+    {\myred \mathcal{T}_0} = \{(X_{i}, Y_{i} \in {\myred J}, Z_{i} = 0)\}, \\
+    {\myblue \widetilde{\mathcal{T}}_0} = \{(X_{i}, Y_{i} \in {\myblue \widetilde{J}}, Z_{i} = 0)\}, \\
+    {\myred \mathcal{T}_1} = \{(X_{i}, Y_{i} \in {\myred J}, Z_{i} = 1)\}.
+  \end{align*}
+
+Data to be classified:
+  \begin{align*}
+    (X, Y \in {\myblue \widetilde{J}}, Z = 1)
+  \end{align*}
+with unobserved class label $Y$.\\
+
+\vspace*{0.0in}
+\uncover<2->{
+\begin{center}
+However, no training data ${\myblue \widetilde{\mathcal{T}}_1}$ is available\\
+of this type ($Z=1$) for these classes ($Y \in {\myblue \widetilde{J}}$).
+\end{center}
+}
+
+%\end{itemize}
+\end{frame}
+
+\begin{frame}
+\hspace*{-0.35in}
+%\begin{center}
+\includegraphics[scale=0.7]{manifold_matching}
+%\end{center}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Manifold Matching Classification:\\Methodology}
+
+  \begin{center}
+    \includegraphics[scale=0.6]{M_classifiction.pdf}
+  \end{center}
+  %W \& oos w/1-1 or Block
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Manifold Matching Classification:\\Principle}
+
+      \begin{figure}
+        \begin{center}
+          \includegraphics[scale=1.0]{fidelity_vs_commensurability2-2.pdf}
+        \end{center}
+      \end{figure}
+
+\uncover<2>{
+  \begin{center}{\Large
+  joint optimization of {\em fidelity} and {\em commensurability}
+  }\end{center}
+  }
+\end{frame}
+
+\begin{frame}
+  \frametitle{Manifold Matching Classification:\\Principle}
+
+  \begin{center}{\Large
+  joint optimization of {\em fidelity} and {\em commensurability}
+  }\end{center}
+
+\uncover<2>{
+  $$\omega_0 \sum_{1 \leq i < j \leq n} (d_{ij}(X) - \delta_{ij})^2 + \omega_1 \sum_{n+1 \leq i < j \leq 2n} (d_{ij}(X) - \delta_{ij})^2$$\\$$ + ~ \omega_{01_d} \sum_{1 \leq i \leq n ; j = i+n} (d_{ij}(X))^2$$\\$$ + ~ \omega_{01_o} \sum_{1 \leq i \leq n ; n+1 \leq j < i+n} (d_{ij}(X) - \delta_{ij})^2$$
+}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Manifold Matching Classification:\\Results}
+
+$$\Xi_0 == English ~ ; ~ \Xi_1 == French$$
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+\multirow{2}{*}{$\widehat{L}_{lda(d=6)}$}
+& \multicolumn{ 2}{c|}{P} & \multicolumn{ 2}{c|}{W} \\ \cline{ 2- 5}
+& G & T & G & T \\ \hline
+
+\multirow{2}{*}{$1 - 1$}
+& 0.42 & 0.4 & 0.33 & 0.18 \\ \cline{ 2- 5}
+& \multicolumn{ 2}{c|}{0.32} & \multicolumn{ 2}{c|}{0.16} \\ \hline
+
+\multirow{2}{*}{Block}& 0.33 & 0.5 & 0.38 & 0.14 \\ \cline{ 2- 5}
+& \multicolumn{ 2}{c|}{0.41} & \multicolumn{ 2}{c|}{{\myred 0.11}} \\ \hline
+\end{tabular}
+\end{center}
+\end{frame}
+
+\begin{comment}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+\multirow{2}{*}{$\widehat{L}_{1nn(d=6)}$}
+& \multicolumn{ 2}{c|}{P} & \multicolumn{ 2}{c|}{W} \\ \cline{ 2- 5}
+& G & T & G & T \\ \hline
+
+\multirow{2}{*}{$1 - 1$}
+& 0.25 & 0.35 & 0.22 & 0.22 \\ \cline{ 2- 5}
+& \multicolumn{ 2}{c|}{0.33} & \multicolumn{ 2}{c|}{0.22} \\ \hline
+
+\multirow{2}{*}{Block}&0.35 & 0.33 & 0.33 & 0.10 \\ \cline{ 2- 5}
+& \multicolumn{ 2}{c|}{0.35} & \multicolumn{ 2}{c|}{0.17} \\ \hline
+\end{tabular}
+\end{comment}
+
+
+\begin{frame}
+  \frametitle{Manifold Matching Classification:\\Results}
+
+$$\Xi_0 == English ~ ; ~ \Xi_1 == French$$
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+\multirow{2}{*}{$\widehat{L}_{lda(d=6)}$}
+& \multicolumn{ 2}{c|}{P} & \multicolumn{ 2}{c|}{W} \\ \cline{ 2- 5}
+& G & T & G & T \\ \hline
+
+\multirow{2}{*}{$1 - 1$}
+& 0.42 & 0.4 & 0.33 & 0.18 \\ \cline{ 2- 5}
+& \multicolumn{ 2}{c|}{0.32} & \multicolumn{ 2}{c|}{0.16} \\ \hline
+
+\multirow{2}{*}{Block}& 0.33 & 0.5 & 0.38 & 0.14 \\ \cline{ 2- 5}
+& \multicolumn{ 2}{c|}{0.41} & \multicolumn{ 2}{c|}{{\myred 0.11}} \\ \hline
+\end{tabular}
+\end{center}
+
+$$\epsilon^P_0 = 0.56 ~ ; ~ \epsilon^P_1 = 0.54 ~ ; ~ \epsilon^P_2 = 0.15$$
+$$\epsilon^W_0 = 0.56 ~ ; ~ \epsilon^W_1 = 0.55 ~ ; ~ \epsilon^W_2 = 0.03$$
+
+\end{frame}
+
+
+
+\begin{frame}
+  \frametitle{Manifold Matching Classification:\\Results}
+%$$\Xi_0 == Graph ~ ; ~ \Xi_1 == Text$$
+\begin{center}
+\begin{tabular}{|l|c|c|}
+  \hline
+  \multicolumn{3}{|c|}{$\Xi_0 == Graph ~ ; ~ \Xi_1 == Text$} \\ \hline
+  $\widehat{L}_{lda(d=6)}$ & P & W \\ \hline
+  English & 0.2464 & 0.1401 \\ \hline
+  French & 0.2303 & 0.1980 \\ \hline
+\end{tabular}
+\end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Manifold Matching Classification:\\Theorem}
+  \vspace*{-0.25 in}
+  $$L^*_{\Xi_1,P_1} \leq
+  L^*_{\Xi_0,P_0,\varphi^*(P_1)} \leq
+    {\myred L^*_{\mcX_0,\rho_0(P_0),T \circ \rho_1(P_1)}} \leq
+    \sup_{P^{\prime}_j \in \mathcal{N}_j} L^*_{\Xi_0,P^{\prime}_0,P^{\prime}_1}$$
+
+    \begin{center}
+%\psset{unit=.75cm}
+%\begin{pspicture}(0,0)(1,1)%\showgrid
+%\rput(0,0){\rnode{x0}{$\mathcal{X}_0$}}
+%\rput(1,0){\rnode{x1}{$\mathcal{X}_1$}}
+%\rput(0,1){\rnode{xi0}{$\Xi_0$}}
+%\rput(1,1){\rnode{xi1}{$\Xi_1$}}
+%\ncline{->}{xi0}{x0}\nbput{$\rho_0$}
+%\ncline{->}{xi1}{xi0}\nbput{$\varphi$}
+%\ncline{->}{xi1}{x1}\naput{$\rho_1$}
+%\ncline{->}{x1}{x0}\naput{T}
+%\end{pspicture}
+\end{center}
+
+    %\uncover<2>{
+    \vspace*{-0.30 in}
+    \begin{center}
+    Neighborhoods $\mathcal{N}_j$ capture infidelity/incommensurability.
+        %\includegraphics[scale=0.15]{1008091440_01.jpg}
+        \includegraphics[scale=0.125]{1008091713_01.jpg}
+    \end{center}
+    %}
+\end{frame}
+
+\begin{frame}
+
+Let $(\mcX \times \mcY,\mcF,P)$ be a probability space admitting random variable pairs $(X,Y)$.\\
+We assume $\mcY$ is the same for all spaces considered, and suppress the ``$\times \mcY$''.\\
+For $g:\mcX \rightarrow \mcY$, define probability of misclassification $L_{\mcX,P}(g) = P[g(X) \neq Y]$.\\
+Define collection of Bayes optimal classifiers $\mcG^*_{\mcX,P} = \arg\inf_{g} L_{\mcX,P}(g)$\\
+and Bayes optimal probability of misclassification $L^*_{\mcX,P} = \inf_{g} L_{\mcX,P}(g)$,
+so $L^*_{\mcX,P} = L_{\mcX,P}(g^*)$ for any $g^* \in \mcG^*_{\mcX,P}$.\\
+\vspace*{0.1 in}
+Define optimal probability of misclassification for $P_0$-optimal classifier
+applied to $P_1$ data [cf.~Hand, {\em Statistical Science}, 2006] to be \\$L^*_{\mcX,P_0,P_1} = \inf_{g^* \in \mcG^*_{\mcX,P_0}} L_{\mcX,P_1}(g^*)$.\\
+\vspace*{0.1 in}
+Then $L^*_{\Xi_1,P_1} \leq L^*_{\Xi_0,P_0,\varphi^*(P_1)} \leq L^*_{\mcX,\rho_0(P_0),T \circ \rho_1(P_1)}$.
+
+\end{frame}
+
+\begin{comment}
+\begin{frame}
+%\usepackage{amssymb,amsmath,amsthm,amscd}
+%\usepackage{url}
+%\usepackage[mathscr]{eucal}
+%\usepackage[dvips]{graphicx}
+$$
+\begin{CD}
+\Xi_0        @<\varphi<< \Xi_1\\
+@V\rho_1VV  @VV\rho_0V\\
+\mcX_0 @<T<< \mcX_1
+\end{CD}
+$$
+\end{frame}
+\end{comment}
+
+
+
+
+\begin{frame}
+%  \frametitle{xxxxx}
+
+\Large{
+  \begin{center}
+  {\mygreen{Leopold Kronecker to Hermann von Helmholtz:}}
+    \textit{``The wealth of your practical experience\\
+with sane and interesting problems\\will give to mathematics\\a new
+direction and a new impetus.''}
+  \end{center}}
+
+\vskip-10pt
+  \begin{figure}[ht]
+    \centering
+    \subfigure[\scriptsize{Leopold Kronecker}]{\includegraphics[height=1.7in]{Leopold_Kronecker.pdf}}\qquad\qquad\qquad
+    \subfigure[\scriptsize{Hermann von Helmholtz}]{\includegraphics[height=1.7in]{Hermann_von_Helmholtz.pdf}}
+%    \caption{ \label{fig:lddmm}
+%      xxxxx.
+%    }
+  \end{figure}
+\end{frame}
+
+\end{document}
+
+
+
+
+
+
+
+
+
+\begin{frame}[plain]
+\vspace*{0.5 in}
+\begin{center}
+{\Large Automatic Stream Characterization\\via\\Joint Exploitation of Content and Externals:\\$ ~ $\\Anomaly detection\\in a\\time series\\of\\attributed graphs}
+\end{center}
+\end{frame}
+
+\begin{frame}[plain]
+  \frametitle{%Fusion and Inference\\from\\Multiple and Massive Disparate Data Sources:\\
+    Joint Exploitation of Content and Externals}
+% \framesubtitle{Change after adding edges}
+% \framesubtitle{$t^*$ = week 132 in May 2001, $m=10$}
+  \vskip+30pt
+  \setbeamercovered{transparent}
+  \begin{columns}
+    \large{h:}
+    \begin{column}{0.25\textwidth}
+      \alt<2>{\hskip30pt\Huge{$\Xi$}}{
+      \vskip-30pt
+      \begin{figure}
+        \begin{center}
+          \includegraphics[scale=0.2]{webearth.jpg}
+        \end{center}
+      \end{figure}
+      }
+    \end{column}
+%    $\underrightarrow{FIMMDDS}$
+    $\underrightarrow{~ ~ ~ ~ ~ ~ ~}$
+    \begin{column}{0.65\textwidth}
+      \begin{figure}
+        \begin{center}
+        \vskip-30pt
+          \includegraphics[angle=-90,scale=0.25]{ts-cartoon.pdf}
+        \end{center}
+      \end{figure}
+    \end{column}
+  \end{columns}
+\vskip-20pt
+\begin{center}
+  \myblue{The map $h$ extracts time series of attributed graphs\\
+  $G(t)=(V=[n],E(t),{a}_V(t),{a}_E(t)), t=t_1,t_2,\cdots$\\
+          from the data domain $\Xi$}
+          %- label vertices \& edges - \\
+          %from multiple and massive disparate data sources}
+\end{center}
+\end{frame}
+
+\begin{frame}[plain]
+  \frametitle{A Latent Process Model \\ For Time Series of Attributed Graphs}
+% \framesubtitle{Change after adding edges}
+% \framesubtitle{$t^*$ = week 132 in May 2001, $m=10$}
+\onslide<1-2>{
+  \vskip-20pt
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+      \begin{figure}
+        \begin{center}
+          \includegraphics[scale=0.25]{vp-r1-shuffle-blue-green2-attributed.pdf}
+        \end{center}
+      \end{figure}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{figure}
+        \begin{center}
+          \includegraphics[scale=0.25]{triplot-coloraxis.jpg}
+        \end{center}
+      \end{figure}
+    \end{column}
+  \end{columns}
+}
+\invisible<2>{
+  \vskip-60pt
+  \begin{figure}
+    \begin{center}
+      \includegraphics[angle=-90,scale=0.25]{ts-cartoon.pdf}
+    \end{center}
+  \end{figure}
+
+  \vspace*{-0.25 in}
+  \begin{center}Lee \& Priebe (2009)\end{center}
+}
+\uncover<2>{
+  \vskip-100pt
+%  \begin{center}
+  \begin{tabular}{l | c c c c c c c}
+    \hline\hline
+    & $\beta_{T_1}$ & $\beta_{T_2}$ & $\beta_{T_3}$ & $\beta_{T_{12}}$ & $\beta_{T_{23}}$ & $\beta_{T_{31}}$ & $\beta_{T_{123}}$ \\
+    \hline
+    $1^{st}$ approx & 0.12 & 0.35 & 0.29 & 0.41 & 0.67 & 0.32 & 0.76 \\
+    $2^{nd}$ approx & 0.11 & 0.30 & 0.28 & 0.41 & 0.66 & 0.32 & 0.76 \\
+    exact & 0.09 & 0.27 & 0.29 & 0.37 & 0.60 & 0.27 & 0.73 \\
+    \hline\hline
+  \end{tabular}
+
+%  \vskip-50pt
+%  \begin{center}
+\[   \mbox{\myblue{Anomaly Detection in}} \] \vskip-20pt
+\[   \mbox{\myblue{Time Series of Attributed Graphs}} \]
+%  \end{center}
+}
+\end{frame}
+
+% #12: kronecker quote
+\begin{frame}
+  \frametitle{Kronecker Quote}
+  \vspace*{\fill}
+  \begin{center}
+    {\large ``The wealth of your practical experience \\ with sane and interesting
+      problems \\ will give to mathematics \\
+      a new direction and a new impetus.''} \\
+  \end{center}
+  \begin{changemargin}{-1cm}{+0cm}
+  $\begin{array}[http]{ccc}
+    \includegraphics[scale=0.18]{Leopold_Kronecker.pdf} &
+    \begin{minipage}[h]{19.3em}
+      \text{\small -- Leopold Kronecker to Hermann von Helmholtz --}\\
+      \vspace{7em}
+    \end{minipage} &
+      \includegraphics[scale=0.24]{hermannvonhelmhotz.pdf}
+  \end{array}$
+\end{changemargin}
+\vspace*{\fill}
+\end{frame}
+\end{document}
