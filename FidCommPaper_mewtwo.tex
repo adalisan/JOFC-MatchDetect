@@ -449,6 +449,7 @@ We start with this lemma from \cite{Raik1972}.
 \begin{lem}
 Let $z$ be a random variable. The functional $g(z;\gamma) = P\left[z \geq \gamma \right]$ is upper semi-continuous in probability with respect to $z$ . Furthermore, if $P\left[z = \gamma \right]=0$, $g(z;\gamma)$ is continuous in probability with respect to $z$. \label{lemma_1}
 \end{lem}
+
 \begin{proof}
 Suppose $z_n$ converges to $z$ in probability. Then by definition, for any  $\delta>0$ and  $\epsilon>0$, $\exists	N$ such that for all   $n>N$ 
 $$ Pr\left[\left|z_n-z\right| \geq \delta \right] \leq \epsilon.$$
@@ -469,14 +470,16 @@ Since $\epsilon$ and $\delta$ are arbitrary,
 By arguments  symmetric to  \eqref{prob_defn}-\eqref{upper_semicont} , we can show that
 
 \begin{equation}
-g_{\gamma+\delta}(z) - g(z_n;\gamma) \leq \epsilon \label{lower_semicont}
+g_(z;\gamma+\delta) - g(z_n;\gamma) \leq \epsilon \label{lower_semicont}
 \end{equation}
 
 
-In addition , assume that  $P\left[z = \gamma \right]=0$, $g(z;\gamma)$ is also right-continuous with respect to $\gamma$.
-$g(z_n;\gamma) -g(z;\gamma) \leq g(z_n;\gamma) -g_{\gamma+\delta}(z)$ and the difference can be made as small as possible. Along with \ref{lower_semicont}, this means that
+In addition , assume that  $P\left[z = \gamma \right]=0$, then $g(z;\gamma)$ is also right-continuous with respect to $\gamma$. Therefore, 
+$g(z_n;\gamma) -g(z;\gamma) \leq g(z_n;\gamma) -g(z;\gamma+\delta)$ and the difference can be made as small as possible. Along with \ref{lower_semicont}, this means that
 
- $$\liminf_{n \rightarrow \infty} ( {g(z_n;\gamma)}- g(z;\gamma) ) = 0.$$ Therefore , $\lim_{n\rightarrow \infty}g(z_n;\gamma) = g(z;\gamma)$.
+ \[ 
+\liminf_{n \rightarrow \infty} ( {g(z_n;\gamma)}- g(z;\gamma) ) = 0. 
+\] Therefore , $\lim_{n\rightarrow \infty}g(z_n;\gamma) = g(z;\gamma)$ ,i.e. $g(z;\gamma)$ is continuous in probability with respect to $z$.
 \end{proof}
 
 \begin{thm}
@@ -486,11 +489,12 @@ $Pr\left[T(w,\omega)=\gamma \right]=0$  where $\omega \in \Omega$, and $\Omega$ 
 \end{thm}
 
 
-\begin{thm}
-Let $T(w)$ be  a stochastic process indexed by $w$ in the interval (0,1). Assume  the process is continuous in probability  (stochastic continuity)   at $w_0$  i.e.
-$$ \forall a>0 \quad  \lim_{s \rightarrow w} Pr\left[\left|T(s)-T(w_0) \right| \geq a \right] \rightarrow 0 \quad(*)$$ 
+\begin{thm} \label{main_thm}
+Let $T(w)$ be  a stochastic process indexed by $w$ in the interval (0,1). Assume  the process is continuous in probability  (stochastic continuity)   at $w=w_0$,  i.e.
+\begin{equation} \forall a>0 \quad  \lim_{s \rightarrow w_0} Pr\left[\left|T(s)-T(w_0) \right| \geq a \right] = 0 
+\end{equation}
 
- $\forall w\in (0,1)$. Furthermore, assume that $Pr\left[T(w_0)=0\right]=0$.
+ $ w_0\in (0,1)$. Furthermore, assume that $Pr\left[T(w_0)=0\right]=0$.
 
 Then,
 
@@ -498,8 +502,11 @@ $Pr \left[ T(w) \geq 0\right]$ is continuous at $w_0$.
 \end{thm}
 
 \begin{proof}
- Set $z_n=T(s)$. Since $T(w)$ is continuous in probability, conditions for \ref{lemma_1} hold, i.e. as $s\rightarrow w_0$, $z_n$ converges in probability to $z=T(w_0)$. By \ref{lemma_1}, we conclude  g(z_n;\gamma) Pr \left[ T(w) \geq 0\right]$  is continuous with respect to $z_n$.
+Consider any sequence $w_n \rightarrow w_0$. Let $z_n = T(w_n)$ and  $z=T(w_0)$ and choose $\gamma=0$. Since $T(w)$ is continuous in probability at $w_0$ and $Pr\left[T(w_0)=0\right]=0$, conditions forLemma \ref{lemma_1} hold, i.e. as $w_n\rightarrow w_0$, $z_n$ converges in probability to $z=T(w_0)$. By  Lemma \ref{lemma_1}, we conclude  $g(T(w_n); 0 ) = Pr \left[ T(w_n) \geq 0\right]$ converges to $g(T(w_0);0)$. Therefore $g(T(w);0)$ is continuous with respect to $w$.
+\end{proof}
+
 \begin{comment}
+\begin{proof}
 Removing the common term from both probabilities,
 
  \hspace{-1in}
@@ -534,14 +541,23 @@ An equivalent theorem  (Theorem 2.1 in \cite{Norkin1993}) states that :  if $T(w
 \end{comment}
 
 \begin{cor}{
- $AUC(w)=P\left[T_a(w)-T_0(w) >0 \right]$ is continuous with respect to $w$.}
+ If $Pr[T_a(w)-T_0(w)=0]=0$ , and $T_a(w)$, $T_0(w)$ are continuous in probability for all $w \in (0,1)$, then $AUC(w)=Pr\left[T_a(w)-T_0(w) >0 \right]$ is continuous with respect to $w$  in the interval $(0,1)$.}
 \end{cor}
+\begin{proof}
 
-Since $AUC(w)$ is continuous with respect to $w$ in $(0,1)$, a global maximum $w^*$ exists. We do not have closed-form expressions for the null and alternative distributions of the test statistic $\tau$ (with $w$ as a parameter), so we cannot provide a rigorous proof of the uniqueness of $w^*$. However, for various data settings, simulations always resulted in \emph{unimodal}  estimates for the AUC function.
-\begin{comment}
- We will, however, argue for the unimodality of $AUC(w)$ and uniqueness of $w^*$. Consider the limits of the AUC function  as $w\rightarrow 0$ , and as $w\rightarrow 1$ . In the first case, the distribution of $T_0(w)$ and $T_A(w)$ will be increasingly similar, since commensurability errors are being mostly ignored.  As $w\rightarrow 1$, minimizing  the commensurability error becomes extremely important, and both  $T_0(w)$ and $T_A(w)$ becomes extremely peaked around $0$.When $w=1$, both $T_0(w)$ and $T_A(w)$ is 0 with probability 1.
- So at both ends of $w \in (0,1)$, $AUC(w)$ should be close to $0.5$. As $w$ goes from the endpoints towards any argmax of $AUC$, the   probability ``$T_0(w)$  is small'' increases,  while the probability that ``$T_A(w)$ is just as small'' is not very large. Assuming the probability distributions obey these trends everywhere in $ (0,1)$ , there should be a single $w$ value at which any increase in the probability ``$T_0(w)$  is small'', will be offset by the probability increase in  ``$T_A(w)$ is just as small''.(Therefore no increase the probability $P(T_A(w)>T_0(w))$.
-\end{comment}
+Let $T(w)=T_a(w)-T_0(w).$ Then Theorem \ref{main_thm} applies everywhere in the interval (0,1).
+\end{proof}
+
+The continuity of $AUC(w)$ with respect to $w$ in $(0,1)$, along with the behaviour of $AUC(w)$ in the neighborhood of $w=0$ and $w=1$ is sufficient to guarentee  that a global maximum $w^*$ exists. As we have proved the continuity of the function, let us describe the behaviour of $AUC(w)$ in these neighborhoods of the endpoints. 
+
+Consider the limits of the AUC function as $w\rightarrow 0$ , and as $w\rightarrow 1$. As $w\rightarrow 0$, the distribution of $T_0(w)$ and $T_A(w)$ will be increasingly similar, since commensurability errors are being mostly ignored.  As $w\rightarrow 1$, minimizing  the commensurability error becomes extremely important, and both  $T_0(w)$ and $T_A(w)$ becomes extremely peaked around $0$. When $w=1$, both $T_0(w)$ and $T_A(w)$ is 0 with probability 1.
+ So in the neighborhoods both endpoints of  the interval $(0,1)$, $AUC(w)$ should be close to $0.5$. Since $AUC(w)$ takes values between 0 and 1, any discontinuity at  the endpoints 
+
+
+ We do not have closed-form expressions for the null and alternative distributions of the test statistic $\tau$ (with $w$ as a parameter), so we cannot provide a rigorous proof of the uniqueness of $w^*$. However, for various data settings, simulations always resulted in \emph{unimodal}  estimates for the AUC function.
+
+ We will argue for the unimodality of $AUC(w)$ and uniqueness of $w^*$. We have already mentioned the behaviour of $AUC(w)$ in the neighborhoods of the endpoints. As $w$ goes from the endpoints towards any argmax of $AUC$, the   probability ``$T_0(w)$  is small'' increases,  while the probability that ``$T_a(w)$ is just as small'' is not very large. Assuming the probability distributions of $T_0(w)$ and $T_a(w)$ have this general behaviour everywhere in $ (0,1)$ , there should be a single $w$ value at which any infinitesimal increase in the probability ``$T_0(w)$  is small'', will be offset by the probability increase in  ``$T_A(w)$ is just as small'' (therefore resulting in no increase in the probability $P(T_A(w)>T_0(w))$.
+
 
 \begin{comment}
 First, note that  $\beta(w)$ is continuous with respect to $w$ and locally convex  with respect to embedding coordinates $\hat{y}_{.}$
@@ -577,7 +593,7 @@ $\bm{x}_{i1}$ and $\bm{x}_{i2}$ is stochastically smaller than $\bm{x}_{i1}$ and
     \begin{figure}
 	\begin{center}
     \includegraphics[scale=0.55]{MVN_alpha_r_multiple_sancar.pdf}
-    \caption{For the  Gaussian setting (Section \ref{subsec:GaussianSet}), the $\bm{\alpha_i},$ are denoted by black points and the $\bm{x}_{ik}$ are denoted by red and blue points respectively.}
+    \caption{For the  Gaussian setting (Section \ref{subsec:GaussianSet}), the objects can be represented by $\bm{\alpha_i}$  which are two-dimensional random vectors denoted by black points and distributed as $\mathcal{N}(\bm{0},I_p)$. The dashed lines show the probability contours for each  $\bm{\alpha_i}$. Since  the measurements in the two conditions and the original object   are in the same space (\mathbb{R}^2), $\bm{\alpha_i}$ can be shown along with the measurements the $\bm{x}_{ik}$ which are denoted by red (k=1) and blue (k=2) points respectively.}
 \label{fig:Fig1}
 	\end{center}
   \end{figure}
@@ -587,7 +603,7 @@ $\bm{x}_{i1}$ and $\bm{x}_{i2}$ is stochastically smaller than $\bm{x}_{i1}$ and
 %the test points into  the existing configuration so as to be as consistent as possible with these dissimilarities (the distances %between points are as close as possible to the dissimilarities as measured by the criterion function). 
 \subsection{Simulation\label{subsec:sim}}
 
-We generate the training data of matched sets of measurements (instantiation of $\mathcal{T}$) according to  the Gaussian setting. Dissimilarity representations are computed from pairwise Euclidean distances of these measurements. We also generate a set of matched pairs and unmatched pairs of measurements for testing with the same distribution. Following the out-of-sample embedding of the dissimilarities test pairs 
+We generate the training data of matched sets of measurements (instantiation of $\mathcal{T}$) according to  the Gaussian setting. Dissimilarity representations are computed from pairwise Euclidean distances of these measurements. We also generate a set of matched pairs and unmatched pairs of measurements for testing with the same distribution. Following the out-of-sample embedding of the test dissimilarities 
 %(computed via by one of the three P$\circ $M, CCA and JOFC approaches), 
 we compute test statistics  for matched and unmatched pairs. This allows us to compute the empirical power  at different $\alpha$ (Type I error rate) values and the empirical AUC measure.
 
@@ -633,7 +649,8 @@ we compute test statistics  for matched and unmatched pairs. This allows us to c
 	
 
 
-The signal  and noise dimensions ($p$ and $q$) were chosen as 5 and 10, respectively.  For $nmc=150$ Monte Carlo replicates,  $n=150$ matched training pairs and $m=150$ matched and unmatched test pairs (generated according to the Gaussian setting) were generated. Using the resulting test statistic values for matched and unmatched test pairs, the AUC measure was computed for different $w$ values along with the average of the power($\beta$) values at  different $\alpha$s. The plot in Figure \ref{fig:MVN-c0-power-alpha} shows the  $\beta$-$\alpha$ curves for different values of  $w$. In Figure
+%The signal  and noise dimensions ($p$ and $q$) were chosen as 5 and 10, respectively.
+ The measurements for the Gaussian setting are vectors in p-dimensional Euclidean space (p=5). For $nmc=150$ Monte Carlo replicates,  $n=150$ matched training pairs and $m=150$ matched and unmatched test pairs (generated according to the Gaussian setting) were generated. Using the resulting test statistic values for matched and unmatched test pairs, the AUC measure was computed for different $w$ values along with the average of the power($\beta$) values at  different $\alpha$s. The plot in Figure \ref{fig:MVN-c0-power-alpha} shows the  $\beta$-$\alpha$ curves for different values of  $w$. In Figure
  \ref{fig:MVN-c0-power-w},  $\beta(w)$ is plotted against $w$ for fixed values of $\alpha$.  
 The average AUC measure for these $nmc=150$ MC replicates are  in  Table \ref{tab:AUCW}.
 
@@ -651,7 +668,7 @@ AUC & 0.811 & 0.822 & 0.834 & 0.886 & 0.896 & 0.902 & 0.902 & 0.898 & 0.849 & 0.
 \end{table}
 
 
- The test statistic that used a particular $w$ value  which  had the highest $AUC$ measure  is not the same for each MC replicate. The number of  MC replicates  for  which a particular $w$ value led to the highest $AUC$ is shown in  the histogram in 	\ref{fig:ArgMaxWAUCW}.
+  The $w$ value  which results in the highest $AUC$ measure  is different for each MC replicate.  The number of  MC replicates  for  which a particular $w$ value led to the highest $AUC$ is shown in  the bar chart in 	\ref{fig:ArgMaxWAUCW}. Only the non-zero counts are  shown in \ref{fig:ArgMaxWAUCW}. The estimate $\hat{w}^* $ can be chosen as  as 0.925, as it is the mode of w^* estimates from each MC replicate. We should note that the AUC function is very flat in the interval (0.85,0.99), and it is possible that the difference between the largest value of  $AUC$ measure and the next highest is very small.
 \begin{figure}[h]
 	\centering
 	
@@ -705,7 +722,7 @@ Note that in Figure \ref{fig:MVN-c001-power-w} for $\alpha=0.05$, $\beta_{\alpha
 
 Note that   the estimate of the optimal $w^{*}$  has  an AUC measure higher than  that of $w$=0.5 (uniform weighting). This finding was confirmed using data generated 
 %in different settings, such as  the Dirichlet setting (introduced in \cite{JOFC}) and
-according to  the Gaussian setting with different set of parameters.
+according to  the Gaussian setting with different sets of parameters.
 
 \begin{comment}
 
