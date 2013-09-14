@@ -343,7 +343,7 @@ if (par.compute){
    
  } else {
    
-   JOFC.wiki.res <- foreach(i=1:nmc, .combine="c",.export=c("bitflip_MC_rep","run.experiment.JOFC")) %dopar% {
+   JOFC.wiki.res <- foreach(i=1:nmc, .combine="c") %dopar% {
      
      mc.rep.result<-run.wiki.JOFC.sim.mc.replicate(m.i=i, N = N, test.samp.size = test.samp.size,
                                                    w.val.len = w.val.len, m = m, TE = TE, TF = TF, n = n,
