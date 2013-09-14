@@ -330,8 +330,8 @@ if(!par.compute){
 }  
 
 
-
 if (par.compute){
+ if (.Platform$OS.type == "windows"){
   
   JOFC.wiki.res<-parLapply(cl=cl,1:nmc, run.wiki.JOFC.sim.mc.replicate, N = N, test.samp.size = test.samp.size,
                            w.val.len = w.val.len, m = m, Diss.E = GE, Diss.F = GF, n = n, d=d,
@@ -340,17 +340,34 @@ if (par.compute){
                            assume.matched.for.oos = assume.matched.for.oos, oos.use.imputed = oos.use.imputed,
                            w.vals = w.vals, size = size, verbose = verbose,  level.mcnemar = level.mcnemar			
   )
-  
-  
-}  else {	
-  JOFC.wiki.res<-lapply(1:nmc, run.wiki.JOFC.sim.mc.replicate, N = N, test.samp.size = test.samp.size,
+   
+ } else {
+   
+   
+   JOFC.wiki.res <- foreach(i=1:nmc, .combine="c",.export=c("bitflip_MC_rep","run.experiment.JOFC")) %dopar% {
+     
+     mc.rep.result<-run.wiki.JOFC.sim.mc.replicate(m.i=i, N = N, test.samp.size = test.samp.size,
+                                                   w.val.len = w.val.len, m = m, TE = TE, TF = TF, n = n,
+                                                   model = "gaussian", oos = oos, Wchoice = Wchoice,
+                                                   separability.entries.w = separability.entries.w, wt.equalize = wt.equalize,
+                                                   assume.matched.for.oos = assume.matched.for.oos, oos.use.imputed = oos.use.imputed,
+                                                   w.vals = w.vals, size = size, verbose = verbose,  level.mcnemar = level.mcnemar			
+     )
+     list(mc.rep.result)
+   }	
+   
+   
+   
+ } else if (!par.compute) {	
+  JOFC.wiki.res<- lapply(1:nmc, run.wiki.JOFC.sim.mc.replicate, N = N, test.samp.size = test.samp.size,
                         w.val.len = w.val.len, m = m, Diss.E = Diss.E, Diss.F = Diss.F, n = n, d=d,
                         model = "gaussian", oos = oos, Wchoice = Wchoice,
                         separability.entries.w = separability.entries.w, wt.equalize = wt.equalize,
                         assume.matched.for.oos = assume.matched.for.oos, oos.use.imputed = oos.use.imputed,
                         w.vals = w.vals, size = size, verbose = verbose,  level.mcnemar = level.mcnemar			
   )
-}
+} 
+  
 
 
 
@@ -364,28 +381,6 @@ for (mc.i in 1:nmc){
 
 
 
-#   
-#   
-# 	JOFC.wiki.res <- foreach(i=1:nmc, .combine="c",.export=c("bitflip_MC_rep","run.experiment.JOFC")) %dopar% {
-# 	  
-# 	  
-# 	  
-# 	  
-# 	  
-# 	  
-# 	  mc.rep.result<-run.wiki.JOFC.sim.mc.replicate(m.i=i, N = N, test.samp.size = test.samp.size,
-# 	                                                w.val.len = w.val.len, m = m, TE = TE, TF = TF, n = n,
-# 	                                                model = "gaussian", oos = oos, Wchoice = Wchoice,
-# 	                                                separability.entries.w = separability.entries.w, wt.equalize = wt.equalize,
-# 	                                                assume.matched.for.oos = assume.matched.for.oos, oos.use.imputed = oos.use.imputed,
-# 	                                                w.vals = w.vals, size = size, verbose = verbose,  level.mcnemar = level.mcnemar			
-# 	  )
-# 	  list(mc.rep.result)
-# 	}	
-# 	
-# 	for (mc.i in 1:nmc){
-# 	  power.nmc[,mc.i,]<- JOFC.wiki.res[[mc.i]]$power.mc
-# 	}   
 
 save.image(file= paste("JOFC_Wiki_Exp_HypTest",format(Sys.time(), "%b %d %H:%M:%S"),".RData"))
 
