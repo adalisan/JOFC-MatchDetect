@@ -314,9 +314,10 @@ if(!par.compute){
   registerDoMC()
   
 } else if (use.snow && require("doSNOW")) {
-  cl <- snow::makeCluster(num.cores, type = "SOCK")
-  on.exit(snow::stopCluster(cl), add = TRUE)
+  cl <- snow::makeCluster(num.cores,type= "SOCK")
   registerDoSNOW(cl)
+  on.exit(snow::stopCluster(cl), add = TRUE)
+
 } else if (                     # doSMP is buggy
   require("doSMP")&& !use.snow) {
   workers <- startWorkers(num.cores,FORCE=TRUE) # My computer has 4 cores
