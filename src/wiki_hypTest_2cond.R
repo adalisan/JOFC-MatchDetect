@@ -199,179 +199,111 @@
 #
 #}
 
-print(getwd())
-load("./data/wiki.RData")
-
-load("./data/wiki_adj.RData")
-
-
-source("./lib/graph_embedding_fn.R")
-
-
-GE_dice <- C_dice_weighted(en_a)
-GF_dice <- C_dice_weighted(fr_a)
-
-
-N <- 1382
-
-model= "gaussian"
-w.vals = c(0.1,0.2,0.4,0.5,0.8,0.9,0.925,0.95,0.99,0.999)
-w.vals <- c(0.1,0.2,0.4,0.5,0.8,0.9)
-w.val.len <- length(w.vals)
-#nmc<-12
-nmc <- 1 
-
-
-d<-6
-size <- seq(0, 1, 0.01)
-#oos.use.imputed<-FALSE
-oos.use.imputed<-TRUE
-level.mcnemar <- 0.02
-power.nmc <-array(0,dim=c(w.val.len,nmc,length(size)))
-test.samp.size <- 100
-m<- test.samp.size
-n<- N-(2*test.samp.size)
-
-Wchoice<-"avg"
-size <- seq(0, 1, 0.01)
-
-#originally was false
-separability.entries.w<- TRUE
-
-wt.equalize<-FALSE
-assume.matched.for.oos<-TRUE
-oos.use.imputed<-FALSE
-oos <- TRUE
-verbose <-TRUE
-pre.scaling<-FALSE
-
-
-#prescaling
-if (pre.scaling) {
-	s <- lm(as.vector(TE) ~ as.vector(TF) + 0)$coefficients
-} else {
-	s <- 1
-}
-
-TF<-TF*s
-
-
+source("./src/wiki_hypTest_2cond_Params.R")
 
 #par.compute<-TRUE
 par.compute<-FALSE
 
-run.wiki.JOFC.sim.mc.replicate <- function(m.i,N, test.samp.size, w.val.len, m, TE, TF,
-		n,d, model, oos, Wchoice, separability.entries.w, wt.equalize,
-		assume.matched.for.oos, oos.use.imputed, w.vals, size, verbose,  level.mcnemar) {
-    source("./lib/simulation_math_util_fn.R")
-    source("./lib/smacofM.R")
-    source("./lib/oosIM.R")
-
-
-
-
-
-
-
-	power.mc <-array(0,dim=c(w.val.len,length(size)))
-	left.out.samp<- sample(1:N,2*test.samp.size)
-	test.matched<- left.out.samp[1:test.samp.size] 
-	test.unmatched<- left.out.samp[test.samp.size+(1:test.samp.size)] 
-	test.matched   <- sort(test.matched)
-	test.unmatched <- sort(test.unmatched)
-	
-	#sample.for.unmatched<- sample(1:n,test.samp.size)
-	orig.indices<-1:N
-	#sample.for.unmatched.orig.index<-orig.indices[-left.out.samp][sample.for.unmatched]
-	
-	T0 <- matrix(0,w.val.len,m)   #Test statistics for JOFC under null
-	TA <- matrix(0,w.val.len,m)    #Test statistics for JOFC under alternative
-	
-	D1<-TE[-left.out.samp,-left.out.samp]
-	D2<-TF[-left.out.samp,-left.out.samp]
-	train.test.0<-orig.indices[-left.out.samp]
-	train.test.0<-c(train.test.0,test.matched)
-	train.test.A<-orig.indices[-left.out.samp]
-	train.test.A<-c(train.test.A,test.unmatched)
-	
-	D10A<- TE[train.test.0]
-	D20<-  TF[train.test.0]
-	
-	D2A<-  TF[train.test.A]
-	
-	D.oos.1      <- TE[test.matched,test.matched]
-	D.oos.2.null <- TF[test.matched,test.matched]
-	D.oos.2.alt  <- TF[test.unmatched,test.unmatched]
-	
-	
-	L.in.oos.0 <- omnibusM.inoos(TE[-left.out.samp,][,test.matched],TF[-left.out.samp,][,test.matched],matrix(0,n,m))
-	L.in.oos.A <- omnibusM.inoos(TE[-left.out.samp,][,test.matched],TF[-left.out.samp,][,test.unmatched],matrix(0,n,m))
-	
-	ideal.omnibus.0 <- omnibusM(omnibusM (D1,D2,matrix(0,n,n)),omnibusM(D.oos.1,D.oos.2.null,matrix(0,m,m)),L.in.oos.0)
-	ideal.omnibus.A <- omnibusM(omnibusM (D1,D2,matrix(0,n,n)),omnibusM(D.oos.1,D.oos.2.alt,matrix(0,m,m)),L.in.oos.A)
-	
-	
-	print(str(T0))
-	print(str(TA))
-	
-	print(str(D1))
-	print(str(D2))
-	print(str(D10A))
-	print(str(D20))
-	
-	
-	power.w.star<- 0
-	print("starting JOFC embedding ")
-	
-	
-
-	JOFC.results <- run.jofc(
-			D1, D2, D10A,D20,D2A,
-			D.oos.1,
-			D.oos.2.null ,
-			D.oos.2.alt ,
-			
-			L.in.oos.0 ,
-			L.in.oos.A,
-			
-			n,m,
-			
-			d,
-			model,oos,Wchoice,separability.entries.w,wt.equalize,
-			assume.matched.for.oos,oos.use.imputed,
-			pom.config=NULL,
-			w.vals,
-			size,
-			verbose=verbose) 
-	
-	
-	if (verbose) print("JOFC test statistic complete \n")
-	
-	T0 <- JOFC.results$T0 
-	TA <- JOFC.results$TA 
-	for (l in 1:w.val.len){
-		
-		w.val.l <- w.vals[l]					
-		
-		power.l <- get_power(T0[l,],TA[l,],size)
-		power.mc[l,]<-power.l
-		power.mcnemar.l <- get_power(T0[l,],TA[l,],level.mcnemar)
-		if (power.mcnemar.l>power.w.star){
-			rival.w <- w.vals[l]
-			power.w.star <- power.mcnemar.l
-			w.val.rival.idx <- l
-		}
-	}
-	return(list(T0=T0,TA=TA,power.mc=power.mc))
+run.wiki.JOFC.sim.mc.replicate <- function(m.i,N, test.samp.size, w.val.len, m, Diss.E, Diss.F
+                                           , n, d, model, oos, Wchoice, separability.entries.w
+                                           , wt.equalize, assume.matched.for.oos
+                                           , oos.use.imputed, w.vals, size, verbose
+                                           , level.mcnemar) {
+  source("./lib/simulation_math_util_fn.R")
+  source("./lib/smacofM.R")
+  source("./lib/oosIM.R")
+  
+  
+  power.mc <-array(0,dim=c(w.val.len,length(size)))
+  left.out.samp<- sample(1:N,2*test.samp.size)
+  test.matched<- left.out.samp[1:test.samp.size] 
+  test.unmatched<- left.out.samp[test.samp.size+(1:test.samp.size)] 
+  test.matched   <- sort(test.matched)
+  test.unmatched <- sort(test.unmatched)
+  
+  #sample.for.unmatched<- sample(1:n,test.samp.size)
+  orig.indices<-1:N
+  #sample.for.unmatched.orig.index<-orig.indices[-left.out.samp][sample.for.unmatched]
+  
+  T0 <- matrix(0,w.val.len,m)   #Test statistics for JOFC under null
+  TA <- matrix(0,w.val.len,m)    #Test statistics for JOFC under alternative
+  
+  D1<-Diss.E[-left.out.samp,-left.out.samp]
+  D2<-Diss.F[-left.out.samp,-left.out.samp]
+  train.test.0<-orig.indices[-left.out.samp]
+  train.test.0<-c(train.test.0,test.matched)
+  train.test.A<-orig.indices[-left.out.samp]
+  train.test.A<-c(train.test.A,test.unmatched)
+  
+  D10A<- Diss.E[train.test.0]
+  D20<-  Diss.F[train.test.0]
+  
+  D2A<-  Diss.F[train.test.A]
+  
+  D.oos.1      <- Diss.E[test.matched,test.matched]
+  D.oos.2.null <- Diss.F[test.matched,test.matched]
+  D.oos.2.alt  <- Diss.F[test.unmatched,test.unmatched]
+  
+  
+  L.in.oos.0 <- omnibusM.inoos(Diss.E[-left.out.samp,][,test.matched],Diss.F[-left.out.samp,][,test.matched],matrix(0,n,m))
+  L.in.oos.A <- omnibusM.inoos(Diss.E[-left.out.samp,][,test.matched],Diss.F[-left.out.samp,][,test.unmatched],matrix(0,n,m))
+  
+  ideal.omnibus.0 <- omnibusM(omnibusM (D1,D2,matrix(0,n,n)),omnibusM(D.oos.1,D.oos.2.null,matrix(0,m,m)),L.in.oos.0)
+  ideal.omnibus.A <- omnibusM(omnibusM (D1,D2,matrix(0,n,n)),omnibusM(D.oos.1,D.oos.2.alt,matrix(0,m,m)),L.in.oos.A)
+  
+  
+  print(str(T0))
+  print(str(TA))
+  
+  print(str(D1))
+  print(str(D2))
+  print(str(D10A))
+  print(str(D20))
+  
+  
+  power.w.star<- 0
+  print("starting JOFC embedding ")
+  
+  
+  
+  JOFC.results <- run.jofc(	D1, D2, D10A,D20,D2A,
+                            D.oos.1, D.oos.2.null ,		D.oos.2.alt ,
+                            
+                            L.in.oos.0 ,	L.in.oos.A, 	n,m,	d,
+                            model,oos,Wchoice,separability.entries.w,wt.equalize,
+                            assume.matched.for.oos,oos.use.imputed,
+                            pom.config=NULL,
+                            w.vals, 	size,	verbose=verbose) 
+  
+  
+  if (verbose) print("JOFC test statistic complete \n")
+  
+  T0 <- JOFC.results$T0 
+  TA <- JOFC.results$TA 
+  for (l in 1:w.val.len){
+    
+    w.val.l <- w.vals[l]					
+    
+    power.l <- get_power(T0[l,],TA[l,],size)
+    power.mc[l,]<-power.l
+    power.mcnemar.l <- get_power(T0[l,],TA[l,],level.mcnemar)
+    if (power.mcnemar.l>power.w.star){
+      rival.w <- w.vals[l]
+      power.w.star <- power.mcnemar.l
+      w.val.rival.idx <- l
+    }
+  }
+  return(list(T0=T0,TA=TA,power.mc=power.mc))
 }
 
 
 
 require(parallel)
+require(foreach)
 
 num.cores<-parallel::detectCores()
 iter_per_core <- ceiling(nmc/num.cores)
-	
+
 cl <- NULL
 use.snow <- TRUE
 
@@ -383,8 +315,9 @@ if(!par.compute){
 } else if ( !use.snow && .Platform$OS.type != "windows" && require("multicore") ) {
   require(doMC)
   registerDoMC()
-} else if (FALSE &&                     # doSMP is buggy
+} else if (                     # doSMP is buggy
   require("doSMP")&& !use.snow) {
+  
   workers <- startWorkers(num.cores,FORCE=TRUE) # My computer has 4 cores
   on.exit(stopWorkers(workers), add = TRUE)
   registerDoSMP(workers)
@@ -399,38 +332,38 @@ if(!par.compute){
 
 
 if (par.compute){
-	
-	JOFC.wiki.res<-parLapply(cl=cl,1:nmc, run.wiki.JOFC.sim.mc.replicate, N = N, test.samp.size = test.samp.size,
-					w.val.len = w.val.len, m = m, TE = GE, TF = GF, n = n, d=d,
-					model = "gaussian", oos = oos, Wchoice = Wchoice,
-					separability.entries.w = separability.entries.w, wt.equalize = wt.equalize,
-					assume.matched.for.oos = assume.matched.for.oos, oos.use.imputed = oos.use.imputed,
-					w.vals = w.vals, size = size, verbose = verbose,  level.mcnemar = level.mcnemar			
-			)
-	
-			
-		}  else {	
-			JOFC.wiki.res<-lapply(1:nmc, run.wiki.JOFC.sim.mc.replicate, N = N, test.samp.size = test.samp.size,
-					w.val.len = w.val.len, m = m, TE = GE, TF = GF, n = n, d=d,
-					model = "gaussian", oos = oos, Wchoice = Wchoice,
-					separability.entries.w = separability.entries.w, wt.equalize = wt.equalize,
-					assume.matched.for.oos = assume.matched.for.oos, oos.use.imputed = oos.use.imputed,
-					w.vals = w.vals, size = size, verbose = verbose,  level.mcnemar = level.mcnemar			
-			)
-		}
-			
-			
-			
-			
-	for (mc.i in 1:nmc){
-		power.nmc[,mc.i,]<- JOFC.wiki.res[[mc.i]]$power.mc
-		
-	}
-	
+  
+  JOFC.wiki.res<-parLapply(cl=cl,1:nmc, run.wiki.JOFC.sim.mc.replicate, N = N, test.samp.size = test.samp.size,
+                           w.val.len = w.val.len, m = m, Diss.E = GE, Diss.F = GF, n = n, d=d,
+                           model = "gaussian", oos = oos, Wchoice = Wchoice,
+                           separability.entries.w = separability.entries.w, wt.equalize = wt.equalize,
+                           assume.matched.for.oos = assume.matched.for.oos, oos.use.imputed = oos.use.imputed,
+                           w.vals = w.vals, size = size, verbose = verbose,  level.mcnemar = level.mcnemar			
+  )
+  
+  
+}  else {	
+  JOFC.wiki.res<-lapply(1:nmc, run.wiki.JOFC.sim.mc.replicate, N = N, test.samp.size = test.samp.size,
+                        w.val.len = w.val.len, m = m, Diss.E = Diss.E, Diss.F = Diss.F, n = n, d=d,
+                        model = "gaussian", oos = oos, Wchoice = Wchoice,
+                        separability.entries.w = separability.entries.w, wt.equalize = wt.equalize,
+                        assume.matched.for.oos = assume.matched.for.oos, oos.use.imputed = oos.use.imputed,
+                        w.vals = w.vals, size = size, verbose = verbose,  level.mcnemar = level.mcnemar			
+  )
+}
 
+
+
+
+for (mc.i in 1:nmc){
+  power.nmc[,mc.i,]<- JOFC.wiki.res[[mc.i]]$power.mc
   
-  
-  
+}
+
+
+
+
+
 #   
 #   
 # 	JOFC.wiki.res <- foreach(i=1:nmc, .combine="c",.export=c("bitflip_MC_rep","run.experiment.JOFC")) %dopar% {
@@ -453,14 +386,14 @@ if (par.compute){
 # 	for (mc.i in 1:nmc){
 # 	  power.nmc[,mc.i,]<- JOFC.wiki.res[[mc.i]]$power.mc
 # 	}   
-	
+
 save.image(file= paste("JOFC_Wiki_Exp_HypTest",format(Sys.time(), "%b %d %H:%M:%S"),".RData"))
 
 
 
 colors.vec <- c("red","green","gold4","purple","aquamarine",
-		"darkblue","azure3","salmon","rosybrown","magenta","orange",
-		"darkorange4")
+                "darkblue","azure3","salmon","rosybrown","magenta","orange",
+                "darkorange4")
 
 
 colors.vec.len<-length(colors.vec)
@@ -471,13 +404,13 @@ par(lty=1)
 
 lty.i.vec<-c()
 for (i in 1:w.val.len){
-	lty.i <- 1+((i-1)%%10)
-	
-	lty.i.vec <- c(lty.i.vec,lty.i)
-	#par(lty=lty.i)
-	plot.ROC.with.CI(power.nmc[i,,],plot.title="",plot.col = colors.vec[i],
-			conf.int=FALSE,add=(i>1),ylim=1)
-	
+  lty.i <- 1+((i-1)%%10)
+  
+  lty.i.vec <- c(lty.i.vec,lty.i)
+  #par(lty=lty.i)
+  plot.ROC.with.CI(power.nmc[i,,],plot.title="",plot.col = colors.vec[i],
+                   conf.int=FALSE,add=(i>1),ylim=1)
+  
 }
 
 dev.copy2pdf(file= paste("JOFC_Wiki_Exp_HypTest",format(Sys.time(), "%b %d %H:%M:%S"),".pdf"))
@@ -486,7 +419,7 @@ dev.copy(device=png,file= paste("JOFC_Wiki_Exp_HypTest",format(Sys.time(), "%b %
 legend.txt <- w.vals
 
 legend("bottomright",legend=legend.txt,
-		col=colors.vec,lty=1)
+       col=colors.vec,lty=1)
 #							plot.title<-paste("TA",vary.param,unlist(params.list[[param.index]][vary.param]))
 #							title(plot.title)
 
