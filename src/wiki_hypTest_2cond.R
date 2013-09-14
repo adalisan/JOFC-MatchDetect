@@ -302,7 +302,7 @@ num.cores<-parallel::detectCores()
 iter_per_core <- ceiling(nmc/num.cores)
 
 cl <- NULL
-use.snow <- TRUE
+use.snow<-TRUE
 
 
 
@@ -312,16 +312,18 @@ if(!par.compute){
 } else if ( !use.snow && .Platform$OS.type != "windows" && require("multicore") ) {
   require(doMC)
   registerDoMC()
-} else if (                     # doSMP is buggy
-  require("doSMP")&& !use.snow) {
   
-  workers <- startWorkers(num.cores,FORCE=TRUE) # My computer has 4 cores
-  on.exit(stopWorkers(workers), add = TRUE)
-  registerDoSMP(workers)
-} else if (require("doSNOW")) {
+} else if (use.snow && require("doSNOW")) {
   cl <- snow::makeCluster(num.cores, type = "SOCK")
   on.exit(snow::stopCluster(cl), add = TRUE)
   registerDoSNOW(cl)
+} else if (                     # doSMP is buggy
+  require("doSMP")&& !use.snow) {
+  workers <- startWorkers(num.cores,FORCE=TRUE) # My computer has 4 cores
+
+  registerDoSMP(workers)
+  on.exit(stopWorkers(workers), add = TRUE)
+
 } else {
   registerDoSEQ()
 }  
