@@ -343,7 +343,6 @@ if (par.compute){
    
  } else {
    
-   
    JOFC.wiki.res <- foreach(i=1:nmc, .combine="c",.export=c("bitflip_MC_rep","run.experiment.JOFC")) %dopar% {
      
      mc.rep.result<-run.wiki.JOFC.sim.mc.replicate(m.i=i, N = N, test.samp.size = test.samp.size,
@@ -355,10 +354,9 @@ if (par.compute){
      )
      list(mc.rep.result)
    }	
-   
-   
-   
- } else if (!par.compute) {	
+  
+ }
+ } else {	
   JOFC.wiki.res<- lapply(1:nmc, run.wiki.JOFC.sim.mc.replicate, N = N, test.samp.size = test.samp.size,
                         w.val.len = w.val.len, m = m, Diss.E = Diss.E, Diss.F = Diss.F, n = n, d=d,
                         model = "gaussian", oos = oos, Wchoice = Wchoice,
