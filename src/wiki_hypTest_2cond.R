@@ -334,7 +334,7 @@ if (par.compute){
  if (.Platform$OS.type == "windows"){
   
   JOFC.wiki.res<-parLapply(cl=cl,1:nmc, run.wiki.JOFC.sim.mc.replicate, N = N, test.samp.size = test.samp.size,
-                           w.val.len = w.val.len, m = m, Diss.E = GE, Diss.F = GF, n = n, d=d,
+                           w.val.len = w.val.len, m = m, Diss.E = Diss.E, Diss.F = Diss.F, n = n, d=d,
                            model = "gaussian", oos = oos, Wchoice = Wchoice,
                            separability.entries.w = separability.entries.w, wt.equalize = wt.equalize,
                            assume.matched.for.oos = assume.matched.for.oos, oos.use.imputed = oos.use.imputed,
@@ -343,11 +343,10 @@ if (par.compute){
    
  } else {
    
-   JOFC.wiki.res <- foreach(i=1:nmc, .combine="c",.export=c("bitflip_MC_rep","run.experiment.JOFC")) %dopar% {
+   JOFC.wiki.res <- foreach(i=1:nmc, .combine="c") %dopar% {
      
      mc.rep.result<-run.wiki.JOFC.sim.mc.replicate(m.i=i, N = N, test.samp.size = test.samp.size,
-                                                   w.val.len = w.val.len, m = m, TE = TE, TF = TF, n = n,
-                                                   model = "gaussian", oos = oos, Wchoice = Wchoice,
+                                                   w.val.len = w.val.len, m = m,Diss.E = Diss.E, Diss.F = Diss.F, n = n, d=d,                  model = "gaussian", oos = oos, Wchoice = Wchoice,
                                                    separability.entries.w = separability.entries.w, wt.equalize = wt.equalize,
                                                    assume.matched.for.oos = assume.matched.for.oos, oos.use.imputed = oos.use.imputed,
                                                    w.vals = w.vals, size = size, verbose = verbose,  level.mcnemar = level.mcnemar			
