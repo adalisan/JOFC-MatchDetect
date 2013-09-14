@@ -1,6 +1,6 @@
 print(getwd())
 
-debug.mode <- TRUE
+debug.mode <- FALSE
 
 source("./lib/graph_embedding_fn.R")
 
@@ -40,12 +40,16 @@ if (use.text.diss){
 w.vals = c(0.1,0.2,0.4,0.5,0.8,0.9,0.925,0.95,0.99,0.999)
 nmc<-12
 test.samp.size <- 300
+
+par.compute <- TRUE
+
 if (debug.mode){
   nmc <- 1 
   w.vals <- c(0.1,0.2,0.4,0.5,0.8,0.9)
   Diss.E<- Diss.E[1:550,1:550]
   Diss.F<- Diss.F[1:550,1:550]
   test.samp.size <- 100
+par.compute<- FALSE
 }
 w.val.len <- length(w.vals)
 
@@ -88,3 +92,4 @@ if (pre.scaling) {
 }
 
 Diss.F<-Diss.F*s
+

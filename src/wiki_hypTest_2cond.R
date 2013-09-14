@@ -201,9 +201,6 @@
 
 source("./src/wiki_hypTest_2cond_Params.R")
 
-#par.compute<-TRUE
-par.compute<-FALSE
-
 run.wiki.JOFC.sim.mc.replicate <- function(m.i,N, test.samp.size, w.val.len, m, Diss.E, Diss.F
                                            , n, d, model, oos, Wchoice, separability.entries.w
                                            , wt.equalize, assume.matched.for.oos
