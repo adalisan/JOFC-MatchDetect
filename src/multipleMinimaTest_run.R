@@ -3,7 +3,7 @@
 # Create point configuration
 #
 
-
+library(ggplot2)
 n<-7
 X<-matrix(0,n,2)
 X[,1]<-c(0,1,1,0,0,0,0.5)#1.01)
@@ -56,14 +56,18 @@ w.vals.sp<-w.vals[c(1,13,14,15,21,26:31,35,36)]
 grid.seq.x<-seq(-0.5,1.5,0.1)
 grid.seq.y<-seq(-0.2,1.6,0.1)
 
+x.grid.len <- length(grid.seq.x)
+y.grid.len <- length(grid.seq.y)
+grid.pts.count<- x.grid.len *y.grid.len 
+
 #
 # Define empty arrays for results
 #
 final.close.to.init.w<-rep(0, length(w.vals))
 
 dir.deriv<-array(0,dim=c(length(w.vals),length(grid.seq.x),length(grid.seq.y),2*n))
-hessian.at.pt<-array(list(c(1,1,2,1)),dim=c(length(w.vals),length(grid.seq.x),length(grid.seq.y)))
-sign.hessian.at.pt<-array(0,dim=c(length(w.vals),length(grid.seq.x),length(grid.seq.y)))
+hessian.at.pt<-array(list(c(1,1,2,1)),dim=c(length(w.vals),x.grid.len,y.grid.len))
+sign.hessian.at.pt<-array(0,dim=c(length(w.vals),x.grid.len,y.grid.len))
 stress.at.loc.w <-sign.hessian.at.pt 
 
 min.config.stress.1.w<- rep(0, length(w.vals))
@@ -77,16 +81,16 @@ far.to.init.X6.for.w   <- list()
 
 
 
-final.coords.x.5.w<-array(0,dim=c(length(w.vals),length(grid.seq.x),length(grid.seq.y)))
-final.coords.y.5.w<-array(0,dim=c(length(w.vals),length(grid.seq.x),length(grid.seq.y)))
-final.coords.x.6.w<-array(0,dim=c(length(w.vals),length(grid.seq.x),length(grid.seq.y)))
-final.coords.y.6.w<-array(0,dim=c(length(w.vals),length(grid.seq.x),length(grid.seq.y)))
-
+final.coords.x.5.w<-array(0,dim=c(length(w.vals),x.grid.len,y.grid.len))
+final.coords.y.5.w<-array(0,dim=c(length(w.vals),x.grid.len,y.grid.len))
+final.coords.x.6.w<-array(0,dim=c(length(w.vals),x.grid.len,y.grid.len))
+final.coords.y.6.w<-array(0,dim=c(length(w.vals),x.grid.len,y.grid.len))
+config.points.agg<-data.frame(x=numeric(0),y=numeric(0),pt.name=character(0),w=numeric(0))
 
 
 for (w.i in 1:length(w.vals)){
   
-  stress.at.loc<-array(0,dim=c(length(grid.seq.x),length(grid.seq.y)))
+  stress.at.loc<-array(0,dim=c(x.grid.len,y.grid.len))
   
   #Set up weight vector
   w <- w.vals[w.i]
@@ -140,23 +144,23 @@ for (w.i in 1:length(w.vals)){
   
   
   
-  grid.resp<-array(0,dim=c(length(grid.seq.x),length(grid.seq.y)))
-  grid.coords<-array(0,dim=c(length(grid.seq.x),length(grid.seq.y)))
+  grid.resp<-array(0,dim=c(x.grid.len,y.grid.len))
+  grid.coords<-array(0,dim=c(x.grid.len,y.grid.len))
   
   
   mesh.grid.coords<-meshgrid(grid.seq.x,grid.seq.y)
   
   
-  final.coords.x.5<-array(0,dim=c(length(grid.seq.x),length(grid.seq.y)))
-  final.coords.y.5<-array(0,dim=c(length(grid.seq.x),length(grid.seq.y)))
-  final.coords.x.6<-array(0,dim=c(length(grid.seq.x),length(grid.seq.y)))
-  final.coords.y.6<-array(0,dim=c(length(grid.seq.x),length(grid.seq.y)))
+  final.coords.x.5<-array(0,dim=c(x.grid.len,y.grid.len))
+  final.coords.y.5<-array(0,dim=c(x.grid.len,y.grid.len))
+  final.coords.x.6<-array(0,dim=c(x.grid.len,y.grid.len))
+  final.coords.y.6<-array(0,dim=c(x.grid.len,y.grid.len))
   min.config.1<-matrix(0,n,2)
   min.config.2<-matrix(0,n,2)
   
-  for (j in 1:length(grid.seq.y)){
+  for (j in 1:y.grid.len){
     
-    for (i in 1:length(grid.seq.x)){
+    for (i in 1:x.grid.len){
       init.config <- X
       
       i.x<-grid.seq.x[i]
@@ -179,7 +183,7 @@ for (w.i in 1:length(w.vals)){
                            X = X.embed.2.in,
                            init = init.config[!in.sample.Bool,],
                            
-                           verbose =  FALSE,#(i<=(length(grid.seq.x)/2)),
+                           verbose =  FALSE,#(i<=(x.grid.len/2)),
                            itmax   = 1000,
                            eps     = 1e-6,
                            W = W.oos,
@@ -251,7 +255,7 @@ for (w.i in 1:length(w.vals)){
           
         }
         close.to.init.1<-rbind(close.to.init.1,X.embed.2.norm[5,])
-        close.to.init.2<-rbind(close.to.init.2,X.embed.2.norm[6,])
+        close.to.init.2<-rbind(close.to.init.2,X.embed.2.norm[6,])        
         
         
       } else{
@@ -295,10 +299,10 @@ for (w.i in 1:length(w.vals)){
   
   #plot(x=grid.seq.x,y=grid.seq.y, col=grid.resp)
   #x.coords = [x1 x2 x3 x4 ... x1 x2 x3 x4 ...
-  x.coords <- rep(grid.seq.x,length(grid.seq.y))
+  x.coords <- rep(grid.seq.x,y.grid.len)
   #y.coords = [y1 y1 y1 y1 ... y2 y2 y2 y2 ...
-  y.coords <- rep(grid.seq.y,each=length(grid.seq.x))
-  #grid.resp<-grid.resp[length(grid.seq.x)A:1,]
+  y.coords <- rep(grid.seq.y,each=x.grid.len)
+  #grid.resp<-grid.resp[x.grid.lenA:1,]
   
   if (w %in% w.vals.sp){
     if (run.in.linux) {X11()} else {windows()}
@@ -343,8 +347,17 @@ for (w.i in 1:length(w.vals)){
     select.y<-1:length(grid.seq.y) 
     #The indexing (select.x,select.y) is mixed because mesh.grid function generates a matrix 
     #whose columns are for x coordinates, while for final.coords, rows are for x coordinates
-    
+   
+#     config.points <- cbind(close.to.init.1,rep("X_6",nrow(close.to.init.1)))
+#     config.points <- rbind(config.points,cbind(close.to.init.2,pt.name=rep("X_7",nrow(close.to.init.2))),check.names=FALSE)
+#     config.points.df<- data.frame(x= config.points[,1],y=config.points[,2],pt.name=config.points[,3]
+#                                ,w=rep(w.vals[w.i],grid.pts.count))
+#     config.points.agg <- rbind(config.points.agg,config.points.df)
   }
+  
+  
+  
+
   
   if(!is.vector(far.to.init.1)){
     if (run.in.linux) {X11()} else {windows()}
@@ -360,7 +373,13 @@ for (w.i in 1:length(w.vals)){
     dev.print(paste(results.dir,"/","other-min-w",w,".png",collapse="",sep=""),device=png, width=600,height=600)
     fname<-paste(results.dir,"/","other-min-w",w,".pdf",collapse="",sep="")
     dev.copy2pdf(file=fname)
-    
+
+#    config.points <- cbind(far.to.init.1,pt.name=rep("X_6",nrow(far.to.init.1)))
+#     config.points <- rbind(config.points,cbind(far.to.init.2,pt.name=rep("X_7",nrow(far.to.init.2))) )
+#     config.points.df<- data.frame(x= config.points[,1],y=config.points[,2],pt.name=config.points[,3]
+#                                ,w=rep(w.vals[w.i],grid.pts.count),check.names=FALSE)
+#     config.points.agg <- rbind(config.points.agg,config.points.df) 
+#  
   }
   
   print("Number of final config close to initial config")
@@ -393,6 +412,48 @@ for (w.i in 1:length(w.vals)){
   
   
 }
+
+  all.final.pts.lf <- data.frame(x=numeric(0),y=numeric(0),pt.name=character(0),close.or.far=character(0),w=numeric(0))
+  
+  far.to.init.X5.for.w.array <- array(numeric(0),dim=c(0,3))
+  pt.name.var <- c("X_6","X_7","X_6","X_7")
+  close.or.far.var = c("far","far","close","close")
+  data.list<-list(far.to.init.X5.for.w  ,far.to.init.X6.for.w,
+                  close.to.init.X5.for.w,close.to.init.X6.for.w)
+  
+  for (j in 1:4){
+  pt.coords<- data.list[[j]]
+  pt.name.var.j <- pt.name.var[j]
+  close.or.far.var.j <-close.or.far.var[j]
+  for (w.i in 1:length(w.vals)){
+    final.coords <- pt.coords[[w.i]]
+    
+   
+    if (!is.null(final.coords)){
+      colnames(final.coords)<-c("x","y")
+      num.pts<-nrow(final.coords)
+      new.final.pts.lf <- cbind(final.coords,pt.name=rep(pt.name.var.j,num.pts)
+            ,close.or.far=rep(close.or.far.var.j,num.pts),w=rep(w.vals[w.i],num.pts))
+      all.final.pts.lf <- rbind(all.final.pts.lf ,new.final.pts.lf)
+      
+    }
+  }
+  }
+  
+  
+sub.final.pts.lf.logical<-all.final.pts.lf$w %in% c(0.1,0.5,0.51,0.52,0.8,0.81,0.82,0.84)
+sub.final.pts.lf<- all.final.pts.lf[sub.final.pts.lf.logical,]
+
+all.final.pts.lf$w<- as.factor(all.final.pts.lf$w)
+sub.final.pts.lf$w<- as.factor(sub.final.pts.lf$w)
+
+
+
+g1<-ggplot(sub.final.pts.lf,aes(x=x,y=y,colour=pt.name,shape=pt.name))+geom_point(alpha = 1/5,solid=FALSE)  + facet_wrap(~w,ncol=2)
+g1
+
+
+
 
 
 min.config.stress.w.table<-rbind(min.config.stress.1.w,min.config.stress.2.w)
