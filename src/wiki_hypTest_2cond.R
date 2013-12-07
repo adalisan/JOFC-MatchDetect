@@ -302,15 +302,16 @@ num.cores<-parallel::detectCores()
 iter_per_core <- ceiling(nmc/num.cores)
 
 cl <- NULL
-use.snow<-TRUE
+use.snow<-FALSE
 
 
 
 
 if(!par.compute){
   registerDoSEQ()
-} else if ( !use.snow && .Platform$OS.type != "windows" && require("multicore") ) {
-  require(doMC)
+} else if ( !use.snow && .Platform$OS.type != "windows" ) {
+  require("multicore") 
+  require("doMC")
   registerDoMC()
   
 } else if (use.snow && require("doSNOW")) {
