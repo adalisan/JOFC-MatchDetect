@@ -1,6 +1,6 @@
 print(getwd())
 
-debug.mode <- FALSE
+debug.mode <- TRUE
 
 source("./lib/graph_embedding_fn.R")
 
@@ -37,15 +37,15 @@ if (use.text.diss){
 
 
 
-w.vals = c(0.1,0.2,0.4,0.5,0.8,0.9,0.925,0.95,0.99,0.999)
-nmc<-12
-test.samp.size <- 300
+w.vals = c(0.1,0.2,0.4,0.5,0.8,0.925,0.95,0.99,0.999)
+nmc<-4
+test.samp.size <- 200
 
 par.compute <- TRUE
 
 if (debug.mode){
   nmc <- 1 
-  w.vals <- c(0.1,0.2,0.4,0.5,0.8,0.9)
+  w.vals <- c(0.1,0.8,0.9,0.99)
   Diss.E<- Diss.E[1:550,1:550]
   Diss.F<- Diss.F[1:550,1:550]
   test.samp.size <- 100
@@ -60,7 +60,7 @@ N <- dim(Diss.E)[1]
 
 
 
-d <- 6
+d <- 12
 size <- seq(0, 1, 0.01)
 #oos.use.imputed<-FALSE
 oos.use.imputed<-TRUE
@@ -74,7 +74,7 @@ Wchoice<-"avg"
 size <- seq(0, 1, 0.01)
 
 #originally was false
-separability.entries.w<- TRUE
+separability.entries.w<- FALSE
 
 wt.equalize<-FALSE
 assume.matched.for.oos<-TRUE
