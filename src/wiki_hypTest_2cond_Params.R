@@ -74,7 +74,7 @@ Wchoice<-"avg"
 size <- seq(0, 1, 0.01)
 
 #originally was false
-separability.entries.w<- FALSE
+separability.entries.w<- TRUE
 
 wt.equalize<-FALSE
 assume.matched.for.oos<-TRUE

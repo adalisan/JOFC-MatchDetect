@@ -405,6 +405,12 @@ for (i in 1:w.val.len){
                    conf.int=FALSE,add=(i>1),ylim=1)
   
 }
+library(arrayhelpers)
+library(reshape2)
+
+power.nmc.lf <- array2df(power.nmc,levels=list(w=TRUE,mc=NULL,alpha=TRUE),
+    label.x = "power")
+
 
 dev.copy2pdf(file= paste("JOFC_Wiki_Exp_HypTest",format(Sys.time(), "%b %d %H:%M:%S"),".pdf"))
 dev.copy(device=png,file= paste("JOFC_Wiki_Exp_HypTest",format(Sys.time(), "%b %d %H:%M:%S"),".png"))
