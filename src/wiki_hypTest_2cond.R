@@ -405,15 +405,31 @@ for (i in 1:w.val.len){
                    conf.int=FALSE,add=(i>1),ylim=1)
   
 }
-library(arrayhelpers)
-library(reshape2)
-
-power.nmc.lf <- array2df(power.nmc,levels=list(w=TRUE,mc=NULL,alpha=TRUE),
-    label.x = "power")
-
-
 dev.copy2pdf(file= paste("JOFC_Wiki_Exp_HypTest",format(Sys.time(), "%b %d %H:%M:%S"),".pdf"))
 dev.copy(device=png,file= paste("JOFC_Wiki_Exp_HypTest",format(Sys.time(), "%b %d %H:%M:%S"),".png"))
+
+library(arrayhelpers)
+library(reshape2)
+library(ggplot2)
+dimnames(power.nmc)[1]<-list(w.vals)
+dimnames(power.nmc)[3]<-list(size)
+power.nmc.lf <- array2df(power.nmc, levels=list(w=TRUE,mc=NULL,alpha=TRUE),
+    label.x = "power")
+
+power.grouped.mean.sd<- summarySE (power.nmc.lf,  measurevar = "power", groupvars=c("w","alpha"))
+power.grouped.mean.sd$alpha <-as.numeric(as.character(power.grouped.mean.sd$alpha))
+ggplot(power.grouped.mean.sd, aes(x=alpha, y=power, colour=w)) + 
+  geom_errorbar(aes(ymin=power-ci, ymax=power+ci),size=1, width=6) +
+  geom_point(size=2)+geom_line(size=1.2)+theme_minimal()+theme(text=element_text(size=22)) +
+  labs(title="JOFC",x=expression(alpha),y=expression(beta))+
+  guides(colour=guide_legend( title =expression(w),title.hjust=1,title.vjust=-1,label.hjust=1))+xlim(0,1)
+
+
+
+
+
+dev.copy2pdf(file= paste("JOFC_Wiki_Exp_HypTest_ggplot",format(Sys.time(), "%b %d %H:%M:%S"),".pdf"))
+dev.copy(device=png,file= paste("JOFC_Wiki_Exp_HypTest_ggplot",format(Sys.time(), "%b %d %H:%M:%S"),".png"))
 
 legend.txt <- w.vals
 
