@@ -44,7 +44,7 @@ test.samp.size <- 200
 par.compute <- TRUE
 
 if (debug.mode){
-  nmc <- 1 
+  nmc <- 4
   w.vals <- c(0.1,0.8,0.9,0.99)
   Diss.E<- Diss.E[1:550,1:550]
   Diss.F<- Diss.F[1:550,1:550]
