@@ -395,18 +395,12 @@ colors.vec.len<-length(colors.vec)
 colors.vec.len<-length(colors.vec)
 par(lty=1)
 
-lty.i.vec<-c()
-for (i in 1:w.val.len){
-  lty.i <- 1+((i-1)%%10)
-  
-  lty.i.vec <- c(lty.i.vec,lty.i)
-  #par(lty=lty.i)
-  plot.ROC.with.CI(power.nmc[i,,],plot.title="",plot.col = colors.vec[i],
-                   conf.int=FALSE,add=(i>1),ylim=1)
-  
+
+if (run.in.linux) {
+X11()
+} else {
+windows()
 }
-dev.copy2pdf(file= paste("JOFC_Wiki_Exp_HypTest",format(Sys.time(), "%b %d %H:%M:%S"),".pdf"))
-dev.copy(device=png,file= paste("JOFC_Wiki_Exp_HypTest",format(Sys.time(), "%b %d %H:%M:%S"),".png"))
 
 library(arrayhelpers)
 library(reshape2)
@@ -430,6 +424,25 @@ ggplot(power.grouped.mean.sd, aes(x=alpha, y=power, colour=w)) +
 
 dev.copy2pdf(file= paste("JOFC_Wiki_Exp_HypTest_ggplot",format(Sys.time(), "%b %d %H:%M:%S"),".pdf"))
 dev.copy(device=png,file= paste("JOFC_Wiki_Exp_HypTest_ggplot",format(Sys.time(), "%b %d %H:%M:%S"),".png"))
+
+run.in.linux<- (.Platform$OS.type=="unix")
+if (run.in.linux) {
+X11()
+} else {
+windows()
+}
+lty.i.vec<-c()
+for (i in 1:w.val.len){
+  lty.i <- 1+((i-1)%%10)
+  
+  lty.i.vec <- c(lty.i.vec,lty.i)
+  #par(lty=lty.i)
+  plot.ROC.with.CI(power.nmc[i,,],plot.title="",plot.col = colors.vec[i],
+                   conf.int=FALSE,add=(i>1),ylim=1)
+  
+}
+dev.copy2pdf(file= paste("JOFC_Wiki_Exp_HypTest",format(Sys.time(), "%b %d %H:%M:%S"),".pdf"))
+dev.copy(device=png,file= paste("JOFC_Wiki_Exp_HypTest",format(Sys.time(), "%b %d %H:%M:%S"),".png"))
 
 legend.txt <- w.vals
 

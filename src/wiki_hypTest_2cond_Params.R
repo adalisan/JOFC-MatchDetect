@@ -1,6 +1,6 @@
 print(getwd())
 
-debug.mode <- TRUE
+debug.mode <- FALSE
 
 source("./lib/graph_embedding_fn.R")
 
