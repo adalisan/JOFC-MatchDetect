@@ -1,7 +1,12 @@
 # History files
 .Rhistory
 .RData
+.Rdata
 
 # Example code in package build process
 *-Ex.R
 .Rproj.user
+.bak
+
+attic/
+data/
